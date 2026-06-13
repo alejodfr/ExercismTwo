@@ -1,3 +1,4 @@
+@file:Suppress("SpellCheckingInspection")
 
 /*
  * Introduction
