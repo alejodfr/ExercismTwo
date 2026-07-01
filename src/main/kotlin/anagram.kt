@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-/*
+/**
  * Introduction
  *
  * At a garage sale, you find a lovely vintage typewriter at a bargain price!
@@ -50,7 +50,7 @@ class Anagram(val target: String) {
     }
 }
 
-/*
+/**
  * # Anagram — Guía de resolución
  *
  * ## Enunciado
@@ -74,7 +74,7 @@ class Anagram(val target: String) {
  *    letras en cualquier orden.
  * 2. Para comparar letras sin importar el orden, se convierten a
  *    lista, se ordenan alfabéticamente y se comparan.
- * 3. Para ignorar mayúsculas, se convierte todo a lowercase antes
+ * 3. Para ignorar mayúsculas, se convierte tod0 a lowercase antes
  *    de comparar.
  * 4. Una palabra no puede ser anagrama de sí misma — hay que
  *    excluirla aunque sus letras ordenadas sean iguales.
