@@ -143,6 +143,7 @@ fun forDownToExercise() {
     for (i in 10 downTo  1){
         print("$i ")
         if (i == 1){
+            println()
             println("Go!"); break
         }
     }
@@ -162,7 +163,7 @@ fun whileExercise() {
 }
 
 
-}
+
 
 
 // ── 11. DO-WHILE ──────────────────────────────
@@ -180,6 +181,12 @@ fun doWhileExercise() {
     val guesses = listOf(3, 9, 7)
     val secret = 7
     // your code here
+    var index = 0
+    do {
+        println("Trying: ${guesses[index]}")
+        index += 1
+    } while (guesses[index-1] != secret)
+    println("You found the number")
 }
 
 
@@ -191,8 +198,12 @@ fun doWhileExercise() {
 // Expected: 1 2 4 5 7 8 10
 fun breakContinueExercise() {
     // your code here
+    for (i in 1..15) {
+        if (i % 11 == 0) break       // para completamente
+        if (i % 3 == 0) continue     // salta al siguiente
+        print("$i ")                 // imprime si pasa ambos filtros
+    }
 }
-
 
 // ── 13. ARRAYS ────────────────────────────────
 // Create an array of 5 integers: 10, 20, 30, 40, 50.
@@ -201,6 +212,13 @@ fun breakContinueExercise() {
 // Expected: Sum: 219
 fun arraysExercise() {
     // your code here
+    val myArray: Array<Int> = arrayOf(10, 20, 30, 40, 50)
+    myArray[myArray.size / 2] = 99
+    var sumTotal = 0
+    for (i in myArray){
+        sumTotal+=i
+    }
+    println("Sum: $sumTotal")
 }
 
 
@@ -210,6 +228,8 @@ fun arraysExercise() {
 // Expected: [0, 1, 8, 27, 64, 125]
 fun arrayCubesExercise() {
     // your code here
+    val myArray = Array(6) { i -> i * i * i }
+    println(myArray.toList())
 }
 
 
@@ -219,6 +239,10 @@ fun arrayCubesExercise() {
 // Expected: [banana, cherry, mango]
 fun listExercise() {
     // your code here
+    val fruits = mutableListOf("banana", "apple", "cherry")
+    fruits.add("mango")
+    fruits.remove("apple")
+    println(fruits.sorted())
 }
 
 
@@ -229,6 +253,14 @@ fun listExercise() {
 // Expected: size = 3
 fun setExercise() {
     // your code here
+    val astronomy = mutableSetOf<String>()
+    astronomy.add("sun")
+    astronomy.add("moon")
+    astronomy.add("sun")
+    astronomy.add("star")
+    astronomy.add("moon")
+    println(astronomy)
+    println("Expected: size = ${astronomy.size}")
 }
 
 
