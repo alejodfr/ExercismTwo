@@ -90,13 +90,13 @@ object BinarySearch {
  *     │  │      │    │
  *     │  │      │    └── , : separa los parámetros de la función.
  *     │  │      │
- *     │  │      └── list: nombre del primer parámetro (la lista ordenada).
- *     │  │          Significa "lista".
+ *     │  │      └── List<Int>: tipo del primer parámetro.
+ *     │  │          List es una interfaz de lista ordenada (colección).
+ *     │  │          <Int> es un tipo genérico: lista de enteros.
+ *     │  │          Palabra reservada. En español: "lista de enteros".
  *     │  │
- *     │  └── List<Int>: tipo del primer parámetro.
- *     │      List es una interfaz de lista ordenada (colección).
- *     │      <Int> es un tipo genérico: lista de enteros.
- *     │      Palabra reservada. En español: "lista de enteros".
+ *     │  └── list: nombre del primer parámetro (la lista ordenada).
+ *     │      Significa "lista".
  *     │
  *     └── fun: palabra reservada que declara una función.
  *         En español: "función".
@@ -213,13 +213,13 @@ object BinarySearch {
  *                 │    │     │       condición de la acción en when.
  *                 │    │     │       En español: "entonces" o "flecha".
  *                 │    │     │
- *                 │    │     └── == : operador de igualdad estructural.
- *                 │    │         Compara el VALOR, no la referencia.
- *                 │    │         En español: "es igual que".
- *                 │    │         Ej: list[3] == 23 → true si el valor
- *                 │    │         en el índice 3 es 23.
+ *                 │    │     └── item: el elemento que estamos buscando.
  *                 │    │
- *                 │    └── item: el elemento que estamos buscando.
+ *                 │    └── == : operador de igualdad estructural.
+ *                 │        Compara el VALOR, no la referencia.
+ *                 │        En español: "es igual que".
+ *                 │        Ej: list[3] == 23 → true si el valor
+ *                 │        en el índice 3 es 23.
  *                 │
  *                 └── list[mid]: accede al elemento en la posición
  *                     media de la lista. Usa el índice calculado.
@@ -261,23 +261,26 @@ object BinarySearch {
  *             ──────────────────────────────────────────────────────
  *
  *                 else -> right = mid - 1
- *                 │      │    │    │   │
- *                 │      │    │    │   └── 1: retrocedemos un índice.
+ *                 │      │    │    │  │  │
+ *                 │      │    │    │  │  └── 1: retrocedemos un índice.
+ *                 │      │    │    │  │
+ *                 │      │    │    │  └── - : resta.
  *                 │      │    │    │
- *                 │      │    │    └── - : resta.
+ *                 │      │    │    └── mid - 1: el nuevo límite derecho
+ *                 │      │    │        es mid-1. Descartamos la mitad
+ *                 │      │    │        derecha y la posición media.
  *                 │      │    │
- *                 │      │    └── mid - 1: el nuevo límite derecho
- *                 │      │        es mid-1. Descartamos la mitad
- *                 │      │        derecha y la posición media.
+ *                 │      │    └── = : asignación. Reasignamos right.
  *                 │      │
- *                 │      └── = : asignación. Reasignamos right.
+ *                 │      └── -> : flecha (arrow). Separa la
+ *                 │          condición de la acción en when.
+ *                 │          En español: "entonces" o "flecha".
  *                 │
  *                 └── else: palabra reservada. Significa "si no".
  *                     Rama por defecto. Se ejecuta si ninguna
- *                     condición anterior se cumplió.
- *                     En este caso: list[mid] > item
- *                     (el elemento del medio es MAYOR que el buscado).
- *                     En español: "si no" o "de lo contrario".
+ *                     condición anterior se cumplió (como una
+ *                     condición implícita: "si no se cumple nada
+ *                     de lo anterior"). En español: "si no".
  *
  *                 Caso 3: El elemento del medio es mayor.
  *                 El elemento buscado está en la mitad IZQUIERDA.
@@ -312,8 +315,8 @@ object BinarySearch {
  *         │      │         que no existe. En español: "excepción de elemento inexistente".
  *         │      │
  *         │      └── throw: palabra reservada. Significa "lanzar".
- *             Lanza una excepción (interrumpe el flujo normal).
- *             En español: "lanzar excepción".
+ *         │          Lanza una excepción (interrumpe el flujo normal).
+ *         │          En español: "lanzar excepción".
  *         │
  *         └── return: palabra reservada. Significa "retornar".
  *             Aquí combinado con throw: return throw ... finaliza la función
