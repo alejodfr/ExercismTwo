@@ -270,6 +270,11 @@ fun setExercise() {
 // "<country> → <capital>"
 fun mapExercise() {
     // your code here
+    val paisesCapitales = mutableMapOf("Venezuela" to "Caracas", "Colombia" to "Bogota", "Argentina" to "Buenos Aires")
+    paisesCapitales["Fracia"] = "Paris"
+    paisesCapitales.forEach() { (pais,capital) ->
+        println("$pais -> $capital")
+    }
 }
 
 
@@ -280,6 +285,9 @@ fun mapExercise() {
 fun mapNullExercise() {
     val capitals = mapOf("Colombia" to "Bogotá", "Japan" to "Tokyo")
     // your code here
+    val resultado = capitals["Atlantis"] ?: "unknown"
+    println("Capital of Atlantis: $resultado")
+
 }
 
 
