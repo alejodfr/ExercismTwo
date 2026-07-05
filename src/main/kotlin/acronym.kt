@@ -22,7 +22,7 @@
 
 object Acronym {
     fun generate(phrase: String) : String {
-        // TODO:
+
         val auxList = mutableListOf<String>()
         val list = phrase.split(" ","-","_").filter { it.isNotEmpty() }
         for (i in list){
