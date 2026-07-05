@@ -35,7 +35,7 @@ fun main(){
     println("Is the word or phrase an isogram? ${Isogram.isIsogram(input)}")
 }
 
-/*
+/**
  * ╔══════════════════════════════════════════════════════════════╗
  * ║      GUÍA DE ESTUDIO — isogram.kt (Verificar Isograma)     ║
  * ╚══════════════════════════════════════════════════════════════╝

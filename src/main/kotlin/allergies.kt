@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-/*
+/**
  * Instructions
  *
  * Given a person's allergy score, determine whether or not they're allergic
@@ -81,7 +81,7 @@ fun main() {
     println(maria.getList())                       // [EGGS]
 }
 
-/*
+/**
  * ──────────────────────────────────────────────────────────────
  * ALERGIAS (Allergies) — Guía de estudio
  * ──────────────────────────────────────────────────────────────

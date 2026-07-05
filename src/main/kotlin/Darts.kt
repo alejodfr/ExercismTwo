@@ -1,5 +1,6 @@
+@file:Suppress("SpellCheckingInspection")
 
-/*
+/**
  * Instructions
  *
  * Calculate the points scored in a single toss of a Darts game.
@@ -46,7 +47,7 @@ fun main(){
     println("The score is ${Darts.score(x.toString().toDouble(), y.toString().toDouble())}")
 }
 
-/*
+/**
  * ╔══════════════════════════════════════════════════════════════╗
  * ║        GUÍA DE ESTUDIO — Darts.kt (Puntuación de Dardos)   ║
  * ╚══════════════════════════════════════════════════════════════╝

@@ -1,7 +1,7 @@
 @file:Suppress("SpellCheckingInspection")
 
 
-/*
+/**
  * Introduction
  *
  * In some English accents, "two for" said quickly sounds like "two fer".
@@ -44,7 +44,7 @@ fun main() {
     println(twofer(null))      // One for you, one for me.
 }
 
-/*
+/**
  * ╔══════════════════════════════════════════════════════════╗
  * ║           TWO FER — GUÍA DE ESTUDIO COMPLETA            ║
  * ╚══════════════════════════════════════════════════════════╝

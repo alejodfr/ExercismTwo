@@ -1,3 +1,4 @@
+@file:Suppress("SpellCheckingInspection")
 
 import java.math.BigInteger
 
@@ -50,7 +51,7 @@ fun main(){
     println("The total number of grains on the chessboard is ${Board.getTotalGrainCount()}")
 }
 
-/*
+/**
  * ╔══════════════════════════════════════════════════════════════╗
  * ║        GUÍA DE ESTUDIO — grains.kt (Granos de trigo)       ║
  * ╚══════════════════════════════════════════════════════════════╝

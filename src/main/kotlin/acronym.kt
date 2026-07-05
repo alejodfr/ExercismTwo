@@ -1,5 +1,5 @@
 @file:Suppress("SpellCheckingInspection")
-/*
+/**
  * Instructions
  *
  * Convert a phrase to its acronym.
@@ -52,7 +52,7 @@ fun main() {
     println(Acronym.generate("portable network graphics")) // PNG
 }
 
-/*
+/**
  * ──────────────────────────────────────────────────────────────
  * ACRÓNIMO (Acronym) — Guía de estudio
  * ──────────────────────────────────────────────────────────────

@@ -1,4 +1,7 @@
-/*
+@file:Suppress("SpellCheckingInspection")
+
+
+/**
  * # Eliud's Eggs
  *
  * ## Introduction
@@ -37,7 +40,7 @@ fun main(){
     println("Actual eggs in the coop: ${EliudsEggs.eggCount(number)}")
 }
 
-/*
+/**
  * ╔══════════════════════════════════════════════════════════════╗
  * ║      GUÍA DE ESTUDIO — EliudsEggs.kt (Huevos de Eliud)     ║
  * ╚══════════════════════════════════════════════════════════════╝
