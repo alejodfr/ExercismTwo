@@ -53,102 +53,115 @@ fun main() {
     }
 }
 
-/**
- * # RNA Transcription — Guía de resolución
+/*
+ * ╔══════════════════════════════════════════════════════════╗
+ * ║       RNA TRANSCRIPTION — GUÍA DE ESTUDIO COMPLETA      ║
+ * ╚══════════════════════════════════════════════════════════╝
  *
- * ## Paso 1 — Entender el problema
+ * ─────────────────────────────────────────────────────────────────────
+ * 1. CÓDIGO ANOTADO (Árbol de análisis línea por línea)
+ * ─────────────────────────────────────────────────────────────────────
  *
- * Dado un String de DNA, reemplazar cada nucleótido
- * por su complemento de RNA según esta tabla:
+ * fun transcribeToRna(dna: String): String {  ──► fun = declarar función
+ * │                                              ──► transcribeToRna = nombre
+ * │                                              ──► dna: String = parámetro (String de entrada)
+ * │                                              ──► : String = tipo de retorno (devuelve String)
+ * │
+ *     return dna.toList().map { when(it) {       ──► return = devolver resultado
+ *     │                                            ──► dna.toList() = convertir String a lista de Chars
+ *     │                                            ──► "GCTA".toList() → ['G','C','T','A']
+ *     │                                            ──► map { } = transformar CADA elemento
+ *     │                                            ──► it = cada carácter (uno por uno)
+ *         'G' -> 'C'                               ──► Si it = 'G' → devolver 'C'
+ *         'C' -> 'G'                               ──► Si it = 'C' → devolver 'G'
+ *         'T' -> 'A'                               ──► Si it = 'T' → devolver 'A'
+ *         'A' -> 'U'                               ──► Si it = 'A' → devolver 'U'
+ *         else -> throw IllegalArgumentException(  ──► else = caso por defecto (OBLIGATORIO)
+ *                    "Invalid nucleotide: $it")    ──► throw lanza excepción si no es A,C,G,T
+ *     } }.joinToString("")                         ──► joinToString("") = unir lista en String
+ *     │                                            ──► "" = sin separador entre caracteres
+ *     │                                            ──► ['C','G','A','U'] → "CGAU"
+ * }
  *
- *   G -> C
- *   C -> G
- *   T -> A
- *   A -> U
+ * ─────────────────────────────────────────────────────────────────────
+ * 2. TABLA DE PALABRAS RESERVADAS
+ * ─────────────────────────────────────────────────────────────────────
  *
- * Ejemplo:
- *   "GCTA" -> "CGAU"
- *   "ACGT" -> "UGCA"
+ * ┌──────────────┬──────────────────────────────────────────────────┐
+ * │ PALABRA      │ SIGNIFICADO                                      │
+ * ├──────────────┼──────────────────────────────────────────────────┤
+ * │ fun          │ Declara una función (bloque de código reusable)  │
+ * │ return       │ Devuelve un valor y termina la función           │
+ * │ it           │ Parámetro implícito en lambda de 1 argumento     │
+ * │ when         │ Evalúa un valor contra múltiples casos (switch)  │
+ * │ else         │ Rama por defecto en when (obligatorio si faltan  │
+ * │              │ casos cubiertos)                                 │
+ * │ throw        │ Lanza una excepción (detiene la ejecución)       │
+ * └──────────────┴──────────────────────────────────────────────────┘
  *
- * ## Paso 2 — Convertir el String a lista con `toList()`
+ * ─────────────────────────────────────────────────────────────────────
+ * 3. TABLA DE OPERADORES IMPORTANTES
+ * ─────────────────────────────────────────────────────────────────────
  *
- * Un String no se puede transformar carácter por carácter directamente,
- * pero si lo convertimos a una lista de caracteres, podemos usar `map`.
+ * ┌──────────────┬──────────┬───────────────────────────────────────┐
+ * │ OPERADOR     │ TIPO     │ EXPLICACIÓN                           │
+ * ├──────────────┼──────────┼───────────────────────────────────────┤
+ * │ ->           │ Separador│ En when: separa caso de resultado     │
+ * │              │          │ Ej: 'G' -> 'C' significa "si es G, da C"│
+ * │ { }          │ Lambda   │ Bloque de código anónimo              │
+ * │ .            │ Acceso   │ Llama un método: dna.toList()         │
+ * │ ::           │ Ref.     │ Referencia a método (no usado aquí)   │
+ * │ $            │Interpolac│ Inserta variable en String: "$it"     │
+ * └──────────────┴──────────┴───────────────────────────────────────┘
  *
- *   "GCTA".toList()  // ['G', 'C', 'T', 'A']
+ * ─────────────────────────────────────────────────────────────────────
+ * 4. RESUMEN ALGORÍTMICO
+ * ─────────────────────────────────────────────────────────────────────
  *
- * Cada elemento de la lista es un Char — un solo carácter.
+ * ▸ PROBLEMA: Dado un String de ADN, transcribirlo a ARN:
+ *   G→C, C→G, T→A, A→U. Si hay caracter invalido → error.
  *
- * ## Paso 3 — Transformar cada carácter con `map` y `when`
+ * ▸ PSEUDOCÓDIGO:
  *
- * `map { }` recorre cada elemento de la lista y lo transforma.
- * `it` representa cada carácter en turno.
- * `when` mapea cada carácter a su complemento — es más limpio
- * que un if/else porque permite agrupar casos fácilmente.
+ *   FUNCION transcribirAArn(adn: String) → String:
+ *       PARA CADA caracter c EN adn:
+ *           SEGUN c:
+ *               'G' → TOMAR 'C'
+ *               'C' → TOMAR 'G'
+ *               'T' → TOMAR 'A'
+ *               'A' → TOMAR 'U'
+ *               OTRO → LANZAR error "nucleotido invalido: c"
+ *       DEVOLVER todos los caracteres unidos en un String
  *
- *   .map { when(it) {
- *       'G' -> 'C'
- *       'C' -> 'G'
- *       'T' -> 'A'
- *       'A' -> 'U'
- *       else -> throw IllegalArgumentException("Invalid nucleotide: $it")
- *   }}
+ * ▸ EJEMPLO: entrada = "GCTA"
  *
- * IMPORTANTE: el `else` es obligatorio en `when` cuando no se cubren
- * todos los casos posibles. Aquí lanzamos una excepción si el carácter
- * no es un nucleótido válido.
+ *   ┌─ PASO 1: toList() ─────────────────────────────────────────────┐
+ *   │                                                                │
+ *   │   "GCTA".toList() → ['G', 'C', 'T', 'A']                      │
+ *   │                                                                │
+ *   └────────────────────────────────────────────────────────────────┘
  *
- * IMPORTANTE: no uses un String hardcodeado como "GCTA" dentro de la función.
- * Debes usar el parámetro `dna` que recibe la función, de lo contrario
- * siempre transformarías el mismo String sin importar el input.
+ *   ┌─ PASO 2: map { when(it) { ... } } ────────────────────────────┐
+ *   │                                                                │
+ *   │   'G' → case 'G' → 'C'                                        │
+ *   │   'C' → case 'C' → 'G'                                        │
+ *   │   'T' → case 'T' → 'A'                                        │
+ *   │   'A' → case 'A' → 'U'                                        │
+ *   │                                                                │
+ *   │   Resultado: ['C', 'G', 'A', 'U']                             │
+ *   │                                                                │
+ *   └────────────────────────────────────────────────────────────────┘
  *
- * ## Paso 4 — Unir la lista en un String con `joinToString()`
+ *   ┌─ PASO 3: joinToString("") ────────────────────────────────────┐
+ *   │                                                                │
+ *   │   ['C', 'G', 'A', 'U'].joinToString("") → "CGAU"             │
+ *   │                                                                │
+ *   └────────────────────────────────────────────────────────────────┘
  *
- * `map` retorna una lista de caracteres transformados:
- *   ['C', 'G', 'A', 'U']
- *
- * `joinToString("")` une todos los elementos en un solo String.
- * El "" entre paréntesis indica que no hay separador entre elementos.
- *
- *   listOf('C', 'G', 'A', 'U').joinToString("")  // "CGAU"
- *   listOf('C', 'G', 'A', 'U').joinToString("-") // "C-G-A-U"
- *
- * ## Paso 5 — Retornar el resultado
- *
- * `dna` es un parámetro de la función — no se puede reasignar.
- * En vez de intentar modificarlo, usamos `return` directamente
- * sobre el resultado de la cadena de transformaciones.
- *
- * ## Resultado final
- *
- *   fun transcribeToRna(dna: String): String {
- *       return dna.toList().map { when(it) {
- *           'G' -> 'C'
- *           'C' -> 'G'
- *           'T' -> 'A'
- *           'A' -> 'U'
- *           else -> throw IllegalArgumentException("Invalid nucleotide: $it")
- *       }}.joinToString("")
- *   }
- *
- * ## Flujo visual
- *
- *   "GCTA"
- *     ↓ toList()
- *   ['G', 'C', 'T', 'A']
- *     ↓ map { when(it) }
- *   ['C', 'G', 'A', 'U']
- *     ↓ joinToString("")
- *   "CGAU"
- *
- * ## Funciones clave utilizadas
- *
- *   toList()          — convierte un String en lista de caracteres (List<Char>)
- *   map { }           — transforma cada elemento de una lista, retorna lista nueva
- *   when              — evalúa un valor contra múltiples casos, como un switch
- *   it                — nombre implícito del parámetro en lambdas de un solo argumento
- *   else              — caso por defecto en when, obligatorio si no se cubren todos los casos
- *   joinToString("")  — une los elementos de una lista en un String sin separador
- *   return            — retorna el resultado de la función
- *   throw             — lanza una excepción y detiene la ejecución
+ *   ┌─ FLUJO COMPLETO ──────────────────────────────────────────────┐
+ *   │                                                                │
+ *   │   "GCTA"  →  ['G','C','T','A']  →  ['C','G','A','U']  →  "CGAU" │
+ *   │    (input)      toList()              map{when}        join   │
+ *   │                                                                │
+ *   └────────────────────────────────────────────────────────────────┘
  */

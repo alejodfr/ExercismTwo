@@ -1,6 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
-/*
+/**
  * Introduction
  *
  * You work for a company that makes an online, fantasy-survival game.
@@ -56,121 +56,224 @@ fun main(){
     println(SumOfMultiples.sum(factors, limit))
 }
 
-/*
- * # Sum of Multiples — Guía de resolución
+/** ══════════════════════════════════════════════════════════════════
+ *  📚  GUÍA DE ANOTACIONES ESQUEMÁTICAS ASCII
+ *  ─────────────────────────────────────────────────────────────────
+ *  Sum of Multiples — Explicación completa del código fuente
+ * ══════════════════════════════════════════════════════════════════
  *
- * ## Enunciado
+ *  ┌── CÓDIGO ANOTADO ─────────────────────────────────────────────
+ *  │
+ *  │  object SumOfMultiples {
+ *  │  └── object ──────► Declara un singleton (una sola instancia)
+ *  │                       └── Español: "objeto"
+ *  │                       └── Analogía: una caja de herramientas
+ *  │                           única en el taller. No la fabricas,
+ *  │                           solo la abres: SumOfMultiples.sum()
+ *  │
+ *  │      fun sum(factors: Set<Int>, limit: Int): Int {
+ *  │      └── fun ──────► Declara una función (código reutilizable)
+ *  │      │                └── Español: "función"
+ *  │      │                └── Analogía: una receta de cocina:
+ *  │      │                    ingredientes (parámetros) → plato (retorno)
+ *  │      │
+ *  │      ├── sum ──────► Nombre de la función ("suma")
+ *  │      │
+ *  │      ├── factors ──► Parámetro: conjunto de números base
+ *  │      │  │            └── Set<Int> ──► colección sin duplicados de enteros
+ *  │      │  └── limit ─► Parámetro: tope o nivel del jugador
+ *  │      │               └── Int ──► número entero
+ *  │      │
+ *  │      └── : Int ────► Tipo de retorno: esta función devuelve un entero
+ *  │
+ *  │      val multiplesOfThree = mutableSetOf<Int>()
+ *  │      └── val ──────► Variable de solo lectura (inmutable en referencia)
+ *  │      │               └── Español: "valor"
+ *  │      │               └── No reasignable, pero su contenido SÍ cambia
+ *  │      │               └── (el Set es mutable aunque val sea fijo)
+ *  │      │
+ *  │      ├── = ────────► Asignación: "lo de la derecha va a la izquierda"
+ *  │      │
+ *  │      └── mutableSetOf<Int>() ──► Crea un Set mutable vacío de enteros
+ *  │          └── Set ───► sin duplicados (clave: 15 aparece una sola vez)
+ *  │          └── mutable ─► podemos hacer .add() dentro del bucle
+ *  │          └── <Int> ──► solo guarda enteros
+ *  │
+ *  │      for (factor in factors) {
+ *  │      └── for ──────► Bucle: repite el bloque para cada elemento
+ *  │      │               └── Español: "para"
+ *  │      │               └── Analogía: revisar cada libro en una estantería
+ *  │      │
+ *  │      ├── factor ───► Variable que toma el valor de cada elemento
+ *  │      │  └── in ────► "en" — recorre el conjunto factors
+ *  │      │
+ *  │      └── factors ──► Conjunto a iterar {3, 5}
+ *  │          └── 1ª vuelta: factor = 3 │ 2ª vuelta: factor = 5
+ *  │
+ *  │      if (factor == 0) { continue }
+ *  │      └── if ───────► Condicional: si se cumple, ejecuta el bloque
+ *  │      │               └── Español: "si"
+ *  │      │               └── Analogía: un desvío en el camino
+ *  │      │
+ *  │      ├── factor == 0 ──► ¿factor es igual a cero?
+ *  │      │  └── == ────► comparación de igualdad (NO confundir con =)
+ *  │      │
+ *  │      └── continue ─► Salta a la siguiente iteración del bucle
+ *  │          └── Español: "continuar"
+ *  │          └── ¿Por qué? Si factor = 0, i % 0 lanza error
+ *  │             (división entre cero). continue lo evita.
+ *  │
+ *  │      for (i in factor..(limit - 1)) {
+ *  │      └── for ──────► Segundo bucle (anidado dentro del primero)
+ *  │      │               └── Por cada factor, prueba números candidatos
+ *  │      │
+ *  │      ├── i ────────► Variable del iterador interno (i = índice)
+ *  │      │
+ *  │      ├── factor ───► Inicio del rango (primer múltiplo posible)
+ *  │      │
+ *  │      ├── .. ───────► Operador de rango inclusivo: a..b = [a, b]
+ *  │      │  └── Español: "hasta" (incluye ambos extremos)
+ *  │      │
+ *  │      └── limit - 1 ──► Excluye limit porque .. es inclusivo
+ *  │          └── Si limit=20, el rango llega hasta 19 (menores que 20)
+ *  │
+ *  │      if (i % factor == 0) {
+ *  │      └── if ───────► ¿Este número i es múltiplo de factor?
+ *  │       └── i % factor ──► Módulo: residuo de dividir i ÷ factor
+ *  │           └── % ────► "módulo" — ej: 9 % 3 = 0, 10 % 3 = 1
+ *  │           └── == 0 ──► residuo cero → i es divisible exactamente
+ *  │
+ *  │      multiplesOfThree.add(i)
+ *  │      └── .add(i) ──► Agrega i al conjunto acumulador
+ *  │          └── Si ya existe (ej. 15 con factores 3 y 5),
+ *  │              el Set lo ignora — no hay duplicados
+ *  │
+ *  │      return multiplesOfThree.sum()
+ *  │      └── return ───► Devuelve el valor y termina la función
+ *  │       └── .sum() ──► Suma todos los enteros del Set
+ *  │           └── Itera internamente y acumula: 3+5+6+9+10+12+15+18
+ *  │
+ *  └───────────────────────────────────────────────────────────────
  *
- * Dado un conjunto de factores y un límite, hay que encontrar todos los
- * múltiplos de cada factor que sean menores que el límite, combinarlos
- * sin duplicados, y sumarlos.
+ *  ┌── TABLA DE PALABRAS RESERVADAS ───────────────────────────────
+ *  │
+ *  │  ┌───────────┬──────────────────┬──────────────────────────────────────────┐
+ *  │  │ Palabra   │ Español          │ Explicación                              │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ object    │ objeto           │ Declara un singleton (una única           │
+ *  │  │           │                  │ instancia global). Sin new, se usa        │
+ *  │  │           │                  │ directo: Nombre.metodo().                  │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ fun       │ función          │ Define un bloque de código con nombre,    │
+ *  │  │           │                  │ parámetros y tipo de retorno.             │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ val       │ valor            │ Variable de solo lectura. La referencia   │
+ *  │  │           │                  │ no se reasigna, pero el contenido sí       │
+ *  │  │           │                  │ puede mutar (si es mutable).               │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ for       │ para             │ Bucle que itera sobre colecciones/rangos.  │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ in        │ en               │ Usado en for: indica qué colección        │
+ *  │  │           │                  │ o rango se recorre.                       │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ if        │ si               │ Condicional: ejecuta código si la         │
+ *  │  │           │                  │ expresión booleana es true.                │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ continue  │ continuar        │ Dentro de un bucle, salta a la siguiente   │
+ *  │  │           │                  │ iteración (ignora el resto del cuerpo).    │
+ *  │  └───────────┴──────────────────┴──────────────────────────────────────────┘
+ *  │
+ *  └───────────────────────────────────────────────────────────────
  *
- * Ejemplo: factors = {3, 5}, limit = 20 -> resultado 78
+ *  ┌── TABLA DE OPERADORES IMPORTANTES ────────────────────────────
+ *  │
+ *  │  ┌───────────┬──────────────────┬──────────────────────────────────────────┐
+ *  │  │ Operador  │ Español          │ Explicación                              │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ =         │ asignación       │ Asigna el valor derecho a la variable     │
+ *  │  │           │                  │ izquierda. NO confundir con ==.           │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ ==        │ igualdad         │ Compara si dos valores son iguales.       │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ %         │ módulo/residuo   │ Residuo de la división entera.            │
+ *  │  │           │                  │ x % y == 0 → x es múltiplo de y.          │
+ *  │  │           │                  │ Ej: 10 % 3 = 1, 9 % 3 = 0.               │
+ *  │  ├───────────┼──────────────────┼──────────────────────────────────────────┤
+ *  │  │ ..        │ rango (hasta)    │ Crea un intervalo inclusivo [a, b].      │
+ *  │  │           │                  │ Ej: 3..5 produce 3, 4, 5.                │
+ *  │  └───────────┴──────────────────┴──────────────────────────────────────────┘
+ *  │
+ *  └───────────────────────────────────────────────────────────────
  *
- * ## Orden de pensamiento
- *
- * 1. Necesito generar múltiplos de cada factor — eso implica recorrer
- *    números y verificar con %.
- * 2. Hay varios factores, no uno solo — eso implica un loop por cada factor.
- * 3. Por cada factor, hay varios múltiplos — eso implica otro loop dentro
- *    del primero (anidado).
- * 4. Los múltiplos no deben repetirse — un Set resuelve esto automáticamente.
- * 5. Al final, hay que sumar tod0 — sum() lo hace directo.
- * 6. Caso especial: si un factor es 0, no debe afectar el resultado.
- *    Hay que detectarlo y saltarlo antes de operar con él.
- *
- * ## Paso a paso
- *
- * ### El object
- *
- *   object SumOfMultiples {
- *
- * `object` crea un singleton — no necesitas instanciarlo, se usa
- * directamente como SumOfMultiples.sum(...)
- *
- * ### La función y sus parámetros
- *
- *   fun sum(factors: Set<Int>, limit: Int): Int {
- *
- * - factors: Set<Int> -> el conjunto de factores base (ej. {3, 5}).
- *   Es Set porque cada factor es único, no hay razón para repetirlos.
- * - limit: Int -> el número límite (el nivel del jugador).
- * - : Int -> la función retorna un número entero, la suma final.
- *
- * ### El conjunto acumulador
- *
- *   val multiplesOfThree = mutableSetOf<Int>()
- *
- * - mutableSetOf<Int>() -> un Set vacío y mutable de enteros.
- * - Es Set (no List) porque elimina duplicados automáticamente — si dos
- *   factores comparten un múltiplo (como el 15 con factores 3 y 5),
- *   solo se guarda una vez.
- * - Es mutable porque necesitamos agregar elementos dentro del loop.
- * - Se declara FUERA de los loops — si estuviera dentro, se reiniciaría
- *   vacío en cada iteración.
- *
- * ### Loop exterior — recorrer cada factor
- *
- *   for (factor in factors) {
- *
- * Recorre cada elemento del conjunto factors uno por uno.
- * En la primera vuelta factor = 3, en la segunda factor = 5.
- *
- * ### Caso especial — factor 0
- *
- *   if (factor == 0) { continue }
- *
- * - Si factor es 0, cualquier operación i % factor lanzaría
- *   ArithmeticException (división por cero).
- * - La regla del ejercicio dice que un factor 0 no debe afectar el
- *   resultado, es decir, debe ignorarse por completo.
- * - `continue` salta directamente a la siguiente iteración del loop
- *   exterior, sin ejecutar el loop interior para ese factor.
- * - Se coloca justo al inicio del loop exterior, ANTES del loop interior,
- *   para evitar que se ejecute cualquier código con ese factor inválido.
- *
- * ### Loop interior — generar los múltiplos de ese factor
- *
- *   for (i in factor..(limit - 1)) {
- *
- * - factor..(limit - 1) -> un rango desde el factor actual hasta limit - 1.
- * - El -1 es clave: la regla pide múltiplos MENORES QUE el límite, y ..
- *   en Kotlin es inclusivo, así que restamos 1 para excluir el límite mismo.
- *
- * ### Verificar si es múltiplo
- *
- *   if (i % factor == 0) {
- *       multiplesOfThree.add(i)
- *   }
- *
- * - i % factor == 0 -> el operador % retorna el residuo de la división.
- *   Si el residuo es 0, significa que i es divisible exactamente entre
- *   factor, es decir, es un múltiplo.
- * - .add(i) -> agrega i al set. Si ya estaba (porque otro factor generó
- *   el mismo múltiplo), el Set lo ignora silenciosamente.
- *
- * ### Retornar la suma
- *
- *   return multiplesOfThree.sum()
- *
- * - .sum() -> función de Kotlin que suma todos los elementos de una
- *   colección numérica.
- * - Retorna ese total como el resultado de la función.
- *
- * ## Código completo
- *
- *   object SumOfMultiples {
- *       fun sum(factors: Set<Int>, limit: Int): Int {
- *           val multiplesOfThree = mutableSetOf<Int>()
- *           for (factor in factors) {
- *               if (factor == 0) { continue }
- *               for (i in factor..(limit - 1)) {
- *                   if (i % factor == 0) {
- *                       multiplesOfThree.add(i)
- *                   }
- *               }
- *           }
- *           return multiplesOfThree.sum()
- *       }
- *   }
+ *  ┌── RESUMEN ALGORÍTMICO ─────────────────────────────────────────
+ *  │
+ *  │  PSEUDOCÓDIGO
+ *  │  ────────────
+ *  │
+ *  │    ENTRADA: factors = conjunto de enteros, limit = entero
+ *  │    SALIDA:  suma de todos los múltiplos < limit
+ *  │
+ *  │    1.  multiples ← conjunto vacío
+ *  │    2.  POR CADA factor EN factors:
+ *  │    3.      SI factor = 0 → SALTAR
+ *  │    4.      POR i DESDE factor HASTA limit - 1:
+ *  │    5.          SI i ES MÚLTIPLO DE factor (i % factor = 0):
+ *  │    6.              AGREGAR i A multiples
+ *  │    7.          FIN SI
+ *  │    8.      FIN POR
+ *  │    9.  FIN POR
+ *  │    10. DEVOLVER suma(multiples)
+ *  │
+ *  │  ──────────────────────────────────────────────────────────────
+ *  │
+ *  │  EJEMPLO RESUELTO
+ *  │  ───────────────
+ *  │
+ *  │    Input: factors = {3, 5}, limit = 20
+ *  │
+ *  │    multiples = {}
+ *  │    ─────────────────────────────────────────────────────
+ *  │    factor = 3  (≠ 0 → continuamos)
+ *  │    ├── i =  3 → 3 % 3 = 0 → ✓ → multiples = {3}
+ *  │    ├── i =  4 → 4 % 3 = 1 → ✗
+ *  │    ├── i =  5 → 5 % 3 = 2 → ✗
+ *  │    ├── i =  6 → 6 % 3 = 0 → ✓ → multiples = {3, 6}
+ *  │    ├── i =  7 → 7 % 3 = 1 → ✗
+ *  │    ├── i =  8 → 8 % 3 = 2 → ✗
+ *  │    ├── i =  9 → 9 % 3 = 0 → ✓ → multiples = {3, 6, 9}
+ *  │    ├── i = 10 → 10 % 3 = 1 → ✗
+ *  │    ├── i = 11 → 11 % 3 = 2 → ✗
+ *  │    ├── i = 12 → 12 % 3 = 0 → ✓ → multiples = {3, 6, 9, 12}
+ *  │    ├── i = 13 → 13 % 3 = 1 → ✗
+ *  │    ├── i = 14 → 14 % 3 = 2 → ✗
+ *  │    ├── i = 15 → 15 % 3 = 0 → ✓ → multiples = {3, 6, 9, 12, 15}
+ *  │    ├── i = 16 → 16 % 3 = 1 → ✗
+ *  │    ├── i = 17 → 17 % 3 = 2 → ✗
+ *  │    ├── i = 18 → 18 % 3 = 0 → ✓ → multiples = {3, 6, 9, 12, 15, 18}
+ *  │    └── i = 19 → 19 % 3 = 1 → ✗
+ *  │
+ *  │    factor = 5  (≠ 0 → continuamos)
+ *  │    ├── i =  5 → 5 % 5 = 0 → ✓ → multiples = {3, 5, 6, 9, 12, 15, 18}
+ *  │    ├── i =  6 → 6 % 5 = 1 → ✗
+ *  │    ├── i =  7 → 7 % 5 = 2 → ✗
+ *  │    ├── i =  8 → 8 % 5 = 3 → ✗
+ *  │    ├── i =  9 → 9 % 5 = 4 → ✗
+ *  │    ├── i = 10 → 10 % 5 = 0 → ✓ → multiples = {3, 5, 6, 9, 10, 12, 15, 18}
+ *  │    ├── i = 11 → 11 % 5 = 1 → ✗
+ *  │    ├── i = 12 → 12 % 5 = 2 → ✗
+ *  │    ├── i = 13 → 13 % 5 = 3 → ✗
+ *  │    ├── i = 14 → 14 % 5 = 4 → ✗
+ *  │    ├── i = 15 → 15 % 5 = 0 → ✓ → ya existe (del factor 3), no se duplica
+ *  │    ├── i = 16 → 16 % 5 = 1 → ✗
+ *  │    ├── i = 17 → 17 % 5 = 2 → ✗
+ *  │    ├── i = 18 → 18 % 5 = 3 → ✗
+ *  │    └── i = 19 → 19 % 5 = 4 → ✗
+ *  │
+ *  │    multiples = {3, 5, 6, 9, 10, 12, 15, 18}
+ *  │    ─────────────────────────────────────────────────────
+ *  │    suma = 3 + 5 + 6 + 9 + 10 + 12 + 15 + 18 = 78
+ *  │
+ *  │  ✅ Resultado: SumOfMultiples.sum({3, 5}, 20) → 78
+ *  │
+ *  └───────────────────────────────────────────────────────────────
  */

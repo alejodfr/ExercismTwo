@@ -48,367 +48,151 @@ object BinarySearch {
     }
 }
 
-/**
- * GUÍA DE RESOLUCIÓN - BÚSQUEDA BINARIA (BINARY SEARCH)
- * ======================================================
+/*
+ * ──────────────────────────────────────────────────────────────
+ * BÚSQUEDA BINARIA (Binary Search) — Guía de estudio
+ * ──────────────────────────────────────────────────────────────
  *
- * La búsqueda binaria encuentra un elemento en una lista ordenada
- * dividiendo repetidamente el espacio de búsqueda a la mitad.
+ * Busca un elemento en una lista ORDENADA dividiendo el espacio
+ * de búsqueda a la mitad en cada paso.
+ * PRECONDICIÓN: la lista debe estar ordenada de menor a mayor.
  *
- * Precondición: la lista debe estar ORDENADA de menor a mayor.
- *
- *
- * ──────────────────────────────────────────────────────────────────
- * Explicación línea por línea del código en el objeto:
- * ──────────────────────────────────────────────────────────────────
+ * CÓDIGO ANOTADO
+ * ──────────────────────────────────────────────────────────────
  *
  * object BinarySearch {
  * │
- * │  La palabra reservada 'object' en Kotlin significa "objeto".
- * │  Crea una única instancia (singleton) de la clase.
- * │  A diferencia de 'class', no necesitamos instanciar con ().
- * │  Similar a un "objeto estático" en otros lenguajes.
+ * ├── fun search(list: List<Int>, item: Int): Int {
+ * │   │
+ * │   ├── var left = 0
+ * │   │   └── ─► left = índice izquierdo, empieza en 0.
+ * │   │       var = mutable (cambia durante la búsqueda).
+ * │   │
+ * │   ├── var right = list.size - 1
+ * │   │   └── ─► right = índice derecho (última posición).
+ * │   │       Si hay 7 elementos, right = 7 - 1 = 6.
+ * │   │
+ * │   ├── while (left <= right) {
+ * │   │   └── ─► Mientras left NO supere a right, hay
+ * │   │       elementos por revisar. Si left > right,
+ * │   │       el elemento no está y salimos del bucle.
+ * │   │
+ * │   ├── val mid = (left + right) / 2
+ * │   │   └── ─► Calcula el índice del medio.
+ * │   │       left=0, right=6 → mid = (0+6)/2 = 3
+ * │   │       División de enteros trunca decimales.
+ * │   │
+ * │   ├── when {
+ * │   │   │
+ * │   │   ├── list[mid] == item -> return mid
+ * │   │   │   └── ─► ¿El medio ES el que buscamos?
+ * │   │   │       ¡Encontrado! Retornamos su índice.
+ * │   │   │
+ * │   │   ├── list[mid] < item -> left = mid + 1
+ * │   │   │   └── ─► ¿El medio es MENOR que item?
+ * │   │   │       El elemento está a la DERECHA.
+ * │   │   │       Movemos left: descartamos mitad izquierda.
+ * │   │   │
+ * │   │   └── else -> right = mid - 1
+ * │   │       └── ─► Si no es igual ni menor, es MAYOR.
+ * │   │           El elemento está a la IZQUIERDA.
+ * │   │           Movemos right: descartamos mitad derecha.
+ * │   │
+ * │   ├── } // fin del when
+ * │   │
+ * │   └── } // fin del while
  * │
- * │  Concepto: una 'object declaration' define un singleton.
- * │  En español diríamos: "declaración de objeto".
+ * ├── return throw NoSuchElementException("$item not found in list")
+ * │   └── ─► Si el while termina sin encontrar (left > right),
+ * │       lanzamos una excepción: "elemento no encontrado".
+ * │       "$item" interpola el valor en el mensaje.
  * │
- * │  Analogía en Java: sería como una clase con todos sus métodos static.
- * │
- * ──────────────────────────────────────────────────────────────────
+ * └── }
  *
- *     fun search(list: List<Int>, item: Int): Int {
- *     │  │      │    │          │    │       │
- *     │  │      │    │          │    │       └── Int: tipo de retorno (entero).
- *     │  │      │    │          │    │           Palabra reservada. Significa "entero".
- *     │  │      │    │          │    │           En español: "tipo entero".
- *     │  │      │    │          │    │
- *     │  │      │    │          │    └── Int: tipo del parámetro 'item'.
- *     │  │      │    │          │        Palabra reservada. En español: "tipo entero".
- *     │  │      │    │          │
- *     │  │      │    │          └── item: nombre del parámetro (el elemento a buscar).
- *     │  │      │    │              Significa "elemento" o "ítem".
- *     │  │      │    │
- *     │  │      │    └── , : separa los parámetros de la función.
- *     │  │      │
- *     │  │      └── List<Int>: tipo del primer parámetro.
- *     │  │          List es una interfaz de lista ordenada (colección).
- *     │  │          <Int> es un tipo genérico: lista de enteros.
- *     │  │          Palabra reservada. En español: "lista de enteros".
- *     │  │
- *     │  └── list: nombre del primer parámetro (la lista ordenada).
- *     │      Significa "lista".
- *     │
- *     └── fun: palabra reservada que declara una función.
- *         En español: "función".
- *         Sintaxis: fun nombreDeFuncion(parametro: Tipo): TipoRetorno { ... }
+ * ──────────────────────────────────────────────────────────────
+ * TABLA DE PALABRAS RESERVADAS
+ * ──────────────────────────────────────────────────────────────
  *
- * ──────────────────────────────────────────────────────────────────
+ * Palabra  | Español     | Explicación
+ * ─────────┼─────────────┼──────────────────────────────────────
+ * object   | objeto      | Singleton (instancia única global)
+ * fun      | función     | Declara una función o método
+ * var      | variable    | Variable mutable (se puede reasignar)
+ * val      | valor       | Variable inmutable (no reasignable)
+ * Int      | entero      | Tipo de dato numérico entero
+ * List     | lista       | Colección ordenada de elementos
+ * while    | mientras    | Bucle que se repite mientras condición sea true
+ * when     | cuando      | Expresión condicional múltiple (switch)
+ * else     | si no       | Rama por defecto en when o if
+ * return   | retornar    | Devuelve un valor y termina la función
+ * throw    | lanzar      | Lanza una excepción e interrumpe el flujo
  *
- *         var left = 0
- *         │   │    │
- *         │   │    └── 0: valor inicial (extremo izquierdo del array).
- *         │   │
- *         │   └── left: nombre de la variable. Significa "izquierda".
- *         │       Almacena el índice del límite izquierdo de búsqueda.
- *         │
- *         └── var: palabra reservada. Declara una variable MUTABLE
- *             (su valor puede reasignarse/cambiarse).
- *             Significa "variable".
- *             En español: "variable mutable".
+ * ──────────────────────────────────────────────────────────────
+ * TABLA DE OPERADORES IMPORTANTES
+ * ──────────────────────────────────────────────────────────────
  *
- * ──────────────────────────────────────────────────────────────────
+ * Operador | Nombre (ES)   | Explicación
+ * ─────────┼───────────────┼─────────────────────────────────────
+ * ==       | igual que     | Compara igualdad de valores
+ * <        | menor que     | Compara si un valor es menor que otro
+ * <=       | menor o igual | Compara menor o igual
+ * >        | mayor que     | Compara si un valor es mayor que otro
+ * /        | división      | División entera (trunca decimales)
+ * +        | suma          | Suma aritmética
+ * -        | resta         | Resta aritmética
+ * =        | asignación    | Asigna un valor a una variable
+ * ->       | flecha        | Separa condición de acción en when
+ * .        | punto         | Accede a métodos y propiedades
+ * $        | dólar         | Interpola variables en strings
  *
- *         var right = list.size - 1
- *         │   │      │    │     │
- *         │   │      │    │     └── 1: se resta 1 porque los índices
- *         │   │      │    │         empiezan en 0. Si hay 7 elementos,
- *         │   │      │    │         el último índice es 6.
- *         │   │      │    │
- *         │   │      │    └── list.size: propiedad que devuelve la
- *         │   │      │        cantidad de elementos de la lista.
- *         │   │      │        En español: "tamaño de la lista".
- *         │   │      │
- *         │   │      └── = : operador de asignación.
- *         │   │          Asigna el valor de la derecha a la variable.
- *         │   │
- *         │   └── right: nombre de la variable. Significa "derecha".
- *         │       Almacena el índice del límite derecho de búsqueda.
- *         │       Inicialmente es el último índice de la lista.
- *         │
- *         └── var: palabra reservada. Variable mutable.
+ * ──────────────────────────────────────────────────────────────
+ * RESUMEN ALGORÍTMICO
+ * ──────────────────────────────────────────────────────────────
  *
- * ──────────────────────────────────────────────────────────────────
+ * PSEUDOCÓDIGO:
+ * ─────────────
+ *   función buscar(lista, elemento):
+ *     izquierda = 0
+ *     derecha = lista.tamaño - 1
  *
- *         while (left <= right) {
- *         │     │    │   │
- *         │     │    │   └── right: límite derecho actual.
- *         │     │    │
- *         │     │    └── <= : operador "menor o igual que".
- *         │     │        Mientras left sea menor o igual que right,
- *         │     │        aún hay elementos por revisar.
- *         │     │        En español: "menor o igual que".
- *         │     │
- *         │     └── left: límite izquierdo actual.
- *         │
- *         └── while: palabra reservada. Significa "mientras".
- *             Crea un bucle que se repite MIENTRAS la condición
- *             entre paréntesis sea verdadera (true).
- *             En español: "mientras".
- *             Sintaxis: while (condición) { ... }
- *             Es una estructura de control de flujo.
+ *     mientras (izquierda <= derecha):
+ *       medio = (izquierda + derecha) / 2
  *
- * ──────────────────────────────────────────────────────────────────
+ *       si lista[medio] == elemento:
+ *         devolver medio                 ← encontrado
+ *       si lista[medio] < elemento:
+ *         izquierda = medio + 1          ← buscar derecha
+ *       si no:
+ *         derecha = medio - 1            ← buscar izquierda
  *
- *             val mid = (left + right) / 2
- *             │   │    │    │   │      │
- *             │   │    │    │   │      └── 2: se divide entre 2 para
- *             │   │    │    │   │          encontrar el punto medio.
- *             │   │    │    │   │
- *             │   │    │    │   └── / : operador de división entera.
- *             │   │    │    │       En Kotlin, la división entre Int
- *             │   │    │    │       trunca los decimales.
- *             │   │    │    │       En español: "división entera".
- *             │   │    │    │
- *             │   │    │    └── + : operador de suma.
- *             │   │    │        En español: "más" (operador suma).
- *             │   │    │
- *             │   │    └── left + right: suma de ambos límites.
- *             │   │        Ej: left=0, right=6 → suma=6 → mid=3
- *             │   │
- *             │   └── = : operador de asignación.
- *             │
- *             └── val: palabra reservada. Declara una variable INMUTABLE
- *                 (de solo lectura, no se puede reasignar).
- *                 Significa "valor".
- *                 En español: "variable inmutable".
- *                 Diferencia clave:
- *                   - val → no puede reasignarse (como final en Java)
- *                   - var → sí puede reasignarse (variable mutable)
+ *     lanzar Excepción("elemento no encontrado")
  *
- * ──────────────────────────────────────────────────────────────────
- *
- *             when {
- *             │
- *             │  when: palabra reservada. Significa "cuando".
- *             │  Es una expresión condicional similar a switch.
- *             │  Evalúa múltiples ramas (condiciones) y ejecuta
- *             │  la primera que se cumpla.
- *             │  En español: "cuando".
- *             │  Sintaxis: when { condicion1 -> accion1 ... }
- *             │
- *             ──────────────────────────────────────────────────────
- *
- *                 list[mid] == item -> return mid
- *                 │    │     │   │      │      │
- *                 │    │     │   │      │      └── mid: índice donde
- *                 │    │     │   │      │          se encontró el elemento.
- *                 │    │     │   │      │
- *                 │    │     │   │      └── return: palabra reservada.
- *                 │    │     │   │          Significa "retornar".
- *                 │    │     │   │          Finaliza la función y
- *                 │    │     │   │          devuelve el valor.
- *                 │    │     │   │          En español: "retornar".
- *                 │    │     │   │
- *                 │    │     │   └── -> : flecha (arrow). Separa la
- *                 │    │     │       condición de la acción en when.
- *                 │    │     │       En español: "entonces" o "flecha".
- *                 │    │     │
- *                 │    │     └── item: el elemento que estamos buscando.
- *                 │    │
- *                 │    └── == : operador de igualdad estructural.
- *                 │        Compara el VALOR, no la referencia.
- *                 │        En español: "es igual que".
- *                 │        Ej: list[3] == 23 → true si el valor
- *                 │        en el índice 3 es 23.
- *                 │
- *                 └── list[mid]: accede al elemento en la posición
- *                     media de la lista. Usa el índice calculado.
- *                     list[indice] devuelve el elemento en esa posición.
- *                     En español: "lista en posición media".
- *
- *                 Caso 1: El elemento del medio ES el que buscamos.
- *                 ¡Éxito! Retornamos el índice mid.
- *
- *             ──────────────────────────────────────────────────────
- *
- *                 list[mid] < item -> left = mid + 1
- *                 │    │     │   │      │    │   │
- *                 │    │     │   │      │    │   └── 1: avanzamos
- *                 │    │     │   │      │    │       un índice más allá
- *                 │    │     │   │      │    │       del medio.
- *                 │    │     │   │      │    │
- *                 │    │     │   │      │    └── + : suma.
- *                 │    │     │   │      │
- *                 │    │     │   │      └── mid + 1: el nuevo límite
- *                 │    │     │   │          izquierdo es mid+1.
- *                 │    │     │   │          Descartamos la mitad izquierda.
- *                 │    │     │   │
- *                 │    │     │   └── = : asignación. Reasignamos left.
- *                 │    │     │
- *                 │    │     └── -> : flecha en when.
- *                 │    │
- *                 │    └── < : operador "menor que".
- *                 │        Compara si list[mid] es menor que item.
- *                 │        En español: "menor que".
- *                 │
- *                 └── list[mid] < item: ¿el elemento del medio es
- *                     MENOR que el que buscamos?
- *
- *                 Caso 2: El elemento del medio es menor.
- *                 El elemento buscado está en la mitad DERECHA.
- *                 Movemos left a mid+1 para buscar solo a la derecha.
- *
- *             ──────────────────────────────────────────────────────
- *
- *                 else -> right = mid - 1
- *                 │      │    │    │  │  │
- *                 │      │    │    │  │  └── 1: retrocedemos un índice.
- *                 │      │    │    │  │
- *                 │      │    │    │  └── - : resta.
- *                 │      │    │    │
- *                 │      │    │    └── mid - 1: el nuevo límite derecho
- *                 │      │    │        es mid-1. Descartamos la mitad
- *                 │      │    │        derecha y la posición media.
- *                 │      │    │
- *                 │      │    └── = : asignación. Reasignamos right.
- *                 │      │
- *                 │      └── -> : flecha (arrow). Separa la
- *                 │          condición de la acción en when.
- *                 │          En español: "entonces" o "flecha".
- *                 │
- *                 └── else: palabra reservada. Significa "si no".
- *                     Rama por defecto. Se ejecuta si ninguna
- *                     condición anterior se cumplió (como una
- *                     condición implícita: "si no se cumple nada
- *                     de lo anterior"). En español: "si no".
- *
- *                 Caso 3: El elemento del medio es mayor.
- *                 El elemento buscado está en la mitad IZQUIERDA.
- *                 Movemos right a mid-1 para buscar solo a la izquierda.
- *
- *             ──────────────────────────────────────────────────────
- *
- *             } // cierre de when
- *
- * ──────────────────────────────────────────────────────────────────
- *
- *         } // cierre de while
- *
- * ──────────────────────────────────────────────────────────────────
- *
- *         return throw NoSuchElementException("$item not found in list")
- *         │      │     │                   │       │
- *         │      │     │                   │       └── "$item not found in list":
- *         │      │     │                   │           string template. Interpola
- *         │      │     │                   │           el valor de 'item' dentro del
- *         │      │     │                   │           mensaje. Ej: si item=99 →
- *         │      │     │                   │           "99 not found in list"
- *         │      │     │                   │           $ se usa para interpolar variables.
- *         │      │     │                   │           En español: "plantilla de cadena".
- *         │      │     │                   │
- *         │      │     │                   └── ( ... ): paréntesis del constructor.
- *         │      │     │                       Pasan el mensaje de error.
- *         │      │     │
- *         │      │     └── NoSuchElementException: clase de excepción de Kotlin/Java.
- *         │      │         Significa "excepción de elemento no encontrado".
- *         │      │         Se lanza cuando se intenta acceder a un elemento
- *         │      │         que no existe. En español: "excepción de elemento inexistente".
- *         │      │
- *         │      └── throw: palabra reservada. Significa "lanzar".
- *         │          Lanza una excepción (interrumpe el flujo normal).
- *         │          En español: "lanzar excepción".
- *         │
- *         └── return: palabra reservada. Significa "retornar".
- *             Aquí combinado con throw: return throw ... finaliza la función
- *             lanzando una excepción en lugar de devolver un valor normal.
- *             Si el bucle while terminó sin encontrar el elemento
- *             (left > right), significa que no está en la lista.
- *             Lanzamos NoSuchElementException con un mensaje descriptivo.
- *             En español: "retornar lanzando excepción (elemento no encontrado)".
- *
- * ──────────────────────────────────────────────────────────────────
- * OTROS CONCEPTOS IMPORTANTES USADOS:
- * ──────────────────────────────────────────────────────────────────
- *
- * @file:Suppress("SpellCheckingInspection")
- * │      │
- * │      └── "SpellCheckingInspection": nombre de la inspección
- * │          de ortografía que se está suprimiendo.
- * │
- * └── @file:Suppress: anotación a nivel de archivo.
- *     @file indica que la anotación aplica a todo el archivo.
- *     Suppress suprime advertencias específicas del compilador.
- *     En español: "suprimir advertencias de revisión ortográfica".
- *
- * ──────────────────────────────────────────────────────────────────
- * TABLA DE PALABRAS RESERVADAS (EN ESPAÑOL):
- * ──────────────────────────────────────────────────────────────────
- *
- * Palabra    | Significado (ES)  | Explicación
- * ───────────┼───────────────────┼─────────────────────────────────────────
- * object     | objeto            | Declara un singleton (instancia única)
- * fun        | función           | Declara una función/método
- * var        | variable          | Variable mutable (se puede reasignar)
- * val        | valor             | Variable inmutable (no reasignable)
- * Int        | entero            | Tipo de dato: número entero de 32 bits
- * List       | lista             | Interfaz de colección ordenada
- * while      | mientras          | Bucle que se repite mientras se cumpla condición
- * when       | cuando            | Expresión condicional (switch)
- * else       | si no             | Rama por defecto en when o if
- * return     | retornar          | Devuelve un valor y finaliza la función
- * throw      | lanzar            | Lanza una excepción (interrumpe el flujo)
- * in         | en                | Usado en bucles para indicar pertenencia
- *
- * ──────────────────────────────────────────────────────────────────
- * OPERADORES IMPORTANTES (NO SON PALABRAS RESERVADAS):
- * ──────────────────────────────────────────────────────────────────
- *
- * Operador   | Significado (ES)  | Explicación
- * ───────────┼───────────────────┼─────────────────────────────────────────
- * ==         | igual que         | Comparación de igualdad estructural
- * <          | menor que         | Comparación numérica
- * <=         | menor o igual que | Comparación numérica
- * +          | más               | Suma aritmética
- * -          | menos             | Resta aritmética
- * /          | división          | División entera (trunca decimales)
- * =          | asignación        | Asigna un valor a una variable
- * ->         | entonces / flecha | Separa condición de acción en when
- * $          | dólar             | Prefijo de interpolación en string templates
- *
- * ──────────────────────────────────────────────────────────────────
- * RESUMEN ALGORÍTMICO:
- * ──────────────────────────────────────────────────────────────────
- *
- * 1. Inicializar dos punteros: left al inicio (0) y right al final
- *    (list.size - 1).
- *
- * 2. Mientras left <= right:
- *    a. Calcular el índice del medio: mid = (left + right) / 2
- *    b. Si list[mid] == item → ¡encontrado! Retornar mid.
- *    c. Si list[mid] < item → el elemento está a la derecha.
- *       Mover left = mid + 1.
- *    d. Si list[mid] > item → el elemento está a la izquierda.
- *       Mover right = mid - 1.
- *
- * 3. Si el bucle termina sin encontrar → lanzar NoSuchElementException.
- *
- * Ejemplo paso a paso para buscar el 23 en [4, 8, 12, 16, 23, 28, 32]:
+ * EJEMPLO — buscar 23 en [4, 8, 12, 16, 23, 28, 32]:
+ * ───────────────────────────────────────────────────
+ *   Índices:  0   1   2   3   4   5   6
+ *   Valores: [4,  8, 12, 16, 23, 28, 32]
  *
  *   Iteración 1:
- *     left=0, right=6, mid=(0+6)/2=3
+ *     left=0  right=6  mid=(0+6)/2=3
  *     list[3]=16, 16 < 23 → left = 3+1 = 4
- *     Nuevo rango: [23, 28, 32]
+ *     └── Descartamos [4, 8, 12, 16]
  *
  *   Iteración 2:
- *     left=4, right=6, mid=(4+6)/2=5
+ *     left=4  right=6  mid=(4+6)/2=5
  *     list[5]=28, 28 > 23 → right = 5-1 = 4
- *     Nuevo rango: [23]
+ *     └── Descartamos [28, 32]
  *
  *   Iteración 3:
- *     left=4, right=4, mid=(4+4)/2=4
+ *     left=4  right=4  mid=(4+4)/2=4
  *     list[4]=23, 23 == 23 → ¡encontrado! Retorna 4 ✓
  *
- *   Si buscamos 99:
- *     Se repetirá hasta left > right sin encontrar.
- *     Lanza NoSuchElementException("99 not found in list") ✗
+ *   Solo 3 pasos para 7 elementos. Con búsqueda lineal
+ *   habrían sido hasta 7 pasos. ¡La binaria es más rápida!
+ *
+ * EJEMPLO — buscar 99 en la misma lista:
+ * ───────────────────────────────────────
+ *   Itera hasta que left > right sin éxito.
+ *   left=0→4→6→7, right=6→6→6→6
+ *   left(7) > right(6) → sale del while
+ *   → lanza NoSuchElementException("99 not found in list") ✗
  */

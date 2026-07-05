@@ -45,52 +45,109 @@ fun main() {
 }
 
 /*
- * # Two Fer — Guía de resolución
+ * ╔══════════════════════════════════════════════════════════╗
+ * ║           TWO FER — GUÍA DE ESTUDIO COMPLETA            ║
+ * ╚══════════════════════════════════════════════════════════╝
  *
- * ## Enunciado
+ * ─────────────────────────────────────────────────────────────────────
+ * 1. CÓDIGO ANOTADO (Árbol de análisis línea por línea)
+ * ─────────────────────────────────────────────────────────────────────
  *
- * Dado un nombre opcional, retornar la frase correcta:
- * - Si se conoce el nombre: "One for [nombre], one for me."
- * - Si no se conoce:        "One for you, one for me."
+ * fun twofer(name: String? = null): String {  ──► fun = declarar función
+ * │                                              ──► twofer = nombre de la función
+ * │                                              ──► name = parámetro (String o null)
+ * │                                              ──► String? = puede contener un String o null
+ * │                                              ──► = null = valor por defecto (opcional)
+ * │                                              ──► : String = tipo de retorno (NUNCA null)
+ * │
+ *     if (name != null) {                        ──► if = estructura condicional
+ *     │                                           ──► name != null = "name NO es nulo"
+ *     │                                           ──► != = operador "diferente de"
+ *     │                                           ──► null = ausencia de valor
+ *         return "One for $name, one for me."    ──► return = devolver resultado
+ *     │                                           ──► $name = interpolación: inserta valor de name
+ *     │                                           ──► "One for Alice, one for me."
+ *     } else {                                    ──► else = caso contrario
+ *     │
+ *         return "One for you, one for me."      ──► Cuando name es null, usamos "you"
+ *     }
+ * }
  *
- * ## Orden de pensamiento
+ * ─────────────────────────────────────────────────────────────────────
+ * 2. TABLA DE PALABRAS RESERVADAS
+ * ─────────────────────────────────────────────────────────────────────
  *
- * 1. El nombre es opcional — puede no pasarse ningún argumento.
- *    Eso significa que el parámetro necesita ? (puede ser null)
- *    y = null (valor por defecto, para que sea opcional).
- * 2. La función siempre retorna un String — nunca null.
- *    Por eso el tipo de retorno es String, no String?.
- * 3. Con un if/else se maneja cada caso.
+ * ┌──────────────┬──────────────────────────────────────────────────┐
+ * │ PALABRA      │ SIGNIFICADO                                      │
+ * ├──────────────┼──────────────────────────────────────────────────┤
+ * │ fun          │ Declara una función                             │
+ * │ if / else    │ Estructura condicional: if (cond) { ... } else  │
+ * │ return       │ Devuelve un valor y termina la función          │
+ * │ null         │ Ausencia de valor, "nada"                       │
+ * │ String       │ Tipo de dato para texto                         │
+ * │ Boolean      │ Tipo lógico: true o false (resultado de !=)     │
+ * └──────────────┴──────────────────────────────────────────────────┘
  *
- * ## Paso a paso
+ * ─────────────────────────────────────────────────────────────────────
+ * 3. TABLA DE OPERADORES IMPORTANTES
+ * ─────────────────────────────────────────────────────────────────────
  *
- * ### La función y sus parámetros
+ * ┌──────────────┬──────────┬───────────────────────────────────────┐
+ * │ OPERADOR     │ TIPO     │ EXPLICACIÓN                           │
+ * ├──────────────┼──────────┼───────────────────────────────────────┤
+ * │ !=           │Comparación│ "diferente de" → true si NO es null  │
+ * │ ==           │Comparación│ "igual a" → compara valores          │
+ * │ ?            │ Nullable │ Marca que un tipo puede ser null      │
+ * │              │          │ Ej: String? significa "String o null" │
+ * │ =            │Asignación│ Asigna valor por defecto: = null      │
+ * │ $            │Interpolac│ Inserta variable en String: "$name"   │
+ * │ { }          │ Bloque   │ Agrupa múltiples sentencias           │
+ * └──────────────┴──────────┴───────────────────────────────────────┘
  *
- *   fun twofer(name: String? = null): String
+ * ─────────────────────────────────────────────────────────────────────
+ * 4. RESUMEN ALGORÍTMICO
+ * ─────────────────────────────────────────────────────────────────────
  *
- * - name: String? -> el nombre puede ser null
- * - = null        -> valor por defecto, permite llamar twofer() sin argumentos
- * - : String      -> siempre retorna un String, nunca null
+ * ▸ PROBLEMA: Devolver "One for X, one for me." donde X es un nombre
+ *   dado, o "you" si no se proporciona nombre.
  *
- * ### El if/else
+ * ▸ PSEUDOCÓDIGO:
  *
- *   if (name != null) {
- *       return "One for $name, one for me."
- *   } else {
- *       return "One for you, one for me."
- *   }
+ *   FUNCION twofer(nombre: String o null = null) → String:
+ *       SI nombre NO es null:
+ *           DEVOLVER "One for " + nombre + ", one for me."
+ *       SINO:
+ *           DEVOLVER "One for you, one for me."
  *
- * - Si name != null -> usa el nombre en la frase
- * - Si name == null -> usa "you" en su lugar
- * - $name           -> interpolación de String, inserta el valor de name
+ * ▸ EJEMPLOS:
  *
- * ## Código completo
+ *   ┌────────────────────────────────────────────────────────────────┐
+ *   │ twofer("Alice")                                               │
+ *   │                                                               │
+ *   │   name = "Alice"                                              │
+ *   │   └── name != null? → SI (true)                              │
+ *   │       └── return "One for Alice, one for me."                │
+ *   │                                                               │
+ *   │ Resultado: "One for Alice, one for me."                       │
+ *   └────────────────────────────────────────────────────────────────┘
  *
- *   fun twofer(name: String? = null): String {
- *       if (name != null) {
- *           return "One for $name, one for me."
- *       } else {
- *           return "One for you, one for me."
- *       }
- *   }
+ *   ┌────────────────────────────────────────────────────────────────┐
+ *   │ twofer()  (sin argumento)                                    │
+ *   │                                                               │
+ *   │   name = null (valor por defecto)                             │
+ *   │   └── name != null? → NO (false)                             │
+ *   │       └── else → return "One for you, one for me."           │
+ *   │                                                               │
+ *   │ Resultado: "One for you, one for me."                         │
+ *   └────────────────────────────────────────────────────────────────┘
+ *
+ *   ┌────────────────────────────────────────────────────────────────┐
+ *   │ twofer(null)  (null explícito)                               │
+ *   │                                                               │
+ *   │   name = null                                                 │
+ *   │   └── name != null? → NO (false)                             │
+ *   │       └── else → return "One for you, one for me."           │
+ *   │                                                               │
+ *   │ Resultado: "One for you, one for me."                         │
+ *   └────────────────────────────────────────────────────────────────┘
  */

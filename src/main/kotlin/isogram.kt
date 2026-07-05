@@ -35,30 +35,109 @@ fun main(){
     println("Is the word or phrase an isogram? ${Isogram.isIsogram(input)}")
 }
 
-/**
- * input.filter { it != '-' && it != ' ' }.lowercase()
+/*
+ * ╔══════════════════════════════════════════════════════════════╗
+ * ║      GUÍA DE ESTUDIO — isogram.kt (Verificar Isograma)     ║
+ * ╚══════════════════════════════════════════════════════════════╝
  *
- * Tomamos el input y filtramos cada carácter:
- * "lumberjacks" -> no tiene guiones ni espacios -> "lumberjacks"
- * "alejan-dro"  -> eliminamos el guión          -> "alejandro"
+ * ────────────────────────────────────────────────────────────
+ *  CÓDIGO ANOTADO
+ * ────────────────────────────────────────────────────────────
  *
- * Luego convertimos a minúscula:
- * "lumberjacks" -> "lumberjacks"  (ya estaba en minúscula)
- * "ALEJAN-DRO"  -> "alejandro"
- */
-
-/**
- * letters.length == letters.toList().distinct().size
+ * object Isogram {                                       ──► Objeto singleton
+ * │
+ * └── fun isIsogram(input: String): Boolean {            ──► Recibe una frase, devuelve
+ *     │                                                     true si no hay letras repetidas
+ *     │
+ *     ├── val letters = input                             ──► Toma el texto original
+ *     │   .filter { it != '-' && it != ' ' }              ──► Elimina guiones y espacios
+ *     │   .lowercase()                                    ──► Convierte todo a minúsculas
+ *     │
+ *     └── return letters.length                          ──► Longitud del String filtrado
+ *             ==                                          ──► COMPARA con:
+ *             letters.toList()                            ──► Convierte a lista de chars
+ *             .distinct()                                  ──► Elimina duplicados
+ *             .size                                       ──► Tamaño de la lista sin duplicados
+ *     }
+ * }
  *
- * Convertimos el String a lista de caracteres:
- * "lumberjacks" -> ['l','u','m','b','e','r','j','a','c','k','s']
- * "alejandro"   -> ['a','l','e','j','a','n','d','r','o']
+ * ────────────────────────────────────────────────────────────
+ *  TABLA DE PALABRAS RESERVADAS
+ * ────────────────────────────────────────────────────────────
  *
- * Eliminamos duplicados con distinct():
- * "lumberjacks" -> ['l','u','m','b','e','r','j','a','c','k','s'] (sin cambios, 11 elementos)
- * "alejandro"   -> ['a','l','e','j','n','d','r','o']             (se eliminó una 'a', 8 elementos)
+ *  ┌──────────────┬────────────────────────────────────────────┐
+ *  │  Palabra     │  Significado                               │
+ *  ├──────────────┼────────────────────────────────────────────┤
+ *  │  object      │  Singleton                                 │
+ *  │  fun         │  Función                                   │
+ *  │  val         │  Variable inmutable                        │
+ *  │  String      │  Tipo cadena de texto                      │
+ *  │  Boolean     │  Tipo verdadero/falso                      │
+ *  │  return      │  Devolver valor                            │
+ *  │  it          │  Parámetro implícito en lambda             │
+ *  │  !=          │  Diferente de                              │
+ *  │  &&          │  AND lógico (y)                            │
+ *  │  ==          │  Igualdad                                  │
+ *  │  filter      │  Filtrar elementos que cumplen condición   │
+ *  │  toList      │  Convertir a lista                         │
+ *  │  distinct    │  Eliminar elementos duplicados             │
+ *  │  lowercase   │  Convertir a minúsculas                    │
+ *  │  length      │  Longitud de la cadena                     │
+ *  │  size        │  Tamaño de la colección                    │
+ *  └──────────────┴────────────────────────────────────────────┘
  *
- * Comparamos tamaños:
- * "lumberjacks" -> 11 == 11 -> true  (es isograma)
- * "alejandro"   -> 9  == 8  -> false (no es isograma, la 'a' se repite)
+ * ────────────────────────────────────────────────────────────
+ *  TABLA DE OPERADORES IMPORTANTES
+ * ────────────────────────────────────────────────────────────
+ *
+ *  ┌──────────┬──────────────┬─────────────────────────────────┐
+ *  │ Operador │  Uso         │  Explicación                    │
+ *  ├──────────┼──────────────┼─────────────────────────────────┤
+ *  │  !=      │ a != b       │  ¿Es diferente?                 │
+ *  │  &&      │ a && b       │  AND: verdadero si ambos lo son │
+ *  │  ==      │ a == b       │  ¿Son iguales?                  │
+ *  │  .       │ a.b()        │  Llamar método                  │
+ *  │  { }     │ { it }       │  Lambda (función anónima)       │
+ *  └──────────┴──────────────┴─────────────────────────────────┘
+ *
+ * ────────────────────────────────────────────────────────────
+ *  RESUMEN ALGORÍTMICO
+ * ────────────────────────────────────────────────────────────
+ *
+ *  PSEUDOCÓDIGO:
+ *  ┌─────────────────────────────────────────────────────────┐
+ *  │  función esIsograma(texto):                            │
+ *  │      filtrar: eliminar guiones y espacios              │
+ *  │      convertir a minúsculas                            │
+ *  │      SI longitud del texto filtrado                     │
+ *  │         == cantidad de letras ÚNICAS (sin repetir):    │
+ *  │         → true (es isograma)                           │
+ *  │      SINO → false (hay letras repetidas)               │
+ *  └─────────────────────────────────────────────────────────┘
+ *
+ *  EJEMPLO TRABAJADO:
+ *  ┌─────────────────────────────────────────────────────────┐
+ *  │  Entrada: "six-year-old"                                │
+ *  │                                                         │
+ *  │  Paso 1: filter { it != '-' && it != ' ' }             │
+ *  │    "six-year-old" → "sixyearold" (se quitan guiones)   │
+ *  │                                                         │
+ *  │  Paso 2: .lowercase()                                  │
+ *  │    "sixyearold" → "sixyearold" (ya está en minúscula)  │
+ *  │                                                         │
+ *  │  Paso 3: letters.length                                │
+ *  │    "sixyearold" tiene 10 caracteres                     │
+ *  │                                                         │
+ *  │  Paso 4: letters.toList().distinct()                   │
+ *  │    ['s','i','x','y','e','a','r','o','l','d']           │
+ *  │    .distinct() → igual (10 elementos, todos únicos)    │
+ *  │                                                         │
+ *  │  Paso 5: 10 == 10 → true → ¡Es isograma!              │
+ *  │                                                         │
+ *  ├─────────────────────────────────────────────────────────┤
+ *  │  Entrada: "hello"                                       │
+ *  │    filter+lowercase → "hello"                           │
+ *  │    .toList().distinct() → ['h','e','l','o'] (4)        │
+ *  │    5 == 4 → false → No es isograma (la 'l' se repite)  │
+ *  └─────────────────────────────────────────────────────────┘
  */

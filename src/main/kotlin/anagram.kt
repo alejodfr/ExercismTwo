@@ -50,93 +50,134 @@ class Anagram(val target: String) {
     }
 }
 
-/**
- * # Anagram — Guía de resolución
+/*
+ * ──────────────────────────────────────────────────────────────
+ * ANAGRAMA (Anagram) — Guía de estudio
+ * ──────────────────────────────────────────────────────────────
  *
- * ## Enunciado
+ * CÓDIGO ANOTADO
+ * ──────────────────────────────────────────────────────────────
  *
- * Dada una palabra objetivo (target) y una colección de candidatos,
- * encontrar cuáles candidatos son anagramas del target.
+ * class Anagram(val target: String) {
+ * │
+ * │   target ─► palabra objetivo. Llega desde afuera:
+ * │   Anagram("stone").match(listaDeCandidatos)
+ * │
+ * ├── fun match(anagrams: Collection<String>): Set<String> {
+ * │   │
+ * │   └── return anagrams.filter { candidate ->
+ * │       │
+ * │       ├── candidate.lowercase() != target.lowercase() &&
+ * │       │   │
+ * │       │   ├── candidate.lowercase()
+ * │       │   │   └── ─► Convierte el candidato a minúsculas.
+ * │       │   │       "StOne" → "stone"
+ * │       │   │
+ * │       │   ├── target.lowercase()
+ * │       │   │   └── ─► Convierte el target a minúsculas.
+ * │       │   │       "STONE" → "stone"
+ * │       │   │
+ * │       │   ├── != (distinto)
+ * │       │   │   └── ─► Una palabra NO es anagrama de sí misma.
+ * │       │   │       "stone" ≠ "stone" → false, se descarta.
+ * │       │   │
+ * │       │   └── && (Y lógico)
+ * │       │       └── ─► Ambas condiciones deben ser true.
+ * │       │
+ * │       ├── candidate.lowercase().toList().sorted() ==
+ * │       │   target.lowercase().toList().sorted()
+ * │       │   │
+ * │       │   ├── .toList()
+ * │       │   │   └── ─► Convierte el String en lista de Chars.
+ * │       │   │       "stone" → ['s','t','o','n','e']
+ * │       │   │
+ * │       │   ├── .sorted()
+ * │       │   │   └── ─► Ordena los caracteres alfabéticamente.
+ * │       │   │       ['s','t','o','n','e'] → ['e','n','o','s','t']
+ * │       │   │
+ * │       │   └── == (igual)
+ * │       │       └── ─► Si las listas ordenadas son IGUALES,
+ * │       │           las palabras tienen las mismas letras
+ * │       │           → son anagramas.
+ * │       │           ["e","n","o","s","t"] == ["e","n","o","s","t"]
+ * │       │
+ * │       └── }.toSet()
+ * │           └── ─► Convierte el resultado de List a Set
+ * │               (colección sin elementos repetidos).
+ * │   }
+ * │
+ * └── }
  *
- * Reglas:
- * - Una palabra no es anagrama de sí misma.
- * - Las mayúsculas y minúsculas son equivalentes.
- * - Los anagramas pueden retornarse en cualquier orden.
+ * ──────────────────────────────────────────────────────────────
+ * TABLA DE PALABRAS RESERVADAS
+ * ──────────────────────────────────────────────────────────────
  *
- * Ejemplo:
- *   target = "stone"
+ * Palabra     | Español     | Explicación
+ * ────────────┼─────────────┼────────────────────────────────────
+ * class       | clase       | Plantilla para crear objetos
+ * val         | valor       | Variable inmutable (parámetro)
+ * fun         | función     | Declara una función o método
+ * String      | cadena      | Tipo de dato textual
+ * Collection  | colección   | Tipo genérico que agrupa elementos
+ * Set         | conjunto    | Colección SIN elementos duplicados
+ * return      | retornar    | Devuelve un valor y termina la función
+ * it          | ello        | Parámetro implícito en lambdas
+ * filter      | filtrar     | Conserva elementos que cumplen condición
+ *
+ * ──────────────────────────────────────────────────────────────
+ * TABLA DE OPERADORES IMPORTANTES
+ * ──────────────────────────────────────────────────────────────
+ *
+ * Operador | Nombre (ES)  | Explicación
+ * ─────────┼──────────────┼─────────────────────────────────────
+ * !=       | distinto     | Verifica si dos valores son diferentes
+ * ==       | igual que    | Compara igualdad de contenido
+ * &&       | Y lógico     | TRUE solo si ambas condiciones son true
+ * .        | punto        | Accede a métodos y propiedades
+ * ->       | flecha       | Separa parámetro de cuerpo en lambda
+ * {}       | llaves       | Define bloque de código o cuerpo lambda
+ *
+ * ──────────────────────────────────────────────────────────────
+ * RESUMEN ALGORÍTMICO
+ * ──────────────────────────────────────────────────────────────
+ *
+ * PSEUDOCÓDIGO:
+ * ─────────────
+ *   clase Anagrama(objetivo):
+ *     función coincidir(candidatos):
+ *       devolver candidatos.filtrar { candidato →
+ *         candidato.minúsculas() ≠ objetivo.minúsculas()
+ *         Y
+ *         candidato.minúsculas().aLista().ordenar() =
+ *         objetivo.minúsculas().aLista().ordenar()
+ *       }.aConjunto()
+ *
+ * ¿CÓMO DETECTAR UN ANAGRAMA?
+ * ────────────────────────────
+ *   Dos palabras son anagramas si tienen las MISMAS letras en
+ *   DISTINTO orden. Para compararlas sin importar el orden:
+ *     1. Convertir ambas a minúsculas (ignorar mayúsculas/minúsculas)
+ *     2. Convertir a lista de caracteres
+ *     3. Ordenar alfabéticamente
+ *     4. Comparar las listas
+ *
+ *   "stone".lowercase().toList().sorted() → [e, n, o, s, t]
+ *   "tones".lowercase().toList().sorted() → [e, n, o, s, t]
+ *   └── IGUALES → "tones" SÍ es anagrama ✓
+ *
+ *   "banana".lowercase().toList().sorted() → [a, a, a, b, n, n]
+ *   └── DISTINTAS → "banana" NO es anagrama ✗
+ *
+ * EJEMPLO — Anagram("stone").match([...]):
+ * ───────────────────────────────────────
  *   candidatos = ["stone", "tones", "banana", "notes", "Seton"]
- *   resultado  = ["tones", "notes", "Seton"]
  *
- * ## Orden de pensamiento
+ *   "stone" → igual que target → descartado ✗
+ *   "tones" → distinto Y sorted igual → anagrama ✓
+ *   "banana" → sorted diferente → descartado ✗
+ *   "notes" → distinto Y sorted igual → anagrama ✓
+ *   "Seton" → distinto Y sorted igual → anagrama ✓
+ *   (minúsculas: "seton" sorted = [e,n,o,s,t])
  *
- * 1. Dos palabras son anagramas si tienen exactamente las mismas
- *    letras en cualquier orden.
- * 2. Para comparar letras sin importar el orden, se convierten a
- *    lista, se ordenan alfabéticamente y se comparan.
- * 3. Para ignorar mayúsculas, se convierte tod0 a lowercase antes
- *    de comparar.
- * 4. Una palabra no puede ser anagrama de sí misma — hay que
- *    excluirla aunque sus letras ordenadas sean iguales.
- * 5. filter() permite quedarse solo con los candidatos que cumplan
- *    ambas condiciones.
- *
- * ## Paso a paso
- *
- * ### El constructor
- *
- *   class Anagram(val target: String)
- *
- * - target: String -> la palabra objetivo que llega desde afuera.
- *   El checker la usa así: Anagram("stone").match(candidatos)
- *
- * ### El parámetro de match()
- *
- *   fun match(anagrams: Collection<String>): Set<String>
- *
- * - Collection<String> -> superclase de List, Set, etc.
- *   Acepta cualquier tipo de colección de Strings.
- * - : Set<String> -> retorna un Set para evitar duplicados.
- *
- * ### La comparación de letras
- *
- *   "stone".lowercase().toList().sorted()  // [e, n, o, s, t]
- *   "tones".lowercase().toList().sorted()  // [e, n, o, s, t]
- *   // son iguales -> es anagrama ✅
- *
- *   "stone".lowercase().toList().sorted()  // [e, n, o, s, t]
- *   "banana".lowercase().toList().sorted() // [a, a, a, b, n, n]
- *   // son distintas -> no es anagrama ❌
- *
- * ### El filter con dos condiciones
- *
- *   anagrams.filter { candidate ->
- *       candidate.lowercase() != target.lowercase() &&
- *       candidate.lowercase().toList().sorted() == target.lowercase().toList().sorted()
- *   }
- *
- * - candidate -> cada palabra de la colección en turno
- * - Primera condición: que no sea la misma palabra que target
- *   (ignorando mayúsculas)
- * - Segunda condición: que sus letras ordenadas sean iguales
- *   a las letras ordenadas del target
- * - && -> ambas condiciones deben cumplirse
- *
- * ### Convertir a Set
- *
- *   .toSet()
- *
- * - filter() retorna una List pero la función debe retornar Set.
- * - toSet() convierte la lista al tipo requerido.
- *
- * ## Código completo
- *
- *   class Anagram(val target: String) {
- *       fun match(anagrams: Collection<String>): Set<String> {
- *           return anagrams.filter { candidate ->
- *               candidate.lowercase() != target.lowercase() &&
- *               candidate.lowercase().toList().sorted() == target.lowercase().toList().sorted()
- *           }.toSet()
- *       }
- *   }
+ *   Resultado: {"tones", "notes", "Seton"} ✓
  */

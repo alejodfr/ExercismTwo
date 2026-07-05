@@ -71,98 +71,140 @@ fun main(){
 }
 
 /*
- * # Triangle — Guía de resolución
+ * ╔══════════════════════════════════════════════════════════╗
+ * ║          TRIANGLE — GUÍA DE ESTUDIO COMPLETA            ║
+ * ╚══════════════════════════════════════════════════════════╝
  *
- * ## Enunciado
+ * ─────────────────────────────────────────────────────────────────────
+ * 1. CÓDIGO ANOTADO (Árbol de análisis línea por línea)
+ * ─────────────────────────────────────────────────────────────────────
  *
- * Dado un triángulo con tres lados a, b, c, determinar si es
- * equilátero, isósceles o escaleno. Además, validar que el
- * triángulo sea geométricamente válido.
+ * class Triangle<out T : Number>(val a: T, val b: T, val c: T) {
+ * │                                                          ──► class = definir clase
+ * │                                                          ──► Triangle = nombre
+ * │                                                          ──► <out T : Number> = genérico
+ * │                                                          ──► T : Number = T solo acepta tipos numéricos
+ * │                                                          ──► out = covarianza (produce T, no consume)
+ * │                                                          ──► val a: T, b: T, c: T = tres lados
+ * │
+ *     init {                                                 ──► init = inicialización al crear objeto
+ *     │
+ *         require( a.toDouble() > 0 && b.toDouble() >0      ──► require() = validar condición
+ *                && c.toDouble() > 0)                        ──► Si es false → IllegalArgumentException
+ *         { "All sides mut be > 0" }                         ──► toDouble() = convertir a Double
+ *         │                                                  ──► > 0 = lado debe ser positivo
+ *         │
+ *         require(                                           ──► Segunda validación
+ *             (a.toDouble() + b.toDouble() >= c.toDouble())  ──► a + b >= c (desigualdad triangular)
+ *             &&                                              ──► && = Y lógico, TODAS deben cumplirse
+ *             (b.toDouble() + c.toDouble() >= a.toDouble())  ──► b + c >= a
+ *             &&
+ *             (a.toDouble() + c.toDouble() >= b.toDouble())  ──► a + c >= b
+ *         ) { "All sides must be the addition..." }
+ *     }
+ *     │
+ *     val isEquilateral: Boolean                             ──► isEquilateral = ¿es equilátero?
+ *         get() = a.toDouble() == b.toDouble()               ──► get() = propiedad calculada
+ *                 && b.toDouble() == c.toDouble()             ──► a == b Y b == c → todos iguales
+ *     │
+ *     val isIsosceles: Boolean                               ──► isIsosceles = ¿es isósceles?
+ *         get() = a.toDouble() == b.toDouble()               ──► a == b (dos lados iguales)
+ *                 || b.toDouble() == c.toDouble()             ──► || = O lógico, BASTA UNO
+ *                 || a.toDouble() == c.toDouble()             ──► a == c (o estos dos)
+ *     │
+ *     val isScalene: Boolean                                 ──► isScalene = ¿es escaleno?
+ *         get() = a.toDouble() != b.toDouble()               ──► a != b (diferentes)
+ *                 && b.toDouble() != c.toDouble()             ──► b != c
+ *                 && a.toDouble() != c.toDouble()             ──► a != c → todos diferentes
+ * }
  *
- * ## Orden de pensamiento
+ * ─────────────────────────────────────────────────────────────────────
+ * 2. TABLA DE PALABRAS RESERVADAS
+ * ─────────────────────────────────────────────────────────────────────
  *
- * 1. La clase recibe tres lados de tipo genérico T : Number —
- *    así funciona con Int, Double, Float, etc.
- * 2. Antes de clasificar, hay que validar que el triángulo sea válido.
- *    Esto va en init porque debe ocurrir al crear el objeto.
- * 3. Cada clasificación es una propiedad calculada con get() —
- *    se evalúa cuando la llamas, no al crear el objeto.
+ * ┌──────────────┬──────────────────────────────────────────────────┐
+ * │ PALABRA      │ SIGNIFICADO                                      │
+ * ├──────────────┼──────────────────────────────────────────────────┤
+ * │ class        │ Define una nueva clase                          │
+ * │ out          │ Covarianza: la clase produce valores del tipo T  │
+ * │ val          │ Propiedad de solo lectura (inmutable)            │
+ * │ init         │ Bloque que se ejecuta al crear el objeto         │
+ * │ get          │ Getter personalizado de una propiedad            │
+ * │ require      │ Valida una condición; lanza exception si es false│
+ * │ Number       │ Clase base de todos los tipos numéricos (Int,    │
+ * │              │ Double, Float, Long, etc.)                       │
+ * │ Boolean      │ Tipo lógico: true o false                       │
+ * └──────────────┴──────────────────────────────────────────────────┘
  *
- * ## Paso a paso
+ * ─────────────────────────────────────────────────────────────────────
+ * 3. TABLA DE OPERADORES IMPORTANTES
+ * ─────────────────────────────────────────────────────────────────────
  *
- * ### La clase y sus parámetros
+ * ┌──────────────┬──────────┬───────────────────────────────────────┐
+ * │ OPERADOR     │ TIPO     │ EXPLICACIÓN                           │
+ * ├──────────────┼──────────┼───────────────────────────────────────┤
+ * │ >            │Comparación│ "mayor que" → true si izquierda > der│
+ * │ >=           │Comparación│ "mayor o igual que"                  │
+ * │ ==           │Comparación│ "igual a" (compara valores)          │
+ * │ !=           │Comparación│ "diferente de"                       │
+ * │ &&           │ Lógico   │ "Y" → true si AMBAS condiciones true  │
+ * │ ||           │ Lógico   │ "O" → true si AL MENOS UNA es true    │
+ * │ +            │Aritmético│ Suma: a + b                          │
+ * │ .            │ Acceso   │ Llama método: a.toDouble()            │
+ * │ < >          │ Genérico │ Parámetros de tipo: <T : Number>     │
+ * └──────────────┴──────────┴───────────────────────────────────────┘
  *
- *   class Triangle<out T : Number>(val a: T, val b: T, val c: T)
+ * ─────────────────────────────────────────────────────────────────────
+ * 4. RESUMEN ALGORÍTMICO
+ * ─────────────────────────────────────────────────────────────────────
  *
- * - <out T : Number> -> tipo genérico restringido a Number.
- *   Permite usar la clase con Int, Double, Float, etc.
- * - out -> indica que Triangle solo produce valores de tipo T.
- * - val a, b, c: T -> los tres lados del triángulo del tipo T.
- * - Como T es genérico, no se puede comparar directamente —
- *   hay que convertir con .toDouble() para operar con los lados.
+ * ▸ PROBLEMA: Dados 3 lados, clasificar el triángulo y validar
+ *   que sea geometricamente valido.
  *
- * ### Validaciones en init
+ * ▸ PSEUDOCÓDIGO:
  *
- *   init {
- *       require(a.toDouble() > 0 && b.toDouble() > 0 && c.toDouble() > 0) { ... }
- *       require((a.toDouble() + b.toDouble() >= c.toDouble()) && ...) { ... }
- *   }
+ *   CLASE Triangle (a, b, c):
+ *       AL CREAR:
+ *           SI a <= 0 O b <= 0 O c <= 0 → ERROR "lados deben ser > 0"
+ *           SI a + b < c O b + c < a O a + c < b → ERROR "no es triangulo valido"
  *
- * - El init se ejecuta al crear el objeto — si el triángulo
- *   no es válido, lanza IllegalArgumentException de inmediato.
- * - Primera validación: todos los lados deben ser > 0.
- * - Segunda validación: la suma de cualquier dos lados debe ser
- *   mayor o igual al tercero (regla geométrica del triángulo).
- * - .toDouble() es necesario porque T : Number no soporta
- *   operadores de comparación o suma directamente.
+ *       PROPIEDAD equilatero:
+ *           DEVOLVER a == b Y b == c
  *
- * ### isEquilateral
+ *       PROPIEDAD isosceles:
+ *           DEVOLVER a == b O b == c O a == c
  *
- *   val isEquilateral: Boolean
- *       get() = a.toDouble() == b.toDouble() && b.toDouble() == c.toDouble()
+ *       PROPIEDAD escaleno:
+ *           DEVOLVER a != b Y b != c Y a != c
  *
- * - Los tres lados deben ser iguales.
- * - Se usa && porque TODAS las condiciones deben cumplirse.
+ * ▸ EJEMPLO: Triangle(3, 4, 5)
  *
- * ### isIsosceles
+ *   ┌─ VALIDACION ───────────────────────────────────────────────────┐
+ *   │                                                                │
+ *   │   require(3>0 && 4>0 && 5>0) → true ✓                         │
+ *   │   require(3+4>=5 && 4+5>=3 && 3+5>=4) → true ✓               │
+ *   │                                                                │
+ *   └────────────────────────────────────────────────────────────────┘
  *
- *   val isIsosceles: Boolean
- *       get() = a.toDouble() == b.toDouble() || b.toDouble() == c.toDouble() || a.toDouble() == c.toDouble()
+ *   ┌─ CLASIFICACION ───────────────────────────────────────────────┐
+ *   │                                                                │
+ *   │   isEquilateral: 3==4? NO, 4==5? NO  → false                 │
+ *   │   isIsosceles:    3==4? NO, 4==5? NO, 3==5? NO  → false      │
+ *   │   isScalene:      3!=4? SI, 4!=5? SI, 3!=5? SI  → true ✓    │
+ *   │                                                                │
+ *   │   Resultado: ESCALENO                                          │
+ *   │                                                                │
+ *   └────────────────────────────────────────────────────────────────┘
  *
- * - Al menos dos lados deben ser iguales.
- * - Se usa || porque BASTA con que UNA condición se cumpla.
- * - Nota: un triángulo equilátero también es isósceles.
+ * ▸ EJEMPLO: Triangle(5, 5, 5)
  *
- * ### isScalene
- *
- *   val isScalene: Boolean
- *       get() = a.toDouble() != b.toDouble() && b.toDouble() != c.toDouble() && a.toDouble() != c.toDouble()
- *
- * - Todos los lados deben ser diferentes.
- * - Se usa && porque TODOS deben ser distintos entre sí.
- * - Se necesitan las tres comparaciones: a!=b, b!=c, a!=c.
- *   Solo a!=b && b!=c no es suficiente — podrían ser a==c.
- *
- * ## Código completo
- *
- *   class Triangle<out T : Number>(val a: T, val b: T, val c: T) {
- *
- *       init {
- *           require(a.toDouble() > 0 && b.toDouble() > 0 && c.toDouble() > 0) { "All sides must be > 0" }
- *           require(
- *               (a.toDouble() + b.toDouble() >= c.toDouble()) &&
- *               (b.toDouble() + c.toDouble() >= a.toDouble()) &&
- *               (a.toDouble() + c.toDouble() >= b.toDouble())
- *           ) { "Invalid triangle" }
- *       }
- *
- *       val isEquilateral: Boolean
- *           get() = a.toDouble() == b.toDouble() && b.toDouble() == c.toDouble()
- *
- *       val isIsosceles: Boolean
- *           get() = a.toDouble() == b.toDouble() || b.toDouble() == c.toDouble() || a.toDouble() == c.toDouble()
- *
- *       val isScalene: Boolean
- *           get() = a.toDouble() != b.toDouble() && b.toDouble() != c.toDouble() && a.toDouble() != c.toDouble()
- *   }
+ *   ┌─ CLASIFICACION ───────────────────────────────────────────────┐
+ *   │                                                                │
+ *   │   isEquilateral: 5==5 Y 5==5 → true ✓                        │
+ *   │   isIsosceles:  5==5? SI (al menos dos iguales) → true       │
+ *   │   isScalene:    5!=5? NO → false                              │
+ *   │                                                                │
+ *   │   Resultado: EQUILATERO (tambien isosceles)                    │
+ *   │                                                                │
+ *   └────────────────────────────────────────────────────────────────┘
  */

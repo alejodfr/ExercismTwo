@@ -62,94 +62,131 @@ fun main() {
     }
 }
 
-/**
- * # DNA Nucleotide Count — Guía de resolución
+/*
+ * ╔══════════════════════════════════════════════════════════╗
+ * ║       NUCLEOTIDE COUNT — GUÍA DE ESTUDIO COMPLETA       ║
+ * ╚══════════════════════════════════════════════════════════╝
  *
- * ## Paso 1 — Entender el problema
+ * ─────────────────────────────────────────────────────────────────────
+ * 1. CÓDIGO ANOTADO (Árbol de análisis línea por línea)
+ * ─────────────────────────────────────────────────────────────────────
  *
- * Dado un String que representa una secuencia de DNA,
- * contar cuántas veces aparece cada nucleótido: A, C, G, T.
- * Si el String contiene caracteres inválidos, lanzar una excepción.
+ * class Dna(val input: String) {                 ──► class + nombre = definir clase
+ * │                                                ──► val input: String = parámetro constructor
+ * │                                                ──► val = solo lectura, String = tipo texto
+ * │
+ *     init {                                       ──► init = bloque de inicialización
+ *     │                                             ──► Se ejecuta al crear: Dna("GATTACA")
+ *     │
+ *         input.filter { it != 'A' && it != 'C'   ──► filter {} recorre cada carácter
+ *                     && it != 'G' && it != 'T' }  ──► Conserva solo los NO válidos
+ *         │                                         ──► it = cada carácter (nombre implícito)
+ *         │                                         ──► != significa "diferente de"
+ *         │                                         ──► && = Y lógico, TODAS deben ser true
+ *         │                                         ──► Si es A, C, G o T → no pasa el filtro
+ *         │
+ *             .forEach { throw IllegalArgumentException(   ──► forEach ejecuta bloque por c/u
+ *                           "Invalid nucleotide: $it") }   ──► throw lanza excepción y detiene
+ *                                                          ──► $it interpola el carácter en texto
+ *     }
+ *     │
+ *     val nucleotideCounts: Map<Char, Int>         ──► Propiedad de solo lectura (val)
+ *     │                                             ──► Map<Char, Int> = diccionario
+ *     │                                             ──► Char = clave (A, C, G, T)
+ *     │                                             ──► Int = valor (cantidad)
+ *         get() {                                   ──► Getter personalizado
+ *         │                                         ──► Se ejecuta al llamar .nucleotideCounts
+ *         │
+ *             return mapOf(                         ──► mapOf() construye el Map
+ *             │
+ *                 'A' to input.count { it == 'A' }, ──► 'A' clave → count {} cuenta ocurrencias
+ *             │                                       ──► to crea par clave→valor
+ *             │                                       ──► it == 'A' es true si carácter = 'A'
+ *                 'C' to input.count { it == 'C' }, ──► Igual para 'C'
+ *                 'G' to input.count { it == 'G' }, ──► Igual para 'G'
+ *                 'T' to input.count { it == 'T' }  ──► Igual para 'T'
+ *             )
+ *         }
+ * }
  *
- * Ejemplo:
- *   "GATTACA" -> {A=3, C=1, G=1, T=2}
- *   "INVALID" -> IllegalArgumentException
+ * ─────────────────────────────────────────────────────────────────────
+ * 2. TABLA DE PALABRAS RESERVADAS
+ * ─────────────────────────────────────────────────────────────────────
  *
- * ## Paso 2 — Definir la clase y el constructor
+ * ┌──────────────┬──────────────────────────────────────────────────┐
+ * │ PALABRA      │ SIGNIFICADO                                      │
+ * ├──────────────┼──────────────────────────────────────────────────┤
+ * │ class        │ Define una nueva clase (molde para crear objetos)│
+ * │ val          │ Variable o propiedad de solo lectura (inmutable) │
+ * │ init         │ Bloque que se ejecuta al instanciar la clase     │
+ * │ it           │ Nombre implícito del parámetro en una lambda     │
+ * │ throw        │ Lanza una excepción (detiene la ejecución)       │
+ * │ return       │ Devuelve un valor desde una función o getter     │
+ * │ get          │ Define el getter personalizado de una propiedad  │
+ * └──────────────┴──────────────────────────────────────────────────┘
  *
- * La clase recibe el String de entrada como parámetro.
- * `nucleotideCounts` es una propiedad calculada con get()
- * que se ejecuta cada vez que la llamas.
+ * ─────────────────────────────────────────────────────────────────────
+ * 3. TABLA DE OPERADORES IMPORTANTES
+ * ─────────────────────────────────────────────────────────────────────
  *
- *   class Dna(val input: String) {
- *       val nucleotideCounts: Map<Char, Int>
- *           get() { ... }
- *   }
+ * ┌──────────────┬──────────┬───────────────────────────────────────┐
+ * │ OPERADOR     │ TIPO     │ EXPLICACIÓN                           │
+ * ├──────────────┼──────────┼───────────────────────────────────────┤
+ * │ !=           │Comparación│ "diferente de" → true si son distintos│
+ * │ &&           │ Lógico   │ "Y" → true solo si AMBAS condiciones  │
+ * │ ==           │Comparación│ "igual a" → true si son iguales      │
+ * │ to           │ Asociación│ Crea un par (clave, valor)           │
+ * │ { }          │ Lambda   │ Bloque de código anónimo que se pasa  │
+ * │ ->           │ Separador│ Separa parámetros del cuerpo lambda   │
+ * │ $            │Interpolac│ Inserta variable dentro de un String  │
+ * └──────────────┴──────────┴───────────────────────────────────────┘
  *
- * ## Paso 3 — Validar el input con `init`
+ * ─────────────────────────────────────────────────────────────────────
+ * 4. RESUMEN ALGORÍTMICO
+ * ─────────────────────────────────────────────────────────────────────
  *
- * IMPORTANTE: la validación debe ir en el bloque `init`, NO dentro de get().
+ * ▸ PROBLEMA: Contar nucleótidos (A, C, G, T) en un String de ADN.
+ *   Si hay caracteres inválidos → lanzar error.
  *
- * ¿Por qué? Porque init se ejecuta al momento de crear el objeto:
- *   Dna("AGXXACT")  <- la excepción se lanza aquí
+ * ▸ PSEUDOCÓDIGO:
  *
- * Si la validación estuviera en get(), solo se ejecutaría cuando
- * alguien llame dna.nucleotideCounts — y algunos tests crean el objeto
- * sin llamar esa propiedad, por lo que nunca detectarían el error.
+ *   CLASE Dna CON entrada: String
+ *       AL CREAR:
+ *           PARA CADA caracter c EN entrada:
+ *               SI c NO es 'A' Y c NO es 'C' Y c NO es 'G' Y c NO es 'T':
+ *                   LANZAR error "caracter invalido: c"
  *
- * Usamos filter() para quedarnos con los caracteres inválidos,
- * y forEach() para lanzar la excepción por cada uno encontrado.
+ *       PROPIEDAD conteos:
+ *           DEVOLVER Mapa:
+ *               'A' → contar A en entrada
+ *               'C' → contar C en entrada
+ *               'G' → contar G en entrada
+ *               'T' → contar T en entrada
  *
- * Nota: el operador entre condiciones es && (Y) no || (O).
- * Con ||, un carácter 'A' cumpliría it != 'C' y siempre filtraría to-do.
- * Con &&, solo filtra si NO es ninguna de las cuatro letras válidas.
+ * ▸ EJEMPLO: entrada = "GATTACA"
  *
- *   init {
- *       input.filter { it != 'A' && it != 'C' && it != 'G' && it != 'T' }
- *            .forEach { throw IllegalArgumentException("Invalid nucleotide: $it") }
- *   }
+ *   ┌─ VALIDACION (init) ────────────────────────────────────────────┐
+ *   │                                                                │
+ *   │ filter { it != 'A' && it != 'C' && it != 'G' && it != 'T' }   │
+ *   │                                                                │
+ *   │ G → G != A? SI, G != C? SI, G != G? NO  → descartado          │
+ *   │ A → A != A? NO                              → descartado       │
+ *   │ T → T != T? NO                              → descartado       │
+ *   │ T → descartado                                                │
+ *   │ A → descartado                                                │
+ *   │ C → descartado                                                │
+ *   │ A → descartado                                                │
+ *   │                                                                │
+ *   │ Resultado: [] lista vacia → no hay invalidos ✓                │
+ *   └────────────────────────────────────────────────────────────────┘
  *
- * ## Paso 4 — Contar los nucleótidos
- *
- * Usamos count() con un lambda para contar cuántas veces
- * aparece cada nucleótido en el String.
- *
- * En vez de declarar 4 variables separadas (count1, count2...),
- * usamos count() directamente al construir el mapa.
- *
- *   return mapOf(
- *       'A' to input.count { it == 'A' },
- *       'C' to input.count { it == 'C' },
- *       'G' to input.count { it == 'G' },
- *       'T' to input.count { it == 'T' }
- *   )
- *
- * ## Resultado final
- *
- *   class Dna(val input: String) {
- *
- *       init {
- *           input.filter { it != 'A' && it != 'C' && it != 'G' && it != 'T' }
- *                .forEach { throw IllegalArgumentException("Invalid nucleotide: $it") }
- *       }
- *
- *       val nucleotideCounts: Map<Char, Int>
- *           get() {
- *               return mapOf(
- *                   'A' to input.count { it == 'A' },
- *                   'C' to input.count { it == 'C' },
- *                   'G' to input.count { it == 'G' },
- *                   'T' to input.count { it == 'T' }
- *               )
- *           }
- *   }
- *
- * ## Funciones clave utilizadas
- *
- *   filter { }   — conserva solo los elementos que cumplan la condición
- *   forEach { }  — ejecuta un bloque por cada elemento
- *   count { }    — cuenta cuántos elementos cumplen la condición
- *   throw        — lanza una excepción y detiene la ejecución
- *   init         — se ejecuta al crear el objeto, ideal para validaciones
- *   get()        — propiedad calculada, se ejecuta cada vez que la llamas
+ *   ┌─ CONTEO (get) ────────────────────────────────────────────────┐
+ *   │                                                               │
+ *   │   count(it == 'A') → [G no, A SI, T no, T no, A SI, C no, A SI] = 3 │
+ *   │   count(it == 'C') → [no, no, no, no, no, SI, no] = 1        │
+ *   │   count(it == 'G') → [SI, no, no, no, no, no, no] = 1        │
+ *   │   count(it == 'T') → [no, no, SI, SI, no, no, no] = 2        │
+ *   │                                                               │
+ *   │ Resultado: {A=3, C=1, G=1, T=2}                              │
+ *   └────────────────────────────────────────────────────────────────┘
  */

@@ -53,85 +53,120 @@ fun main() {
 }
 
 /*
- * # Acronym — Guía de resolución
+ * ──────────────────────────────────────────────────────────────
+ * ACRÓNIMO (Acronym) — Guía de estudio
+ * ──────────────────────────────────────────────────────────────
  *
- * ## Enunciado
+ * CÓDIGO ANOTADO
+ * ──────────────────────────────────────────────────────────────
  *
- * Dada una frase, generar su acrónimo tomando la primera letra
- * de cada palabra y convirtiéndola a mayúscula.
+ * object Acronym {
+ * │
+ * ├── fun generate(phrase: String) : String {
+ * │   │
+ * │   ├── val auxList = mutableListOf<String>()
+ * │   │   │
+ * │   │   └── ─► Lista vacía que acumulará las iniciales.
+ * │   │       mutableListOf permite agregar (.add()) elementos.
+ * │   │
+ * │   ├── val list = phrase.split(" ","-","_").filter { it.isNotEmpty() }
+ * │   │   │
+ * │   │   ├── split(" ","-","_")
+ * │   │   │   └── ─► Divide la frase usando espacio, guión y
+ * │   │   │       guión bajo como separadores.
+ * │   │   │       "Liquid-crystal display" →
+ * │   │   │       ["Liquid", "crystal", "display"]
+ * │   │   │
+ * │   │   └── filter { it.isNotEmpty() }
+ * │   │       └── ─► Elimina cadenas vacías que split() genera
+ * │   │           con separadores consecutivos ("a  b" → ["a","","b"]).
+ * │   │           Sin esto, .first() fallaría en cadenas vacías.
+ * │   │
+ * │   ├── for (i in list) {
+ * │   │   │
+ * │   │   ├── auxList.add(i.first().uppercaseChar().toString())
+ * │   │   │   │
+ * │   │   │   ├── i.first()         ─► primer carácter de la palabra
+ * │   │   │   ├── .uppercaseChar()  ─► lo pasa a mayúscula
+ * │   │   │   ├── .toString()       ─► convierte Char a String
+ * │   │   │   └── auxList.add()     ─► guarda la letra en la lista
+ * │   │   │
+ * │   │   └── }
+ * │   │
+ * │   ├── return auxList.joinToString("")
+ * │   │   └── ─► Une todas las letras sin separador.
+ * │   │       ["A","S","A","P"] → "ASAP"
+ * │   │
+ * │   └── }
+ * │
+ * └── }
  *
- * Ejemplos:
- *   "As Soon As Possible"   -> "ASAP"
- *   "Liquid-crystal display" -> "LCD"
- *   "Thank George It's Friday!" -> "TGIF"
+ * ──────────────────────────────────────────────────────────────
+ * TABLA DE PALABRAS RESERVADAS
+ * ──────────────────────────────────────────────────────────────
  *
- * ## Orden de pensamiento
+ * Palabra        | Español       | Explicación
+ * ───────────────┼───────────────┼────────────────────────────────
+ * object         | objeto        | Singleton: una única instancia
+ * fun            | función       | Declara una función o método
+ * val            | valor         | Variable inmutable (no reasigna)
+ * String         | cadena        | Tipo de dato textual
+ * mutableListOf  | lista mutable | Crea una lista que acepta cambios
+ * for            | para          | Bucle que recorre una colección
+ * in             | en            | Separa elemento de colección en for
+ * it             | ello          | Parámetro implícito de una lambda
+ * return         | retornar      | Devuelve valor y termina la función
  *
- * 1. Separar la frase en palabras — los separadores pueden ser
- *    espacios, guiones o guiones bajos.
- * 2. Filtrar elementos vacíos — separadores consecutivos generan
- *    cadenas vacías que causan errores al tomar la primera letra.
- * 3. Tomar la primera letra de cada palabra y convertirla a mayúscula.
- * 4. Unir todas las letras en un solo String.
+ * ──────────────────────────────────────────────────────────────
+ * TABLA DE OPERADORES IMPORTANTES
+ * ──────────────────────────────────────────────────────────────
  *
- * ## Paso a paso
+ * Operador | Nombre (ES) | Explicación
+ * ─────────┼─────────────┼────────────────────────────────────────
+ * .        | punto       | Accede a métodos y propiedades
+ * ()       | paréntesis  | Llama funciones o agrupa expresiones
+ * {}       | llaves      | Define bloques de código o lambdas
+ * ==       | igualdad    | Compara si dos valores son iguales
+ * ->       | flecha      | Separa parámetro de cuerpo en lambda
+ * ""       | comillas    | Delimita un valor String literal
  *
- * ### Separar la frase en palabras con split()
+ * ──────────────────────────────────────────────────────────────
+ * RESUMEN ALGORÍTMICO
+ * ──────────────────────────────────────────────────────────────
  *
- *   val list = phrase.split(" ", "-", "_")
+ * PSEUDOCÓDIGO:
+ * ─────────────
+ *   función generar(frase):
+ *     iniciales = []
+ *     palabras = frase.separar(" ", "-", "_")
+ *     palabras = palabras.filtrar(no vacío)
+ *     para cada palabra en palabras:
+ *       iniciales.agregar(palabra.primera().mayúscula())
+ *     devolver iniciales.unir("")
  *
- * - split() divide el String en una lista usando los separadores dados.
- * - Se usan tres separadores: espacio, guión y guión bajo.
- * - Los guiones son separadores de palabras igual que los espacios.
- * - Los guiones bajos se usan para énfasis (_word_) y deben ignorarse.
+ * EJEMPLO — "As Soon As Possible":
+ * ────────────────────────────────
+ *   split    → ["As", "Soon", "As", "Possible"]
+ *   for:
+ *     "As"       → 'A' → "A"
+ *     "Soon"     → 'S' → "S"
+ *     "As"       → 'A' → "A"
+ *     "Possible" → 'P' → "P"
+ *   join      → ["A","S","A","P"] → "ASAP" ✓
  *
- * ### Filtrar elementos vacíos
+ * EJEMPLO — "Liquid-crystal display":
+ * ───────────────────────────────────
+ *   split    → ["Liquid", "crystal", "display"]
+ *   for      → "L" + "C" + "D"
+ *   join     → "LCD" ✓
  *
+ * ANATOMÍA DE UNA LAMBDA:
+ * ──────────────────────
  *   .filter { it.isNotEmpty() }
- *
- * - Cuando hay separadores consecutivos (ej. "--"), split() genera
- *   cadenas vacías "" entre ellos.
- * - Llamar .first() sobre una cadena vacía lanza error: "Char sequence is empty".
- * - filter { it.isNotEmpty() } elimina esas cadenas vacías antes de continuar.
- *
- * ### Lista mutable acumuladora
- *
- *   val auxList = mutableListOf<String>()
- *
- * - Lista mutable de Strings donde se irán acumulando las letras.
- * - Es String (no Char) porque .toString() convierte cada Char a String.
- * - Se declara fuera del loop para no reiniciarse en cada iteración.
- *
- * ### Loop — tomar la primera letra de cada palabra
- *
- *   for (i in list) {
- *       auxList.add(i.first().uppercaseChar().toString())
- *   }
- *
- * - i          -> cada palabra de la lista
- * - .first()   -> primer carácter de la palabra (retorna Char)
- * - .uppercaseChar() -> convierte el Char a mayúscula
- * - .toString() -> convierte el Char a String para agregarlo a auxList
- * - .add()     -> agrega el resultado a auxList
- *
- * ### Retornar el acrónimo
- *
- *   return auxList.joinToString("")
- *
- * - joinToString("") une todos los elementos de la lista en un solo String.
- * - El "" indica que no hay separador entre los elementos.
- * - Ejemplo: ["A", "S", "A", "P"] -> "ASAP"
- *
- * ## Código completo
- *
- *   object Acronym {
- *       fun generate(phrase: String): String {
- *           val auxList = mutableListOf<String>()
- *           val list = phrase.split(" ", "-", "_").filter { it.isNotEmpty() }
- *           for (i in list) {
- *               auxList.add(i.first().uppercaseChar().toString())
- *           }
- *           return auxList.joinToString("")
- *       }
- *   }
+ *   └──┬──┘ └──┬────────────────┘
+ *      │       └── función anónima (lambda)
+ *      │           it = cada elemento de la lista en turno
+ *      │           isNotEmpty() = true si la cadena NO está vacía
+ *      └── filter: conserva solo los elementos que dan true
+ *          ─► elimina cadenas vacías que causarían error
  */
