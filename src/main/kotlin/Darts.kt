@@ -47,106 +47,258 @@ fun main(){
     println("The score is ${Darts.score(x.toString().toDouble(), y.toString().toDouble())}")
 }
 
-/**
- * ╔══════════════════════════════════════════════════════════════╗
- * ║        GUÍA DE ESTUDIO — Darts.kt (Puntuación de Dardos)   ║
- * ╚══════════════════════════════════════════════════════════════╝
- *
- * ────────────────────────────────────────────────────────────
- *  CÓDIGO ANOTADO (Árbol de análisis línea por línea)
- * ────────────────────────────────────────────────────────────
- *
- * object Darts {                                       ──► Define un objeto singleton llamado Darts
- * │                                                         (una única instancia, como un módulo)
- * │
- * └── fun score(x: Number, y: Number): Int {            ──► Función que recibe dos coordenadas (x, y)
- *     │                                                     como Number (Int o Double) y devuelve Int
- *     │
- *     ├── var firstCordinate = x                        ──► Guarda x en una variable mutable
- *     ├── var secondCordinate = y                       ──► Guarda y en una variable mutable
- *     │
- *     ├── var distance = Math.sqrt(                     ──► Calcula la distancia al centro (0,0)
- *     │   │   Math.pow(firstCordinate.toDouble(), 2.0)  ──► x²  (convierte a Double)
- *     │   │   +                                         ──► +
- *     │   │   Math.pow(secondCordinate.toDouble(), 2.0) ──► y²
- *     │   )                                             ──► √(x² + y²)  → teorema de Pitágoras
- *     │
- *     ├── if (distance <= 1) {                          ──► ¿Círculo interno? (radio ≤ 1)
- *     │   │   return 10                                 ──► 10 puntos
- *     │   └── }
- *     │
- *     ├── else if (distance <= 5) {                     ──► ¿Círculo medio? (radio ≤ 5)
- *     │   │   return 5                                  ──► 5 puntos
- *     │   └── }
- *     │
- *     ├── else if (distance <= 10) {                    ──► ¿Círculo externo? (radio ≤ 10)
- *     │   │   return 1                                  ──► 1 punto
- *     │   └── }
- *     │
- *     └── else {                                        ──► Fuera del blanco (radio > 10)
- *             return 0                                  ──► 0 puntos
- *         }
- *     }
- * }
- *
- * ────────────────────────────────────────────────────────────
- *  TABLA DE PALABRAS RESERVADAS
- * ────────────────────────────────────────────────────────────
- *
- *  ┌──────────────┬────────────────────────────────────────────┐
- *  │  Palabra     │  Significado                               │
- *  ├──────────────┼────────────────────────────────────────────┤
- *  │  object      │  Declara un singleton (objeto único)       │
- *  │  fun         │  Define una función / método               │
- *  │  var         │  Declara variable mutable (se puede reasig)│
- *  │  val         │  Declara variable inmutable (no cambia)    │
- *  │  if          │  Condicional: si se cumple la condición    │
- *  │  else        │  Sino (alternativa cuando no se cumple)    │
- *  │  else if     │  Sino si (nueva condición si la anterior   │
- *  │              │  fue falsa)                                │
- *  │  return      │  Devuelve un valor y termina la función    │
- *  │  Int         │  Tipo número entero (32 bits)              │
- *  │  Number      │  Tipo padre de Int, Double, Float, etc.    │
- *  └──────────────┴────────────────────────────────────────────┘
- *
- * ────────────────────────────────────────────────────────────
- *  TABLA DE OPERADORES IMPORTANTES
- * ────────────────────────────────────────────────────────────
- *
- *  ┌──────────┬──────────┬─────────────────────────────────────┐
- *  │ Operador │  Uso     │  Explicación                        │
- *  ├──────────┼──────────┼─────────────────────────────────────┤
- *  │  <=      │ a <= b   │  Menor o igual que                  │
- *  │  -       │ a - b    │  Resta                              │
- *  │  .       │ a.b()    │  Llamar método / acceder propiedad  │
- *  │  ->      │ args ->  │  Lambda (función anónima)           │
- *  └──────────┴──────────┴─────────────────────────────────────┘
- *
- * ────────────────────────────────────────────────────────────
- *  RESUMEN ALGORÍTMICO
- * ────────────────────────────────────────────────────────────
- *
- *  PSEUDOCÓDIGO:
- *  ┌─────────────────────────────────────────────────────────┐
- *  │  función score(x, y):                                  │
- *  │      distancia ← √(x² + y²)                            │
- *  │      SI distancia ≤ 1  → devolver 10                   │
- *  │      SI NO SI distancia ≤ 5 → devolver 5               │
- *  │      SI NO SI distancia ≤ 10 → devolver 1              │
- *  │      SI NO → devolver 0                                │
- *  └─────────────────────────────────────────────────────────┘
- *
- *  EJEMPLO TRABAJADO:
- *  ┌─────────────────────────────────────────────────────────┐
- *  │  Entrada: x = 0, y = 3                                 │
- *  │                                                         │
- *  │  Paso 1: calcular distancia                            │
- *  │    Math.sqrt(0² + 3²) = Math.sqrt(0 + 9) = √9 = 3      │
- *  │                                                         │
- *  │  Paso 2: evaluar condiciones                           │
- *  │    ¿3 ≤ 1? → NO                                        │
- *  │    ¿3 ≤ 5? → SÍ → devolver 5                           │
- *  │                                                         │
- *  │  Resultado: 5 puntos (círculo medio)                   │
- *  └─────────────────────────────────────────────────────────┘
- */
+/*
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. INSTRUCCIONES                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    Calcular los puntos obtenidos en un lanzamiento de dardos.
+
+    El blanco tiene 4 zonas concéntricas centradas en (0, 0):
+      - Fuera del blanco (radio > 10):              0 puntos
+      - Círculo exterior (radio ≤ 10):               1 punto
+      - Círculo medio (radio ≤ 5):                   5 puntos
+      - Círculo interior (radio ≤ 1):               10 puntos
+
+    OBJETIVOS:
+    I.   Calcular la distancia del punto (x, y) al origen (0, 0) con Pitágoras.
+    II.  Comparar la distancia contra los radios 1, 5 y 10.
+    III. Devolver 10, 5, 1 o 0 según la zona donde cayó el dardo.
+
+──────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. ORDEN DE PENSAMIENTO                                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    I. CALCULO DE LA DISTANCIA
+       └── Usar el teorema de Pitágoras: distancia = raiz(x² + y²).
+       └── En código: Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0)).
+       └── Convertir x e y a Double con toDouble().
+
+    II. EVALUACION DE LA ZONA
+       └── if (distancia <= 1)   → círculo interior → 10 puntos.
+       └── else if (distancia <= 5)   → círculo medio → 5 puntos.
+       └── else if (distancia <= 10)  → círculo exterior → 1 punto.
+       └── else → fuera del blanco → 0 puntos.
+
+    III. PROGRAMA PRINCIPAL
+       └── Pedir coordenadas con readLine(), convertir a Double.
+       └── Llamar Darts.score(x, y) y mostrar el resultado.
+
+──────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. SINTAXIS DEL CODIGO                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    CODIGO FUENTE COMPLETO:
+
+    ┌──────────────────────────────────────────────────────────────────────────┐
+    │ object Darts {                                                           │
+    │                                                                          │
+    │     fun score(x: Number, y: Number ): Int {                              │
+    │         var firstCordinate = x                                           │
+    │         var secondCordinate = y                                          │
+    │         var distance = Math.sqrt(                                        │
+    │             Math.pow(firstCordinate.toDouble(), 2.0)                     │
+    │             + Math.pow(secondCordinate.toDouble(), 2.0)                  │
+    │         )                                                                │
+    │         if (distance<=1){                                                │
+    │             return 10                                                    │
+    │         } else if (distance<=5){                                         │
+    │             return 5                                                     │
+    │         } else if (distance<=10){                                        │
+    │             return 1                                                     │
+    │         } else {                                                         │
+    │             return 0                                                     │
+    │         }                                                                │
+    │     }                                                                    │
+    │ }                                                                        │
+    │                                                                          │
+    │ fun main(){                                                              │
+    │     println("Enter the x coordinate")                                    │
+    │     val x = readLine()                                                   │
+    │     println("Enter the y coordinate")                                    │
+    │     val y = readLine()                                                   │
+    │     println("The score is ${Darts.score(x.toString().toDouble(),         │
+    │         y.toString().toDouble())}")                                      │
+    │ }                                                                        │
+    └──────────────────────────────────────────────────────────────────────────┘
+
+    EXPLICACION DE CADA ELEMENTO (numeración en romanos):
+
+    I.   object
+         └── Palabra reservada que crea un singleton (única instancia global).
+         └── Analogía: una caja de herramientas única en el taller.
+
+    II.  Darts
+         └── Nombre del objeto. Por convención empieza con mayúscula.
+
+    III. fun
+         └── Palabra reservada "function". Define un bloque de código reutilizable.
+         └── Analogía: una receta de cocina — se escribe una vez, se usa muchas veces.
+
+    IV.  score
+         └── Nombre de la función que calcula el puntaje.
+
+    V.   (x: Number, y: Number)
+         └── Parámetros: x (coordenada horizontal), y (coordenada vertical).
+         └── Number: tipo padre de Int, Double, Float — acepta cualquier número.
+
+    VI.  : Int
+         └── Declara que la función devuelve un Int (entero de 32 bits).
+
+    VII. var
+         └── Declara variable MUTABLE (se puede reasignar después).
+         └── Analogía: una pizarra blanca — puedes borrar y escribir de nuevo.
+
+    VIII. firstCordinate / secondCordinate / distance
+         └── Nombres de variables locales.
+         └── firstCordinate = x, secondCordinate = y, distance = resultado del cálculo.
+
+    IX.  = (asignación)
+         └── Operador que guarda el valor de la derecha en la variable de la izquierda.
+         └── NO confundir con == (comparación de igualdad).
+
+    X.   Math.sqrt(...)
+         └── Función de la biblioteca estándar: raíz cuadrada (square root).
+         └── Devuelve Double.
+
+    XI.  Math.pow(base, exponente)
+         └── Eleva "base" a la potencia "exponente".
+         └── Ej: Math.pow(3.0, 2.0) = 9.0.
+
+    XII. .toDouble()
+         └── Convierte un Number a Double (formato decimal de 64 bits).
+         └── Necesario porque Math.pow solo acepta Doubles.
+
+    XIII. 2.0
+         └── Literal Double. El ".0" lo distingue de un entero.
+
+    XIV. + (suma)
+         └── Operador aritmético que suma dos valores.
+         └── Aquí suma x² + y² dentro de la raíz cuadrada.
+
+    XV.  if (condición) { ... }
+         └── Estructura condicional: si la condición es true, ejecuta el bloque.
+         └── Analogía: SI llueve → llevo paraguas.
+
+    XVI. else if (condición) { ... }
+         └── "Sino, si": se evalúa solo si el if anterior fue false.
+
+    XVII. else { ... }
+         └── "Sino": se ejecuta si ninguna condición anterior fue true.
+
+    XVIII. <=
+         └── Operador "menor o igual que". Devuelve true o false.
+         └── distance <= 5 → "¿distance es menor o igual a 5?"
+
+    XIX. return
+         └── Termina la función y devuelve el valor indicado.
+         └── return 10 → la función termina y entrega 10.
+
+    XX.  { } (llaves)
+         └── Delimitan un bloque de código (cuerpo de función, if, else, etc.).
+
+    XXI. fun main()
+         └── Función especial: punto de entrada del programa.
+         └── Kotlin ejecuta main() automáticamente al iniciar.
+
+    XXII. println("...")
+         └── Función que imprime texto en consola y añade salto de línea.
+
+    XXIII. val
+         └── Declara variable INMUTABLE (no se puede reasignar).
+         └── Analogía: una placa grabada en piedra.
+
+    XXIV. readLine()
+         └── Lee una línea de texto escrita por el usuario en la consola.
+         └── Devuelve String? (puede ser null).
+
+    XXV. "${ ... }"
+         └── Plantilla de cadena: evalúa la expresión y la convierte a texto.
+         └── Analogía: un hueco en un texto donde insertas un valor calculado.
+
+    XXVI. .toString()
+         └── Convierte un valor a su representación como String.
+
+    XXVII. ( ) (paréntesis)
+         └── En funciones: agrupan argumentos. En expresiones: agrupan operaciones.
+
+──────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. PSEUDOCODIGO                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    OBJETO Dardos:
+        FUNCION puntuar(x, y):
+            primeraCoord = x
+            segundaCoord = y
+            distancia = RAIZ_CUADRADA(primeraCoord² + segundaCoord²)
+            SI distancia <= 1:
+                DEVOLVER 10
+            SINO SI distancia <= 5:
+                DEVOLVER 5
+            SINO SI distancia <= 10:
+                DEVOLVER 1
+            SINO:
+                DEVOLVER 0
+
+    PROGRAMA PRINCIPAL:
+        1. IMPRIMIR "Ingrese la coordenada x"
+        2. LEER x
+        3. IMPRIMIR "Ingrese la coordenada y"
+        4. LEER y
+        5. xNum = CONVERTIR_A_DECIMAL(x)
+        6. yNum = CONVERTIR_A_DECIMAL(y)
+        7. puntos = Dardos.puntuar(xNum, yNum)
+        8. IMPRIMIR "La puntuación es " + puntos
+
+──────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 5. EJEMPLOS TRABAJADOS                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    EJEMPLO 1: (0, 0) — centro exacto del blanco
+
+        Entrada: x = 0, y = 0
+        Proceso:
+            distancia = √(0² + 0²) = 0
+            ¿0 <= 1? → SÍ → return 10
+        Resultado: 10 puntos
+
+    EJEMPLO 2: (3, 4) — círculo medio
+
+        Entrada: x = 3, y = 4
+        Proceso:
+            distancia = √(3² + 4²) = √(9 + 16) = √25 = 5
+            ¿5 <= 1? → NO
+            ¿5 <= 5? → SÍ → return 5
+        Resultado: 5 puntos
+        └── (3, 4) está justo en el borde del círculo medio (radio 5).
+
+    EJEMPLO 3: (8, 6) — círculo exterior
+
+        Entrada: x = 8, y = 6
+        Proceso:
+            distancia = √(8² + 6²) = √(64 + 36) = √100 = 10
+            ¿10 <= 1? → NO
+            ¿10 <= 5? → NO
+            ¿10 <= 10? → SÍ → return 1
+        Resultado: 1 punto
+        └── (8, 6) está en el borde del círculo exterior (radio 10).
+
+    EJEMPLO 4: (10, 10) — fuera del blanco
+
+        Entrada: x = 10, y = 10
+        Proceso:
+            distancia = √(10² + 10²) = √(100 + 100) = √200 ≈ 14.14
+            ¿14.14 <= 1? → NO
+            ¿14.14 <= 5? → NO
+            ¿14.14 <= 10? → NO
+            else → return 0
+        Resultado: 0 puntos
+*/
