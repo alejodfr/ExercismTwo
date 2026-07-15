@@ -47,7 +47,7 @@ fun main(){
     OBJETIVOS:
     I.   Recibir una palabra o frase como String.
     II.  Filtrar (eliminar) los guiones y espacios.
-    III. Convertir todo a minúsculas para que la comparación no distinga
+    III. Convertir toodo a minúsculas para que la comparación no distinga
          mayúsculas de minúsculas.
     IV.  Verificar que NO haya letras repetidas:
          la longitud del texto filtrado debe ser igual a la cantidad de
@@ -66,7 +66,7 @@ fun main(){
        a) Eliminar guiones: filter { it != '-' }
        b) Eliminar espacios: filter { it != ' ' }
        c) Convertir a minúsculas: .lowercase()
-       └── Resultado: un String con solo letras, todo en minúscula.
+       └── Resultado: un String con solo letras, toodo en minúscula.
 
     II. DETECCION DE REPETICIONES
         a) letters.length: cuántos caracteres tiene el String filtrado.
@@ -77,7 +77,7 @@ fun main(){
 
     III. LOGICA CENTRAL
          └── La línea return letters.length == letters.toList().distinct().size
-             hace todo el trabajo en UNA sola expresión.
+             hace toodo el trabajo en UNA sola expresión.
 
     IV. INTERACCION CON USUARIO (main)
         └── Leer frase, llamar Isogram.isIsogram(frase), imprimir resultado.
@@ -162,7 +162,7 @@ fun main(){
          └── &&: operador "AND lógico" — ambas deben ser verdaderas.
 
     XI.  .lowercase()
-         └── Método que convierte TODOS los caracteres del String a
+         └── Métoodo que convierte TODOS los caracteres del String a
              minúsculas.
          └── "Hello".lowercase() → "hello"
          └── Sirve para que la comparación ignore mayúsculas/minúsculas.
@@ -182,11 +182,11 @@ fun main(){
          └── 5 == 5 → true; 5 == 3 → false
 
     XV.  letters.toList()
-         └── .toList() — método que convierte el String en una lista de Chars.
+         └── .toList() — métoodo que convierte el String en una lista de Chars.
          └── "hola".toList() → ['h', 'o', 'l', 'a']
 
     XVI. .distinct()
-         └── Método que elimina elementos DUPLICADOS de la lista.
+         └── Métoodo que elimina elementos DUPLICADOS de la lista.
          └── ['h','o','l','a'] → igual (todos únicos)
          └── ['h','e','l','l','o'] → ['h','e','l','o'] (la 'l' se repite)
          └── Analogía: poner todas las cartas sobre la mesa y luego retirar
