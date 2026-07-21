@@ -52,7 +52,7 @@ class DndCharacter {
     companion object {
 
         fun ability(): Int {
-            val stats = Array(4) { (1..6).random() }.toList()
+            val stats = List(4) { (1..6).random() }
             val totalSum = stats.sorted().drop(1).sum()
             return totalSum
         }
