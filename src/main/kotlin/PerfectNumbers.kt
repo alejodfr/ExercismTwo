@@ -26,29 +26,22 @@ enum class Classification {
     DEFICIENT, PERFECT, ABUNDANT
 }
 
-object PerfectNumbers {
+fun classify(naturalNumber: Int): Classification {
+    require(naturalNumber > 0) { "The number must be greater than zero" }
 
-    fun classify(naturalNumber: Int): Classification {
-        // 1. Validamos que sea un número entero positivo
-        require(naturalNumber > 0) { "The number must be greater than zero" }
-
-        // 2. Buscamos todos los divisores
-        val divisores = mutableListOf<Int>()
-        for (i in 1 until naturalNumber) {
-            if (naturalNumber % i == 0) {
-                divisores.add(i)
-            }
+    val divisores = mutableListOf<Int>()
+    for (i in 1 until naturalNumber) {
+        if (naturalNumber % i == 0) {
+            divisores.add(i)
         }
+    }
 
-        // 3. Calculamos la suma alícuota
-        val resultado = divisores.sum()
+    val resultado = divisores.sum()
 
-        // 4. Clasificamos el número
-        return when {
-            resultado == naturalNumber -> Classification.PERFECT
-            resultado > naturalNumber -> Classification.ABUNDANT
-            else -> Classification.DEFICIENT
-        }
+    return when {
+        resultado == naturalNumber -> Classification.PERFECT
+        resultado > naturalNumber -> Classification.ABUNDANT
+        else -> Classification.DEFICIENT
     }
 }
 
