@@ -115,7 +115,7 @@ class PhoneNumber(rawNumber: String) {
  *
  *  -----------------------------------------------------------------
  *  ⚡  RENDIMIENTO
- *  O(n) tiempo, O(n) espacio — filter recorre todo el string y crea
+ *  O(n) tiempo, O(n) espacio — filter recorre tdo el string y crea
  *  uno nuevo. Las validaciones restantes son O(1).
  *
  *  -----------------------------------------------------------------
