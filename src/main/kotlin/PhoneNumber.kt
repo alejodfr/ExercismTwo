@@ -54,3 +54,107 @@ class PhoneNumber(rawNumber: String) {
         number = digits
     }
 }
+
+/**
+ *  =====================  GUÍA DE ESTUDIO  =====================
+ *
+ *  📌  OBJETIVO
+ *  Limpiar números telefónicos ingresados por el usuario eliminando
+ *  puntuación y código de país, validando el formato NANP (NXX-NXX-XXXX).
+ *
+ *  -----------------------------------------------------------------
+ *  🧠  ANÁLISIS DE LA SOLUCIÓN
+ *
+ *  class PhoneNumber(rawNumber: String) {
+ *      val number: String
+ *      init {
+ *          var digits = rawNumber.filter { it.isDigit() }
+ *          if (digits.length == 11) {
+ *              require(digits.startsWith("1")) { "11-digit numbers must start with 1" }
+ *              digits = digits.drop(1)
+ *          }
+ *          require(digits.length == 10) { "Incorrect number of digits" }
+ *          require(digits[0] in '2'..'9') { "Area code cannot start with 0 or 1" }
+ *          require(digits[3] in '2'..'9') { "Exchange code cannot start with 0 or 1" }
+ *          number = digits
+ *      }
+ *  }
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *  1.  filter + isDigit — Extrae solo los dígitos del string original.
+ *  2.  Código de país — Si hay 11 dígitos y empieza con '1', lo elimina.
+ *  3.  require + length — Valida que queden exactamente 10 dígitos.
+ *  4.  Rangos con in — Verifica que posición 0 y 3 estén en '2'..'9'.
+ *  5.  Asignación — Guarda el número limpio en la propiedad val number.
+ *
+ *  -----------------------------------------------------------------
+ *  🛠️  FUNCIONES Y CONCEPTOS CLAVE DE KOTLIN
+ *
+ *  ┌───────────────────────────┬──────────────────────────────────────┐
+ *  │  Concepto                 │  Uso en el ejercicio                 │
+ *  ├───────────────────────────┼──────────────────────────────────────┤
+ *  │  filter                   │  rawNumber.filter { it.isDigit() }   │
+ *  │  isDigit()                │  Filtra caracteres no numéricos      │
+ *  │  require                  │  Valida condiciones con excepción    │
+ *  │  drop(n)                  │  digits.drop(1) elimina prefijo      │
+ *  │  startsWith               │  digits.startsWith("1")             │
+ *  │  Rangos '2'..'9'         │  digits[0] in '2'..'9'              │
+ *  │  init block               │  Bloque de inicialización            │
+ *  │  val (inmutabilidad)      │  number se asigna una sola vez       │
+ *  └───────────────────────────┴──────────────────────────────────────┘
+ *
+ *  -----------------------------------------------------------------
+ *  🔁  ENFOQUES ALTERNATIVOS
+ *
+ *  A)  replace con Regex
+ *      rawNumber.replace(Regex("[^0-9]"), "") en vez de filter.
+ *  B)  Función privada auxiliar
+ *      Extraer validaciones a métodos privados separados.
+ *
+ *  -----------------------------------------------------------------
+ *  ⚡  RENDIMIENTO
+ *  O(n) tiempo, O(n) espacio — filter recorre todo el string y crea
+ *  uno nuevo. Las validaciones restantes son O(1).
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *  CLASE PhoneNumber(rawNumber: String)
+ *      number: String (inmutable)
+ *      INICIALIZAR:
+ *          digits = rawNumber SOLO DÍGITOS
+ *          SI digits.longitud == 11 ENTONCES
+ *              REQUERIR digits EMPIEZA CON "1"
+ *              digits = digits SIN PRIMER CARÁCTER
+ *          REQUERIR digits.longitud == 10
+ *          REQUERIR digits[0] EN '2'..'9'
+ *          REQUERIR digits[3] EN '2'..'9'
+ *          number = digits
+ *      FIN INICIALIZAR
+ *  FIN CLASE
+ *
+ *  -----------------------------------------------------------------
+ *  🧪  EJEMPLOS TRABAJADOS
+ *
+ *  ─────────────────────────────────────────────────────────────────
+ *  Ejemplo 1: "+1 (613)-995-0253"
+ *  ─────────────────────────────────────────────────────────────────
+ *  filter { it.isDigit() } → "16139950253" (11 dígitos)
+ *  startsWith("1")? sí → drop(1) → "6139950253"
+ *  length == 10? sí
+ *  digits[0] = '6' in '2'..'9'? sí
+ *  digits[3] = '9' in '2'..'9'? sí
+ *  Resultado: "6139950253"
+ *
+ *  ─────────────────────────────────────────────────────────────────
+ *  Ejemplo 2: "123-456-7890"
+ *  ─────────────────────────────────────────────────────────────────
+ *  filter → "1234567890" (10 dígitos)
+ *  length == 10? sí
+ *  digits[0] = '1' in '2'..'9'? NO → IllegalArgumentException
+ *  Resultado: "Area code cannot start with 0 or 1"
+ *
+ *  ================================================================
+ */
