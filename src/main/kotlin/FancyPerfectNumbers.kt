@@ -19,7 +19,7 @@ object FancyPerfectNumbers {
         return when {
             aliquotSum == naturalNumber -> FancyClassification.PERFECT
             aliquotSum > naturalNumber -> FancyClassification.ABUNDANT
-            else -> FancyClassification.DEFICIENT.
+            else -> FancyClassification.DEFICIENT
         }
     }
 }
