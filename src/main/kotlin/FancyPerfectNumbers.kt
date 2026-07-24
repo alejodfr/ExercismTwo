@@ -1,9 +1,14 @@
 @file:Suppress("SpellCheckingInspection")
 // ? Solucion Refactorizado de PerfectNumbers.kt
 
-object PerfectNumbers {
+enum class FancyClassification {
+    DEFICIENT, PERFECT, ABUNDANT
+}
 
-    fun classify(naturalNumber: Int): Classification {
+
+object FancyPerfectNumbers {
+
+    fun classify(naturalNumber: Int): FancyClassification {
         require(naturalNumber > 0) { "The number must be greater than zero" }
 
         // Filtramos directamente las letras/números en el rango y los sumamos
@@ -12,9 +17,9 @@ object PerfectNumbers {
             .sum()
 
         return when {
-            aliquotSum == naturalNumber -> Classification.PERFECT
-            aliquotSum > naturalNumber -> Classification.ABUNDANT
-            else -> Classification.DEFICIENT
+            aliquotSum == naturalNumber -> FancyClassification.PERFECT
+            aliquotSum > naturalNumber -> FancyClassification.ABUNDANT
+            else -> FancyClassification.DEFICIENT.
         }
     }
 }
