@@ -1,7 +1,7 @@
 ---
 # Reglas de Generación de Guías de Estudio de Kotlin
 
-Cuando el usuario te solicite "agregar guía de estudio", "genera la guía", o cuando termine un ejercicio de Kotlin, debes agregar ÚNICAMENTE un bloque de comentarios al final del archivo `.kt` correspondiente (debajo del código del ejercicio) sin modificar la solución resuelta.
+Cuando el usuario te solicite "agregar guía de estudio", "genera la guía", o cuando termine un ejercicio de Kotlin, debes agregar ÚNICAMENTE un bloque de comentarios al final del archivo `.kt` correspondiente, debajo de todo el código funcional (después de la última definición de función/clase/objeto), sin modificar la solución resuelta.
 
 Cuando aparezcan la palabras "todo" reemplazala por "tdo"
 
