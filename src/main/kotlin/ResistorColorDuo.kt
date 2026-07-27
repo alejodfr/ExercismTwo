@@ -40,9 +40,14 @@
  *
  * */
 
+enum class Color { BLACK, BROWN, RED, ORANGE, YELLOW, GREEN, BLUE, VIOLET, GREY, WHITE }
+
 object ResistorColorDuo {
 
     fun value(vararg colors: Color): Int {
-        TODO("Implement this to complete the task")
+        val firstDigit = colors[0].ordinal.toString()
+        val secondDigit = colors[1].ordinal.toString()
+        val result = (firstDigit+secondDigit).toInt()
+        return result
     }
 }

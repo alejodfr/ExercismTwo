@@ -14,9 +14,9 @@ Usa SIEMPRE el siguiente formato estricto en español:
  *  <explicación breve del objetivo del ejercicio>
  *
  *  -----------------------------------------------------------------
- *  🧠  ANÁLISIS DE LA SOLUCIÓN
+ *  🧠  ORDEN DE PENSAMIENTO
  *
- *  <código de la solución>
+ *  <análisis de cómo completar el ejercicio desde el principio hasta el final>
  *
  *  -----------------------------------------------------------------
  *  🔍  EXPLICACIÓN PASO A PASO
