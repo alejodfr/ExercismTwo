@@ -141,3 +141,32 @@ object ResistorColor {
  *
  *  ================================================================
  */
+
+/*?**
+
+VERSION MAS SIMPLE
+
+object ResistorColor {
+
+    -> Guardamos la lista ordenada de colores
+    private val colorsList = listOf(
+        "black", "brown", "red", "orange", "yellow",
+        "green", "blue", "violet", "grey", "white"
+    )
+
+    -> Recibe un color (ej: "red") y devuelve su posición (ej: 2)
+    fun colorCode(input: String): Int {
+        return colorsList.indexOf(input)
+    }
+
+    -> Devuelve la lista completa de colores
+    fun colors(): List<String> {
+        return colorsList
+    }
+}
+
+
+
+
+
+ */
