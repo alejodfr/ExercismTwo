@@ -44,126 +44,89 @@ object Raindrops {
     }
 }
 
-/**
+/*
  *  =====================  GUÍA DE ESTUDIO  =====================
  *
  *  📌  OBJETIVO
- *  Convertir un número en su cadena de sonidos de lluvia (Raindrops) según divisibilidad por 3, 5 y 7.
+ *
+ *      Convertir un número en su cadena de sonidos de lluvia según su
+ *      divisibilidad por 3 ("Pling"), 5 ("Plang") y 7 ("Plong"); si no
+ *      es divisible por ninguno, devolver el número como texto.
  *
  *  -----------------------------------------------------------------
- *  🧠  ANÁLISIS DE LA SOLUCIÓN
+ *  🧠  ORDEN DE PENSAMIENTO
  *
- *  object Raindrops {
- *      fun convert(n: Int): String {
- *          var result = ""
- *          if (n % 3 == 0) result += "Pling"
- *          if (n % 5 == 0) result += "Plang"
- *          if (n % 7 == 0) result += "Plong"
- *          return if (result.isEmpty()) n.toString() else result
- *      }
- *  }
+ *      I.   Empezar con un acumulador de texto vacío.
+ *      II.  Comprobar divisibilidad por 3, 5 y 7 de forma
+ *           independiente, concatenando el sonido correspondiente.
+ *      III. Si al final no se concatenó ningún sonido, devolver el
+ *           número como String; si no, devolver lo acumulado.
  *
  *  -----------------------------------------------------------------
  *  🔍  EXPLICACIÓN PASO A PASO
  *
- *  1.  `object Raindrops` — Objeto singleton que envuelve la función.
- *  2.  `var result = ""` — Acumulador de cadenas vacío inicial.
- *  3.  Tres `if` independientes — Cada uno verifica divisibilidad por un primo y concatena el sonido.
- *  4.  `result.isEmpty()` — Si ningún if se cumplió, se devuelve el número como string.
- *  5.  `n.toString()` — Convierte el entero a String para el caso por defecto.
+ *      →  fun convert(n: Int): String {
+ *      →      var result = ""
+ *      ①  Acumulador mutable que empieza vacío.
  *
- *  -----------------------------------------------------------------
- *  🛠️  FUNCIONES Y CONCEPTOS CLAVE DE KOTLIN
+ *      →      if (n % 3 == 0){
+ *      →          result += "Pling"
+ *      ②  Si n es divisible por 3, se concatena "Pling".
+ *      →      }
+ *      →      if (n % 5 == 0){
+ *      →          result += "Plang"
+ *      ③  Chequeo independiente para 5 (no es else if: pueden
+ *          cumplirse varias condiciones a la vez).
+ *      →      }
+ *      →      if (n % 7 == 0){
+ *      →          result += "Plong"
+ *      ④  Mismo patrón para 7.
+ *      →      }
  *
- *  ┌───────────────────────────┬──────────────────────────────────┐
- *  │  Concepto                 │  Uso en el ejercicio             │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  object                   │  Singleton contenedor de función  │
- *  │  var                      │  Variable mutable para `result`   │
- *  │  if                       │  Condicional sin else if (c/u independiente)│
- *  │  % (módulo)               │  Verificar divisibilidad         │
- *  │  += (concatenación)       │  Acumular cadenas con "+="       │
- *  │  .isEmpty()               │  Saber si no hubo coincidencias  │
- *  │  .toString()              │  Convertir Int a String          │
- *  │  if como expresión        │  `return if (cond) a else b`     │
- *  └───────────────────────────┴──────────────────────────────────┘
+ *      →      if (result.isEmpty()){
+ *      →          return n.toString()
+ *      ⑤  Si ningún if se cumplió, result sigue vacío: se devuelve el
+ *          número convertido a texto.
+ *      →      } else {
+ *      →          return result
+ *      ⑥  Si hubo al menos una coincidencia, se devuelve lo acumulado.
+ *      →      }
+ *      →  }
  *
  *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
- *  A)  buildString { } — Usar `buildString { append(...) }` para mejor rendimiento con cadenas.
- *  B)  List + joinToString — Almacenar sonidos en lista y usar `joinToString("")`.
- *  C)  when + map — Usar `when` con pares (condición, sonido) iterados.
- *
- *  -----------------------------------------------------------------
- *  ⚡  RENDIMIENTO
- *  Complejidad O(1) — siempre 3 verificaciones fijas, sin importar el valor de n.
- *  Memoria O(1) — solo almacena el resultado en una cadena.
+ *      A)  Usar buildString { if (...) append(...) }.ifEmpty { n.toString() }
+ *          en vez de var + concatenación manual con +=.
+ *      B)  Guardar los sonidos en una List<Pair<Int,String>> y usar
+ *          filter + joinToString("") para generar el resultado.
  *
  *  -----------------------------------------------------------------
  *  📝  PSEUDOCÓDIGO EN ESPAÑOL
  *
- *  OBJETO Raindrops
- *      FUNCIÓN convertir(n: Int): String
- *          resultado := ""
- *          SI n % 3 == 0 ENTONCES resultado := resultado + "Pling"
- *          SI n % 5 == 0 ENTONCES resultado := resultado + "Plang"
- *          SI n % 7 == 0 ENTONCES resultado := resultado + "Plong"
- *          SI resultado está vacío ENTONCES
- *              DEVOLVER n como texto
- *          SINO
- *              DEVOLVER resultado
- *          FIN SI
+ *      FUNCIÓN convertir(n): Texto
+ *          resultado ← ""
+ *          SI n % 3 == 0: resultado += "Pling"
+ *          SI n % 5 == 0: resultado += "Plang"
+ *          SI n % 7 == 0: resultado += "Plong"
+ *          SI resultado VACÍO: DEVOLVER n COMO TEXTO
+ *          SINO: DEVOLVER resultado
  *      FIN FUNCIÓN
- *  FIN OBJETO
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 1: "28"
- *  ─────────────────────────────────────────────────────────────────
- *  28 % 3 = 1 → no agrega "Pling"
- *  28 % 5 = 3 → no agrega "Plang"
- *  28 % 7 = 0 → agrega "Plong"
- *  resultado = "Plong"
- *  Resultado: "Plong"
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 2: "30"
- *  ─────────────────────────────────────────────────────────────────
- *  30 % 3 = 0 → agrega "Pling"
- *  30 % 5 = 0 → agrega "Plang"
- *  30 % 7 = 2 → no agrega "Plong"
- *  resultado = "PlingPlang"
- *  Resultado: "PlingPlang"
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 3: "34"
- *  ─────────────────────────────────────────────────────────────────
- *  34 % 3 = 1 → no agrega "Pling"
- *  34 % 5 = 4 → no agrega "Plang"
- *  34 % 7 = 6 → no agrega "Plong"
- *  resultado = "" → vacío, devuelve "34"
- *  Resultado: "34"
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "convert(30)"
+ *      ─────────────────────────────────────────────────────────
+ *      30%3=0→"Pling"; 30%5=0→"Plang"; 30%7≠0
+ *      Resultado: "PlingPlang"
  *
- *  ================================================================
- */
-
-/*
- *  =====================  VARIANTE MÁS ELEGANTE  =====================
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "convert(34)"
+ *      ─────────────────────────────────────────────────────────
+ *      34%3≠0, 34%5≠0, 34%7≠0 → result vacío → n.toString()
+ *      Resultado: "34"
  *
- *  object Raindrops {
- *      fun convert(n: Int): String = buildString {
- *          if (n % 3 == 0) append("Pling")
- *          if (n % 5 == 0) append("Plang")
- *          if (n % 7 == 0) append("Plong")
- *      }.ifEmpty { n.toString() }
- *  }
- *
- *  ✅  Ventajas
- *  ────────────────────────────────────────────────────────────────────
- *  •  Sin var — Todo es val, estilo funcional.
- *  •  buildString — Usa StringBuilder internamente, evita crear
- *     Strings intermedias en cada concatenación (+=).
- *  •  ifEmpty — Reemplaza el if/else manual de forma declarativa.
  *  ================================================================
  */

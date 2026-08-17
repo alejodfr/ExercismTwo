@@ -59,95 +59,75 @@ class Gigasecond(val birthDate: LocalDateTime) { // * <- Constructor Primario
     val date: LocalDateTime = birthDate.plusSeconds(1_000_000_000)
 }
 
-// ============================================================
-//  1. INSTRUCCIONES
-// ============================================================
-//
-// Dada una fecha (LocalDateTime o LocalDate), calcular el
-// momento exacto un gigasegundo (1.000.000.000 segundos) después.
-//
-// Objetivos:
-//  - Aceptar tanto LocalDate como LocalDateTime.
-//  - Si se recibe LocalDate, convertirlo al inicio de ese dia
-//    (00:00:00) antes de operar.
-//  - Usar el metdo plusSeconds de la API de java.time.
-//  - Almacenar el resultado en una propiedad calculada date.
-
-// ============================================================
-//  2. ORDEN DE PENSAMIENTO
-// ============================================================
-//
-//  2.1 Analisis de la entrada
-//   - La fecha puede venir como LocalDate (solo dia) o como
-//     LocalDateTime (dia + hora).
-//   - Si es LocalDate, debemos interpretarla como las 00:00:00
-//     de ese dia.
-//
-//  2.2 Conversion al tipo unificado
-//   - Creamos un constructor secundario que reciba LocalDate,
-//     lo convierta con atStartOfDay() y delegue en el constructor
-//     primario (this).
-//
-//  2.3 Calculo del gigasegundo
-//   - Un gigasegundo = 1_000_000_000 segundos.
-//   - Usamos plusSeconds() sobre el LocalDateTime unificado.
-//   - Guardamos el resultado en una propiedad val date.
-//
-//  2.4 Propiedad calculada
-//   - val date: LocalDateTime se inicializa directamente en el
-//     cuerpo de la clase, sin necesidad de un bloque init.
-
-// ============================================================
-//  3. SINTAXIS DEL CODIGO
-// ============================================================
-//
-// +----------------+------------------------------------------+--------------------------------------+
-// | Palabra clave  | Significado                              | Analogia                             |
-// +----------------+------------------------------------------+--------------------------------------+
-// | class          | Define un nuevo tipo de dato.            | Como un molde para crear objetos.    |
-// | val            | Declara una propiedad de solo lectura.   | Una etiqueta permanente que no       |
-// |                |                                          | cambia de valor.                     |
-// | constructor    | Metdo especial para construir objetos.  | La puerta de entrada al objeto.      |
-// | this           | Referencia al objeto actual.             | "Yo mismo" dentro de la clase.       |
-// | :              | Indica herencia, delegacion o tipo.     | "Es un" o "delega en".               |
-// | atStartOfDay   | Convierte LocalDate a LocalDateTime      | Pone el reloj a medianoche.          |
-// |                | a las 00:00:00.                          |                                      |
-// | plusSeconds    | Suma una cantidad de segundos.           | Avanzar el cronometro.               |
-// | LocalDateTime  | Fecha y hora sin zona horaria.           | Un instante en el calendario y       |
-// |                |                                          | reloj de pared.                      |
-// +----------------+------------------------------------------+--------------------------------------+
-
-// ============================================================
-//  4. PSEUDOCODIGO
-// ============================================================
-//
-// Clase Gigasecond:
-//     Constructor primario( fechaNacimiento: LocalDateTime )
-//         propiedad date := fechaNacimiento + 1_000_000_000 segundos
-//
-//     Constructor secundario( fechaNacimiento: LocalDate )
-//         Llama al constructor primario con fechaNacimiento a las 00:00:00
-//
-//     Propiedad date: LocalDateTime (se calcula automaticamente)
-
-// ============================================================
-//  5. EJEMPLOS TRABAJADOS
-// ============================================================
-//
-// Ejemplo 1:
-//   Entrada: LocalDate.of(2015, 1, 24)
-//   Proceso: Se convierte a 2015-01-24T00:00, se suman
-//            1_000_000_000 segundos.
-//   Resultado: 2046-10-02T23:46:40
-//
-// Ejemplo 2:
-//   Entrada: LocalDateTime.of(2020, 6, 1, 12, 0, 0)
-//   Proceso: Se suma 1_000_000_000 segundos directamente.
-//   Resultado: 2052-02-07T11:46:40
-//
-// Ejemplo 3:
-//   Entrada: LocalDate.of(2000, 1, 1)
-//   Proceso: Se convierte a 2000-01-01T00:00, se suman
-//            1_000_000_000 segundos.
-//   Resultado: 2031-09-09T23:46:40
-//
+/*
+ *  =====================  GUÍA DE ESTUDIO  =====================
+ *
+ *  📌  OBJETIVO
+ *
+ *      Dada una fecha (LocalDate o LocalDateTime), calcular el
+ *      instante exacto un gigasegundo (1.000.000.000 segundos)
+ *      después de esa fecha.
+ *
+ *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   El constructor primario recibe un LocalDateTime.
+ *      II.  Un constructor secundario acepta un LocalDate y lo
+ *           convierte al inicio de ese día (00:00:00) delegando en el
+ *           constructor primario con this(...).
+ *      III. La propiedad date se calcula sumando 1_000_000_000
+ *           segundos con plusSeconds().
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  class Gigasecond(val birthDate: LocalDateTime) {
+ *      ①  Constructor primario: birthDate se guarda como propiedad
+ *          inmutable de tipo LocalDateTime (fecha + hora).
+ *
+ *      →      constructor(birthDate: LocalDate) : this(birthDate.atStartOfDay())
+ *      ②  Constructor secundario: recibe un LocalDate (solo fecha) y
+ *          delega en el primario con this(...), convirtiendo con
+ *          .atStartOfDay() a las 00:00:00 de ese día.
+ *
+ *      →      val date: LocalDateTime = birthDate.plusSeconds(1_000_000_000)
+ *      ③  .plusSeconds(n) suma n segundos a la fecha; un gigasegundo
+ *          equivale a 1_000_000_000 segundos (los guiones bajos son
+ *          solo separadores visuales, no afectan el valor).
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
+ *  🔁  ENFOQUES ALTERNATIVOS
+ *
+ *      A)  Usar Duration.ofSeconds(1_000_000_000) y birthDate.plus(duration)
+ *          en vez de plusSeconds directo.
+ *      B)  Aceptar un Instant en vez de LocalDateTime si no importa la
+ *          zona horaria ni el calendario humano.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      CLASE Gigasegundo
+ *          Constructor primario(fechaNacimiento: FechaHora)
+ *              date ← fechaNacimiento + 1_000_000_000 segundos
+ *          Constructor secundario(fechaNacimiento: SoloFecha)
+ *              LLAMA al primario con fechaNacimiento a las 00:00:00
+ *      FIN CLASE
+ *
+ *  -----------------------------------------------------------------
+ *  🧪  EJEMPLOS TRABAJADOS
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "Gigasecond(LocalDate.of(2015, 1, 24))"
+ *      ─────────────────────────────────────────────────────────
+ *      Se convierte a 2015-01-24T00:00, se suman 1_000_000_000 s.
+ *      Resultado: 2046-10-02T23:46:40
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "Gigasecond(LocalDateTime.of(2020, 6, 1, 12, 0, 0))"
+ *      ─────────────────────────────────────────────────────────
+ *      Se suma 1_000_000_000 s directamente sobre la fecha-hora dada.
+ *      Resultado: 2052-02-07T11:46:40
+ *
+ *  ================================================================
+ */

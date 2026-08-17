@@ -67,153 +67,100 @@ class RotationalCipher(private val key: Int) {
  *  =====================  GUÍA DE ESTUDIO  =====================
  *
  *  📌  OBJETIVO
- *  Implementar el cifrado César (rotacional) desplazando cada letra
- *  del alfabeto una cantidad fija de posiciones definida por una clave.
+ *
+ *      Implementar el cifrado César (rotacional): desplazar cada letra
+ *      del alfabeto una cantidad fija de posiciones definida por una
+ *      clave, preservando mayúsculas/minúsculas y caracteres no
+ *      alfabéticos.
  *
  *  -----------------------------------------------------------------
  *  🧠  ORDEN DE PENSAMIENTO
  *
- *  1.  Definir el alfabeto base en orden (a-z).
- *  2.  Generar el alfabeto cifrado rotando los caracteres según la key.
- *  3.  Recorrer cada carácter del texto de entrada.
- *  4.  Si es letra, buscar su índice en el alfabeto base y reemplazarlo
- *      por el carácter en la misma posición del alfabeto cifrado.
- *  5.  Conservar mayúsculas, minúsculas y caracteres no alfabéticos.
+ *      I.   Validar que la clave esté entre 0 y 26.
+ *      II.  Construir el alfabeto cifrado rotando el alfabeto base
+ *           según la clave.
+ *      III. Recorrer cada carácter del texto: si es letra, ubicar su
+ *           posición en el alfabeto base y sustituirla por el
+ *           carácter en la misma posición del alfabeto cifrado.
+ *      IV.  Conservar mayúsculas, minúsculas y símbolos no alfabéticos.
  *
  *  -----------------------------------------------------------------
  *  🔍  EXPLICACIÓN PASO A PASO
  *
- *  1.  require(key in 0..26) — valida que la clave esté en el rango
- *      permitido; lanza IllegalArgumentException si no.
- *  2.  plain.drop(key) + plain.take(key) — construye el alfabeto
- *      desplazado: descarta los primeros `key` chars y los coloca
- *      al final.
- *  3.  text.map { char -> ... } — transforma cada carácter aplicando
- *      una lamba.
- *  4.  char.isLowerCase() / isUpperCase() — verifica si es letra
- *      minúscula o mayúscula.
- *  5.  plain.indexOf(char) — encuentra la posición del carácter en
- *      el alfabeto original.
- *  6.  cipher[index] — obtiene el carácter cifrado en esa posición.
- *  7.  .joinToString("") — une la lista resultante en un String.
+ *      →  init {
+ *      →      require(key in 0..26) { "The key must be between 0 and 26" }
+ *      ①  Valida que la clave esté en el rango permitido; lanza
+ *          excepción si no.
+ *      →  }
  *
- *  -----------------------------------------------------------------
- *  🛠️  FUNCIONES Y CONCEPTOS CLAVE DE KOTLIN
+ *      →  val plain = "abcdefghijklmnopqrstuvwxyz"
+ *      →  val cipher = plain.drop(key) + plain.take(key)
+ *      ②  .drop(key) descarta los primeros key caracteres; .take(key)
+ *          toma esos mismos caracteres y los pone al final: así se
+ *          construye el alfabeto rotado.
  *
- *  ┌───────────────────────────┬──────────────────────────────────┐
- *  │  Concepto                 │  Uso en el ejercicio             │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  require()                │  Validar clave en 0..26          │
- *  │  String.drop(n)           │  Quitar primeros n caracteres    │
- *  │  String.take(n)           │  Tomar primeros n caracteres     │
- *  │  CharSequence.map {}      │  Transformar cada carácter       │
- *  │  Char.isLowerCase()       │  Detectar minúscula              │
- *  │  Char.isUpperCase()       │  Detectar mayúscula              │
- *  │  String.indexOf()         │  Buscar posición de un char      │
- *  │  Char.uppercaseChar()     │  Convertir a mayúscula           │
- *  │  Iterable.joinToString()  │  Unir lista en un String         │
- *  └───────────────────────────┴──────────────────────────────────┘
+ *      →      return text.map { char ->
+ *      →          when {
+ *      →              char.isLowerCase() -> {
+ *      →                  val index = plain.indexOf(char)
+ *      →                  cipher[index]
+ *      ③  Si es minúscula, se busca su posición en plain y se toma el
+ *          carácter en esa misma posición del alfabeto cifrado.
+ *
+ *      →              char.isUpperCase() -> {
+ *      →                  val lowerChar = char.lowercaseChar()
+ *      →                  val index = plain.indexOf(lowerChar)
+ *      →                  cipher[index].uppercaseChar()
+ *      ④  Si es mayúscula, se busca su versión minúscula en plain, se
+ *          sustituye y se vuelve a convertir a mayúscula.
+ *
+ *      →              else -> char
+ *      ⑤  Cualquier carácter no alfabético se deja igual.
+ *      →          }
+ *      →      }.joinToString("")
+ *      ⑥  .map transforma cada carácter; .joinToString("") reconstruye
+ *          el String final sin separador.
  *
  *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
- *  A)  Usar Character.isLetter() y aritmética módulo 26 para
- *      desplazar directamente con (char - 'a' + key) % 26.
- *  B)  fold() en vez de map() + joinToString() para construir
- *      el resultado en una sola pasada.
- *
- *  -----------------------------------------------------------------
- *  ⚡  RENDIMIENTO
- *  Tiempo: O(n) — recorre cada carácter una vez.
- *  Memoria: O(n) — construye un nuevo String del mismo tamaño.
+ *      A)  Usar aritmética módulo 26 directamente: ((char - 'a' + key)
+ *          % 26 + 'a'.code).toChar(), sin construir el alfabeto cifrado.
+ *      B)  Usar fold() en vez de map() + joinToString() para construir
+ *          el resultado en una sola pasada sin lista intermedia.
  *
  *  -----------------------------------------------------------------
  *  📝  PSEUDOCÓDIGO EN ESPAÑOL
  *
- *  CLASE RotationalCipher(key: Int)
- *      INICIALIZACIÓN:
- *          SI key NO está en 0..26 → lanzar error
- *
- *      FUNCIÓN encode(texto: String): String
- *          alfabeto := "abcdefghijklmnopqrstuvwxyz"
- *          cifrado := alfabeto.drop(key) + alfabeto.take(key)
- *          resultado := ""
- *          POR CADA char EN texto:
- *              SI char es minúscula:
- *                  índice := alfabeto.indexOf(char)
- *                  resultado += cifrado[índice]
- *              SI NO SI char es mayúscula:
- *                  minúscula := char en minúscula
- *                  índice := alfabeto.indexOf(minúscula)
- *                  resultado += cifrado[índice] en mayúscula
- *              SI NO:
- *                  resultado += char
- *          DEVOLVER resultado
- *      FIN FUNCIÓN
- *  FIN CLASE
+ *      CLASE RotationalCipher(key)
+ *          AL CREAR: REQUERIR key EN 0..26
+ *          FUNCIÓN encode(texto): Texto
+ *              alfabeto ← "abcdefghijklmnopqrstuvwxyz"
+ *              cifrado ← alfabeto.QUITAR_PRIMEROS(key) + alfabeto.TOMAR_PRIMEROS(key)
+ *              resultado ← ""
+ *              PARA CADA char EN texto:
+ *                  SI char es minúscula: resultado += cifrado[alfabeto.INDICE(char)]
+ *                  SINO SI char es mayúscula: resultado += cifrado[alfabeto.INDICE(minusc)].MAYUSCULA()
+ *                  SINO: resultado += char
+ *              DEVOLVER resultado
+ *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 1: RotationalCipher(5).encode("omg")
- *  ─────────────────────────────────────────────────────────────────
- *  key = 5
- *  plain  = abcdefghijklmnopqrstuvwxyz
- *  cipher = fghijklmnopqrstuvwxyzabcde
- *  'o' → índice 14 → cipher[14] = 't'
- *  'm' → índice 12 → cipher[12] = 'r'
- *  'g' → índice 6  → cipher[6]  = 'l'
- *  Resultado: "trl"
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "RotationalCipher(5).encode(\"omg\")"
+ *      ─────────────────────────────────────────────────────────
+ *      cipher = fghijklmnopqrstuvwxyzabcde
+ *      'o'→índice 14→'t'; 'm'→índice 12→'r'; 'g'→índice 6→'l'
+ *      Resultado: "trl"
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 2: RotationalCipher(13).encode("ABC")
- *  ─────────────────────────────────────────────────────────────────
- *  key = 13
- *  plain  = abcdefghijklmnopqrstuvwxyz
- *  cipher = nopqrstuvwxyzabcdefghijklm
- *  'A' → minúscula 'a' → índice 0 → cipher[0] = 'n' → mayúscula 'N'
- *  'B' → minúscula 'b' → índice 1 → cipher[1] = 'o' → mayúscula 'O'
- *  'C' → minúscula 'c' → índice 2 → cipher[2] = 'p' → mayúscula 'P'
- *  Resultado: "NOP"
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 3: RotationalCipher(0).encode("Cool!")
- *  ─────────────────────────────────────────────────────────────────
- *  key = 0
- *  plain  = abcdefghijklmnopqrstuvwxyz
- *  cipher = abcdefghijklmnopqrstuvwxyz
- *  'C' → 'C' (sin cambio)
- *  'o' → 'o'
- *  'o' → 'o'
- *  'l' → 'l'
- *  '!' → '!' (no es letra, se conserva)
- *  Resultado: "Cool!"
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 4: RotationalCipher(22).encode("Kotlin is better")
- *  ─────────────────────────────────────────────────────────────────
- *  key = 22
- *  plain  = abcdefghijklmnopqrstuvwxyz
- *  cipher = wxyzabcdefghijklmnopqrstuv
- *  'K' → 'k'(10) → cipher[10] = 'g' → mayúscula 'G'
- *  'o' → index 14  → cipher[14] = 'k'
- *  't' → index 19  → cipher[19] = 'p'
- *  'l' → index 11  → cipher[11] = 'h'
- *  'i' → index 8   → cipher[8]  = 'e'
- *  'n' → index 13  → cipher[13] = 'j'
- *  ' ' → ' ' (no es letra)
- *  'i' → index 8   → cipher[8]  = 'e'
- *  's' → index 18  → cipher[18] = 'o'
- *  ' ' → ' '
- *  'b' → index 1   → cipher[1]  = 'x'
- *  'e' → index 4   → cipher[4]  = 'a'
- *  't' → index 19  → cipher[19] = 'p'
- *  't' → index 19  → cipher[19] = 'p'
- *  'e' → index 4   → cipher[4]  = 'a'
- *  'r' → index 17  → cipher[17] = 'n'
- *  Resultado: "Gkhpj eo xappan"
- *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "RotationalCipher(0).encode(\"Cool!\")"
+ *      ─────────────────────────────────────────────────────────
+ *      key=0 → cipher es idéntico a plain → nada cambia; '!' se
+ *      conserva por no ser letra.
+ *      Resultado: "Cool!"
  *
  *  ================================================================
  */

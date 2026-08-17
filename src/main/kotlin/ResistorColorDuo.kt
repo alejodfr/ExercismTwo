@@ -56,99 +56,71 @@ object ResistorColorDuo {
  *  =====================  GUÍA DE ESTUDIO  =====================
  *
  *  📌  OBJETIVO
- *  Convertir los dos primeros colores de una resistencia en un
- *  número de dos dígitos, ignorando cualquier color adicional.
+ *
+ *      Convertir los dos primeros colores de una resistencia en un
+ *      número de dos dígitos, ignorando cualquier color adicional.
  *
  *  -----------------------------------------------------------------
  *  🧠  ORDEN DE PENSAMIENTO
  *
- *  1. Recibir una lista de colores como parámetro vararg.
- *  2. Obtener el valor numérico de cada color mediante su ordinal
- *     dentro del enum Color (coincide con el valor real).
- *  3. Concatenar el primer dígito con el segundo como Strings y
- *     convertir el resultado a Int para formar el número de dos cifras.
+ *      I.   Recibir los colores como vararg (cantidad variable de
+ *           argumentos).
+ *      II.  Obtener el valor numérico de los dos primeros colores
+ *           usando su .ordinal en el enum Color.
+ *      III. Concatenar ambos dígitos como texto y convertir el
+ *           resultado a Int.
  *
  *  -----------------------------------------------------------------
  *  🔍  EXPLICACIÓN PASO A PASO
  *
- *  1.  enum class Color — Define los 10 colores con su ordinal
- *      coincidiendo con el valor de la banda (BLACK=0, BROWN=1, etc.).
- *  2.  vararg colors: Color — Permite pasar cualquier cantidad de
- *      argumentos del tipo Color sin necesidad de un array explícito.
- *  3.  colors[0].ordinal — Obtiene la posición ordinal del enum
- *      (0 para BLACK, 1 para BROWN, etc.).
- *  4.  .toString() — Convierte el entero a String para concatenar.
- *  5.  firstDigit + secondDigit — Concatena ambos Strings (ej. "1"+"5"
- *      = "15").
- *  6.  .toInt() — Transforma el String resultante de vuelta a Int.
+ *      →  fun value(vararg colors: Color): Int {
+ *      ①  vararg permite pasar cualquier cantidad de argumentos Color
+ *          sin necesidad de un array explícito.
  *
- *  -----------------------------------------------------------------
- *  🛠️  FUNCIONES Y CONCEPTOS CLAVE DE KOTLIN
+ *      →      val firstDigit = colors[0].ordinal.toString()
+ *      →      val secondDigit = colors[1].ordinal.toString()
+ *      ②  .ordinal devuelve la posición del color en el enum (0-based,
+ *          coincide con su valor); .toString() lo convierte a texto.
  *
- *  ┌───────────────────────────┬──────────────────────────────────┐
- *  │  Concepto                 │  Uso en el ejercicio             │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  enum class               │  Define constantes con un        │
- *  │                           │  ordinal numérico asociado.      │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  .ordinal                 │  Devuelve la posición del valor  │
- *  │                           │  enum (0-based).                 │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  vararg                   │  Parámetro que acepta cero o     │
- *  │                           │  más argumentos del mismo tipo.  │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  String concatenación     │  Une dos Strings con el operador │
- *  │                           │  +.                              │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  .toInt()                 │  Convierte un String a un valor  │
- *  │                           │  numérico Int.                   │
- *  └───────────────────────────┴──────────────────────────────────┘
+ *      →      val result = (firstDigit+secondDigit).toInt()
+ *      ③  Concatena ambos dígitos como Strings (ej. "1"+"5"="15") y
+ *          convierte el resultado de vuelta a Int.
+ *
+ *      →      return result
+ *      →  }
  *
  *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
- *  A)  Aritmético directo: colors[0].ordinal * 10 + colors[1].ordinal
- *      — evita la conversión a String y es más eficiente.
- *  B)  Con una función de extensión o un mapa inmutable
- *      (Map<Color, Int>) que asocie cada color a su valor numérico,
- *      útil si se necesita personalizar la asignación.
- *
- *  -----------------------------------------------------------------
- *  ⚡  RENDIMIENTO
- *  Tiempo O(1) — solo se accede a los dos primeros elementos del
- *  vararg y se realizan operaciones constantes. Espacio O(1) — no
- *  se crean estructuras adicionales significativas.
+ *      A)  Cálculo aritmético directo: colors[0].ordinal * 10 +
+ *          colors[1].ordinal — evita convertir a String y es más
+ *          eficiente.
+ *      B)  Usar un Map<Color, Int> explícito en vez de .ordinal, si se
+ *          necesita desacoplar el valor del orden de declaración.
  *
  *  -----------------------------------------------------------------
  *  📝  PSEUDOCÓDIGO EN ESPAÑOL
  *
- *  FUNCION valor(vararg colores: Color): Int
- *      primerDigito <- colores[0].ordinal
- *      segundoDigito <- colores[1].ordinal
- *      resultado <- concatenar(primerDigito, segundoDigito) como texto
- *      DEVOLVER convertir resultado a Int
- *  FIN FUNCION
+ *      FUNCIÓN valor(vararg colores): Entero
+ *          primerDigito ← colores[0].ordinal
+ *          segundoDigito ← colores[1].ordinal
+ *          DEVOLVER CONCATENAR(primerDigito, segundoDigito) COMO Entero
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 1: "brown, green"
- *  ─────────────────────────────────────────────────────────────────
- *  colores[0] = BROWN  -> ordinal 1 -> "1"
- *  colores[1] = GREEN  -> ordinal 5 -> "5"
- *  "1" + "5" = "15"
- *  "15".toInt() = 15
- *  Resultado: 15
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "value(Color.BROWN, Color.GREEN)"
+ *      ─────────────────────────────────────────────────────────
+ *      BROWN.ordinal=1, GREEN.ordinal=5 → "1"+"5"="15" → 15
+ *      Resultado: 15
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 2: "brown, green, violet"
- *  ─────────────────────────────────────────────────────────────────
- *  colores[0] = BROWN  -> ordinal 1 -> "1"
- *  colores[1] = GREEN  -> ordinal 5 -> "5"
- *  "1" + "5" = "15"
- *  El tercer color (VIOLET) se ignora por completo.
- *  Resultado: 15
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "value(Color.BROWN, Color.GREEN, Color.VIOLET)"
+ *      ─────────────────────────────────────────────────────────
+ *      Solo se usan colors[0] y colors[1]; el tercer color se ignora.
+ *      Resultado: 15
  *
  *  ================================================================
  */

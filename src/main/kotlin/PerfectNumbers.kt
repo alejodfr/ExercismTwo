@@ -45,163 +45,87 @@ fun classify(naturalNumber: Int): Classification {
     }
 }
 
-/**
+/*
  *  =====================  GUÍA DE ESTUDIO  =====================
  *
  *  📌  OBJETIVO
- *  Clasificar un número entero positivo como DEFICIENTE, PERFECTO o
- *  ABUNDANTE según su suma alícuota (suma de sus divisores propios).
+ *
+ *      Clasificar un número entero positivo como DEFICIENTE, PERFECTO
+ *      o ABUNDANTE según su suma alícuota (suma de sus divisores
+ *      propios, sin incluir el número mismo).
  *
  *  -----------------------------------------------------------------
- *  🧠  ANÁLISIS DE LA SOLUCIÓN
+ *  🧠  ORDEN DE PENSAMIENTO
  *
- *  fun classify(naturalNumber: Int): Classification {
- *      require(naturalNumber > 0) { "The number must be greater than zero" }
- *
- *      val divisores = mutableListOf<Int>()
- *      for (i in 1 until naturalNumber) {
- *          if (naturalNumber % i == 0) divisores.add(i)
- *      }
- *
- *      val resultado = divisores.sum()
- *
- *      return when {
- *          resultado == naturalNumber -> Classification.PERFECT
- *          resultado > naturalNumber  -> Classification.ABUNDANT
- *          else                       -> Classification.DEFICIENT
- *      }
- *  }
+ *      I.   Validar que el número sea positivo con require.
+ *      II.  Recorrer desde 1 hasta naturalNumber-1 y acumular en una
+ *           lista los que dividen exactamente al número.
+ *      III. Sumar esa lista de divisores (suma alícuota).
+ *      IV.  Comparar la suma contra el número original para elegir la
+ *           clasificación.
  *
  *  -----------------------------------------------------------------
  *  🔍  EXPLICACIÓN PASO A PASO
  *
- *  1.  require(naturalNumber > 0)
- *      — Lanza una excepción si el número no es positivo. Es una
- *      precondición que garantiza que el resto del código recibe
- *      una entrada válida.
+ *      →  fun classify(naturalNumber: Int): Classification {
+ *      →      require(naturalNumber > 0) { "The number must be greater than zero" }
+ *      ①  Lanza excepción si el número no es positivo.
  *
- *  2.  for (i in 1 until naturalNumber)
- *      — Itera desde 1 hasta naturalNumber - 1 (excluye al propio
- *      número). El operador until crea un rango semiabierto.
+ *      →      val divisores = mutableListOf<Int>()
+ *      →      for (i in 1 until naturalNumber) {
+ *      →          if (naturalNumber % i == 0) {
+ *      →              divisores.add(i)
+ *      ②  until crea un rango exclusivo [1, naturalNumber); si el
+ *          residuo de la división es 0, i es divisor y se agrega.
+ *      →          }
+ *      →      }
  *
- *  3.  naturalNumber % i == 0
- *      — Si el residuo de la división es 0, entonces i es divisor.
+ *      →      val resultado = divisores.sum()
+ *      ③  Suma todos los divisores encontrados: la suma alícuota.
  *
- *  4.  divisores.sum()
- *      — Función de extensión que suma todos los elementos de la
- *      lista. Equivale a la suma alícuota.
- *
- *  5.  when { ... }
- *      — Expresión condicional que compara la suma alícuota contra
- *      el número original y devuelve la clasificación correspondiente.
- *
- *  -----------------------------------------------------------------
- *  🛠️  FUNCIONES Y CONCEPTOS CLAVE DE KOTLIN
- *
- *  ┌───────────────────────────┬──────────────────────────────────┐
- *  │  Concepto                 │  Uso en el ejercicio             │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  require()                │  Valida precondiciones           │
- *  │  until                    │  Rango exclusivo [1, n)          │
- *  │  % (módulo)               │  Detecta divisores exactos       │
- *  │  MutableList / .add()     │  Colección mutable de divisores  │
- *  │  .sum()                   │  Suma todos los elementos        │
- *  │  when                     │  Expresión condicional múltiple  │
- *  │  enum class               │  Conjunto fijo de constantes     │
- *  └───────────────────────────┴──────────────────────────────────┘
+ *      →      return when {
+ *      →          resultado == naturalNumber -> Classification.PERFECT
+ *      →          resultado > naturalNumber -> Classification.ABUNDANT
+ *      →          else -> Classification.DEFICIENT
+ *      →      }
+ *      ④  Compara la suma contra el número original: igual → PERFECT,
+ *          mayor → ABUNDANT, menor → DEFICIENT.
+ *      →  }
  *
  *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
- *  A)  Con optimización hasta √n (más eficiente):
- *      var suma = 1  // 1 siempre es divisor
- *      for (i in 2..sqrt(n).toInt()) {
- *          if (n % i == 0) {
- *              suma += i
- *              if (i != n / i) suma += n / i
- *          }
- *      }
- *
- *  B)  Con programación funcional:
- *      val suma = (1 until n).filter { n % it == 0 }.sum()
- *
- *  -----------------------------------------------------------------
- *  ⚡  RENDIMIENTO
- *  La solución actual es O(n) porque recorre todos los números
- *  desde 1 hasta n-1. Para números grandes, el enfoque con √n
- *  (alternativa A) reduce la complejidad a O(√n).
+ *      A)  Optimizar recorriendo solo hasta √n, sumando cada divisor y
+ *          su complementario (n/divisor) para reducir de O(n) a O(√n).
+ *      B)  Estilo funcional: (1 until n).filter { n % it == 0 }.sum()
+ *          en vez del bucle for con lista mutable (ver
+ *          FancyPerfectNumbers.kt).
  *
  *  -----------------------------------------------------------------
  *  📝  PSEUDOCÓDIGO EN ESPAÑOL
  *
- *  FUNCIÓN clasificar(numero: Entero): Clasificacion
- *      ASSERT numero > 0
- *
- *      suma := 0
- *
- *      PARA CADA i DESDE 1 HASTA numero - 1:
- *          SI numero % i == 0:
- *              suma := suma + i
- *          FIN SI
- *      FIN PARA
- *
- *      SI suma == numero:
- *          DEVOLVER PERFECTO
- *      SINO SI suma > numero:
- *          DEVOLVER ABUNDANTE
- *      SINO:
- *          DEVOLVER DEFICIENTE
- *      FIN SI
- *  FIN FUNCIÓN
+ *      FUNCIÓN clasificar(numero): Clasificacion
+ *          REQUERIR numero > 0
+ *          suma ← 0
+ *          PARA i DESDE 1 HASTA numero - 1:
+ *              SI numero % i == 0: suma ← suma + i
+ *          SI suma == numero: DEVOLVER PERFECTO
+ *          SINO SI suma > numero: DEVOLVER ABUNDANTE
+ *          SINO: DEVOLVER DEFICIENTE
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 1: n = 6
- *  ─────────────────────────────────────────────────────────────────
- *  Divisores propios: 1, 2, 3
- *  Suma alícuota:     1 + 2 + 3 = 6
- *  Comparación:       6 == 6
- *  Resultado:         Classification.PERFECT  ✅
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "classify(28)"
+ *      ─────────────────────────────────────────────────────────
+ *      Divisores: 1,2,4,7,14 → suma=28 → 28==28 → PERFECT
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 2: n = 12
- *  ─────────────────────────────────────────────────────────────────
- *  Divisores propios: 1, 2, 3, 4, 6
- *  Suma alícuota:     1 + 2 + 3 + 4 + 6 = 16
- *  Comparación:       16 > 12
- *  Resultado:         Classification.ABUNDANT  ✅
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 3: n = 8
- *  ─────────────────────────────────────────────────────────────────
- *  Divisores propios: 1, 2, 4
- *  Suma alícuota:     1 + 2 + 4 = 7
- *  Comparación:       7 < 8
- *  Resultado:         Classification.DEFICIENT  ✅
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 4: n = 1 (caso borde)
- *  ─────────────────────────────────────────────────────────────────
- *  Divisores propios: (ninguno, el for va de 1 until 1 = vacío)
- *  Suma alícuota:     0
- *  Comparación:       0 < 1
- *  Resultado:         Classification.DEFICIENT  ✅
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 5: n = 28
- *  ─────────────────────────────────────────────────────────────────
- *  Divisores propios: 1, 2, 4, 7, 14
- *  Suma alícuota:     1 + 2 + 4 + 7 + 14 = 28
- *  Comparación:       28 == 28
- *  Resultado:         Classification.PERFECT  ✅
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 6: n = 0 (precondición)
- *  ─────────────────────────────────────────────────────────────────
- *  require(0 > 0) → IllegalArgumentException
- *  Resultado:         EXCEPCIÓN  ❌
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "classify(8)"
+ *      ─────────────────────────────────────────────────────────
+ *      Divisores: 1,2,4 → suma=7 → 7<8 → DEFICIENT
  *
  *  ================================================================
  */

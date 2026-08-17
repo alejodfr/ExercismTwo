@@ -52,94 +52,73 @@ object Hamming {
     }
 }
 
-// ============================================================
-//  1. INSTRUCCIONES
-// ============================================================
-//
-// Dadas dos cadenas de ADN (Strings) de igual longitud, contar
-// cuantas posiciones tienen letras diferentes (distancia Hamming).
-//
-// Objetivos:
-//  - Validar que ambas cadenas tengan la misma longitud.
-//  - Si no son iguales, lanzar IllegalArgumentException con
-//    require().
-//  - Recorrer ambas cadenas simultaneamente y contar las
-//    posiciones donde los caracteres difieren.
-
-// ============================================================
-//  2. ORDEN DE PENSAMIENTO
-// ============================================================
-//
-//  2.1 Validacion de longitud
-//   - Usamos require(condicion) para verificar que las cadenas
-//     midan lo mismo.
-//   - Si la condicion es falsa, require lanza automaticamente
-//     una IllegalArgumentException con el mensaje indicado.
-//
-//  2.2 Emparejamiento posicional
-//   - zip() toma dos Strings y devuelve una lista de pares
-//     (Char, Char), uno por cada posicion.
-//   - Ej: "ABC".zip("ABX") -> [(A,A), (B,B), (C,X)]
-//
-//  2.3 Conteo de diferencias
-//   - count() recibe una lambda que evalua cada par.
-//   - Si left != right, cuenta 1; si son iguales, no cuenta.
-//   - El resultado es la distancia Hamming.
-
-// ============================================================
-//  3. SINTAXIS DEL CODIGO
-// ============================================================
-//
-// +----------------+------------------------------------------+--------------------------------------+
-// | Palabra clave  | Significado                              | Analogia                             |
-// +----------------+------------------------------------------+--------------------------------------+
-// | object         | Declara un singleton (una unica          | Una caja con una unica copia.        |
-// |                | instancia de la clase).                  |                                      |
-// | fun            | Define una funcion o metdo.              | Una receta con pasos a seguir.       |
-// | require        | Valida una condicion y lanza excepcion   | Un portero que no deja pasar si      |
-// |                | si es falsa.                             | no cumples el requisito.             |
-// | zip            | Combina dos secuencias en pares          | Crear parejas de baile con dos       |
-// |                | posicion a posicion.                    | filas de personas.                   |
-// | count          | Cuenta elementos que cumplen una         | Un contador con filtro.              |
-// |                | condicion.                               |                                      |
-// | { (a,b) -> }   | Lambda que recibe dos parametros.        | Una maquina que toma dos cosas       |
-// |                |                                          | y produce un resultado.              |
-// | length         | Propiedad que devuelve cuantos           | La longitud de una fila de          |
-// |                | caracteres tiene el String.              | caracteres.                          |
-// +----------------+------------------------------------------+--------------------------------------+
-
-// ============================================================
-//  4. PSEUDOCODIGO
-// ============================================================
-//
-// objeto Hamming:
-//     funcion compute(cadenaIzq: String, cadenaDer: String): Int
-//         requerir que largo de cadenaIzq == largo de cadenaDer
-//             si no, lanzar error "left and right strands must be of equal length"
-//
-//         emparejar cadenaIzq con cadenaDer en pares (izq, der)
-//         contar cuantos pares tienen izq != der
-//         devolver ese conteo
-
-// ============================================================
-//  5. EJEMPLOS TRABAJADOS
-// ============================================================
-//
-// Ejemplo 1:
-//   Entrada: leftStrand = "GAGCCTACTAACGGGAT"
-//            rightStrand = "CATCGTAATGACGGCCT"
-//   Proceso: zip -> 16 pares, count -> 7 diferencias
-//   Resultado: 7
-//
-// Ejemplo 2:
-//   Entrada: leftStrand = "A"
-//            rightStrand = "A"
-//   Proceso: zip -> 1 par ('A','A'), left != right? false
-//   Resultado: 0
-//
-// Ejemplo 3:
-//   Entrada: leftStrand = "A"
-//            rightStrand = "G"
-//   Proceso: zip -> 1 par ('A','G'), left != right? true
-//   Resultado: 1
-//
+/*
+ *  =====================  GUÍA DE ESTUDIO  =====================
+ *
+ *  📌  OBJETIVO
+ *
+ *      Calcular la distancia de Hamming entre dos cadenas de ADN de
+ *      igual longitud: la cantidad de posiciones donde difieren.
+ *
+ *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Validar que ambas cadenas tengan la misma longitud; si no,
+ *           lanzar una excepción.
+ *      II.  Emparejar ambas cadenas posición a posición con zip().
+ *      III. Contar los pares donde los caracteres son distintos.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun compute(leftStrand: String, rightStrand: String): Int {
+ *      →      require(leftStrand.length == rightStrand.length) {
+ *      →          "left and right strands must be of equal length"
+ *      →      }
+ *      ①  require lanza IllegalArgumentException con el mensaje dado
+ *          si las longitudes no coinciden.
+ *
+ *      →      return leftStrand.zip(rightStrand).count { (left, right) ->
+ *      ②  zip() combina ambas cadenas en una lista de pares (Char,
+ *          Char), uno por cada posición.
+ *
+ *      →          left != right
+ *      →      }
+ *      ③  count evalúa la lambda por cada par y cuenta cuántos tienen
+ *          caracteres diferentes.
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
+ *  🔁  ENFOQUES ALTERNATIVOS
+ *
+ *      A)  Bucle for con índices: for (i in leftStrand.indices) if
+ *          (leftStrand[i] != rightStrand[i]) contador++.
+ *      B)  Usar leftStrand.indices.count { leftStrand[it] != rightStrand[it] }
+ *          sin construir la lista intermedia de pares.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN calcularDistancia(cadenaIzq, cadenaDer): Entero
+ *          REQUERIR cadenaIzq.LONGITUD == cadenaDer.LONGITUD
+ *          pares ← EMPAREJAR(cadenaIzq, cadenaDer)
+ *          DEVOLVER pares.CONTAR(izq != der)
+ *      FIN FUNCIÓN
+ *
+ *  -----------------------------------------------------------------
+ *  🧪  EJEMPLOS TRABAJADOS
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "compute(\"GAGCCTACTAACGGGAT\", \"CATCGTAATGACGGCCT\")"
+ *      ─────────────────────────────────────────────────────────
+ *      17 pares, 7 posiciones difieren
+ *      Resultado: 7
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "compute(\"A\", \"A\")"
+ *      ─────────────────────────────────────────────────────────
+ *      1 par ('A','A'), left != right → false
+ *      Resultado: 0
+ *
+ *  ================================================================
+ */

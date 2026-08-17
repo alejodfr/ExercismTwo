@@ -54,309 +54,86 @@ fun main(){
 
 
 /*
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. INSTRUCCIONES                                                            │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-    Problema: Calcular granos de trigo en un tablero de ajedrez.
-    Casilla 1 = 1 grano, casilla 2 = 2, casilla 3 = 4, y así sucesivamente
-    (se duplica en cada casilla).
-
-    OBJETIVOS:
-    I.   Función que reciba un número de casilla (1-64) y devuelva los granos
-         en esa casilla (2^(n-1)).
-    II.  Función que calcule el TOTAL de granos en todo el tablero (suma de
-         todas las casillas).
-    III. Validar que la casilla esté entre 1 y 64; si no, lanzar excepción.
-    IV.  Usar BigInteger para manejar números enormes (2⁶⁴ ≈ 1.84×10¹⁹).
-
-──────────────────────────────────────────────────────────────────────────────
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2. ORDEN DE PENSAMIENTO                                                     │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-    I. ENTENDER EL PROBLEMA
-       └── Un tablero de ajedrez tiene 64 casillas.
-       └── Patrón: 1, 2, 4, 8, 16, ... (potencias de 2).
-       └── Fórmula para la casilla n: granos = 2^(n-1).
-
-    II. VALIDACIÓN
-        └── Si n < 1 o n > 64, el problema no tiene sentido.
-        └── Lanzamos una excepción para detener la ejecución.
-
-    III. BIGINTEGER
-         └── Kotlin/Java tienen tipos Int (32 bits) y Long (64 bits).
-         └── 2⁶³ ya supera el rango de Long (9.22×10¹⁸ > 9.22×10¹⁸).
-         └── Usamos BigInteger que puede crecer sin límite.
-
-    IV. CÁLCULO DE GRANOS EN UNA CASILLA
-        └── bigNumber.pow(number - 1) → 2^(n-1)
-        └── Ej: casilla 4 → 2^(4-1) = 2³ = 8.
-
-    V. CÁLCULO DEL TOTAL
-       └── Sumatoria desde i=1 hasta i=64 de getGrainCountForSquare(i).
-       └── Equivalente a 2⁶⁴ - 1 (progresión geométrica).
-       └── Se usa un bucle for con variable mutable var.
-
-    VI. MAIN (prueba interactiva)
-        └── Pedir al usuario un número por consola.
-        └── Mostrar granos en esa casilla y el total del tablero.
-
-──────────────────────────────────────────────────────────────────────────────
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 3. SINTAXIS DEL CODIGO                                                      │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-    CODIGO FUENTE COMPLETO:
-
-    ┌──────────────────────────────────────────────────────────────────────────┐
-    │ import java.math.BigInteger                                              │
-    │                                                                          │
-    │ object Board {                                                           │
-    │     fun getGrainCountForSquare(number: Int): BigInteger {                │
-    │         if (number < 1 || number > 64)                                   │
-    │             throw IllegalArgumentException("...")                        │
-    │         val bigNumber = BigInteger.valueOf(2)                            │
-    │         return bigNumber.pow(number - 1)                                 │
-    │     }                                                                    │
-    │                                                                          │
-    │     fun getTotalGrainCount(): BigInteger {                               │
-    │         var total = BigInteger.ZERO                                      │
-    │         for (i in 1..64) {                                               │
-    │             total += getGrainCountForSquare(i)                           │
-    │         }                                                                │
-    │         return total                                                     │
-    │     }                                                                    │
-    │ }                                                                        │
-    │                                                                          │
-    │ fun main() {                                                             │
-    │     println("Enter a number between 1 and 64")                           │
-    │     val number = readln().toInt()                                        │
-    │     println("... ${Board.getGrainCountForSquare(number)}")               │
-    │     println("... ${Board.getTotalGrainCount()}")                         │
-    │ }                                                                        │
-    └──────────────────────────────────────────────────────────────────────────┘
-
-    EXPLICACION DE CADA ELEMENTO (numeración en romanos):
-
-    I.   import
-         └── Palabra reservada que trae código de otros paquetes.
-         └── import java.math.BigInteger → trae la clase BigInteger del paquete
-             java.math para poder usarla sin escribir java.math.BigInteger cada vez.
-         └── Analogía: como tomar prestado un libro de la biblioteca para usarlo
-             en tu casa.
-
-    II.  java.math.BigInteger
-         └── Clase de la biblioteca estándar de Java/Kotlin.
-         └── Almacena números enteros de PRECISIÓN ARBITRARIA (sin límite de bits).
-         └── Necesario porque 2⁶⁴ es demasiado grande para Int o Long.
-         └── Analogía: una hoja de papel infinita donde puedes escribir un número
-             tan largo como quieras.
-
-    III. object Board
-         └── object: palabra reservada que declara un SINGLETON (una única instancia).
-         └── Board: nombre del objeto (por convención, mayúscula inicial).
-         └── No necesita constructor, Kotlin crea la única instancia automáticamente.
-         └── Analogía: hay UN solo tablero de ajedrez en el juego; no necesitas
-             crear múltiples copias.
-
-    IV.  fun
-         └── Palabra reservada que define una FUNCIÓN (bloque de código reutilizable).
-         └── Analogía: una receta de cocina — describes pasos una vez y los ejecutas
-             cada vez que invocas la función.
-
-    V.   getGrainCountForSquare
-         └── Nombre de función: "obtener cantidad de granos para una casilla".
-         └── Sigue la convención camelCase (primera palabra minúscula, siguientes
-             mayúscula).
-
-    VI.  (number: Int)
-         └── Parámetro de entrada: nombre "number", tipo Int (entero de 32 bits).
-         └── ":" separa el nombre del tipo de dato.
-         └── Analogía: el número de casilla que el usuario elige en el tablero.
-
-    VII. : BigInteger
-         └── Después de los paréntesis, indica el TIPO DE RETORNO de la función.
-         └── Esta función DEVUELVE un BigInteger.
-         └── Si no se especifica, el tipo de retorno es Unit (como void).
-
-    VIII. if (number < 1 || number > 57)
-          └── if: palabra reservada para CONDICIONAL (SI).
-          └── (condición): entre paréntesis se evalúa si es verdadera o falsa.
-          └── number < 1: ¿el número es MENOR que 1? (operador <).
-          └── || : operador OR lógico — "O". Verdadero si AL MENOS una condición
-               es verdadera.
-          └── number > 64: ¿el número es MAYOR que 64? (operador >).
-          └── Analogía: "SI el casillero está fuera del tablero (menor a 1 O mayor
-               a 64), entonces es inválido."
-
-    IX.  throw
-         └── Palabra reservada para LANZAR una excepción (error).
-         └── Detiene la ejecución normal y pasa el control al bloque catch (si hay).
-         └── Analogía: una alarma que suena cuando alguien mete un dato incorrecto.
-
-    X.   IllegalArgumentException("...")
-         └── Tipo de excepción: "argumento ilegal" (dato no válido).
-         └── El mensaje entre paréntesis explica qué salió mal.
-         └── Solo letras (A-Z, a-z), espacios y punto.
-
-    XI.  val bigNumber
-         └── val: palabra reservada para variable INMUTABLE (no reasignable).
-         └── bigNumber: nombre de variable ("número grande").
-         └── Una vez asignado, no puede cambiar.
-
-    XII. BigInteger.valueOf(2)
-         └── Llamada a un MÉTODO ESTÁTICO de BigInteger.
-         └── valueOf(2) crea un BigInteger con valor 2.
-         └── Es equivalente a escribir BigInteger("2") pero más eficiente para
-             valores pequeños.
-         └── Analogía: pedirle a la fábrica de BigInteger que te dé el número 2.
-
-    XIII. bigNumber.pow(number - 1)
-          └── pow(): método que calcula POTENCIA (exponenciación).
-          └── pow(3) → 2³ = 8.
-          └── number - 1: el exponente. Casilla n → 2^(n-1).
-          └── Analogía: empezar con 2 y multiplicarlo por sí mismo (n-1) veces.
-
-    XIV. return
-         └── Palabra reservada: DEVOLVER un valor al lugar que llamó la función.
-         └── return bigNumber.pow(...) → entrega el resultado y termina.
-
-    XV.  getTotalGrainCount
-         └── Segunda función: "obtener el total de granos en todo el tablero".
-         └── No recibe parámetros, solo devuelve BigInteger.
-
-    XVI. var total = BigInteger.ZERO
-         └── var: palabra reservada para variable MUTABLE (se puede reasignar).
-         └── total: nombre de variable que acumulará la suma.
-         └── BigInteger.ZERO: constante estática que vale cero (0).
-         └── Analogía: una alcancía vacía que vamos a llenar moneda por moneda.
-
-    XVII. for (i in 1..64)
-          └── for: palabra reservada para BUCLE (repetir).
-          └── i in 1..64: la variable i toma valores 1, 2, 3, ..., 64.
-          └── 1..64: operador de RANGO (range), del 1 al 64 inclusive.
-          └── Analogía: "Para cada casilla desde la 1 hasta la 64, haz algo."
-
-    XVIII. total += getGrainCountForSquare(i)
-           └── +=: operador de ASIGNACIÓN CON SUMA.
-           └── total += X es equivalente a total = total + X.
-           └── getGrainCountForSquare(i): llama a la función para la casilla i.
-           └── Analogía: saca los granos de la casilla i y échalos a la alcancía.
-
-    XIX. main
-         └── Función especial: PUNTO DE ENTRADA del programa.
-         └── Kotlin ejecuta main() automáticamente al correr el programa.
-         └── Analogía: la puerta principal de una casa — por donde se entra.
-
-    XX.  readln()
-         └── Función de la biblioteca estándar: "read line" (leer línea).
-         └── Lee una línea de texto desde el teclado (consola).
-         └── Devuelve un String (texto).
-
-    XXI. .toInt()
-         └── Método que convierte un String a Int (entero).
-         └── Si el texto no es un número válido, lanza excepción.
-         └── Ej: "42".toInt() → 42.
-
-    XXII. ${Board.getGrainCountForSquare(number)}
-          └── Interpolación de cadenas (String templates).
-          └── ${...}: dentro de un String con comillas dobles, ejecuta lo que hay
-              entre llaves y CONVIERTE el resultado a texto.
-          └── Board.getGrainCountForSquare(number): llama a la función del objeto
-              Board pasando number como argumento.
-          └── Analogía: un hueco en una frase que se rellena automáticamente con
-              el resultado de un cálculo.
-
-    XXIII. Board.getTotalGrainCount()
-           └── Board: nombre del objeto singleton.
-           └── . : operador punto — "accede al miembro de".
-           └── getTotalGrainCount(): llamada a la función.
-
-──────────────────────────────────────────────────────────────────────────────
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 4. PSEUDOCODIGO                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-    OBJETO Tablero
-
-        FUNCION granosEnCasilla(numero):
-            ENTRADA: numero (entero, 1-64)
-            SALIDA: BigInteger
-
-            SI numero < 1 O numero > 64:
-                LANZAR error "Solo enteros entre 1 y 64"
-            SINO:
-                numeronGrande = BigInteger(2)
-                DEVOLVER numeronGrande.elevado(numero - 1)
-
-        FUNCION totalGranos():
-            SALIDA: BigInteger
-
-            total = BigInteger.CERO
-            PARA cada i DESDE 1 HASTA 64:
-                total = total + granosEnCasilla(i)
-            DEVOLVER total
-
-    ──────────────────────────────────────────────────────────────────────────
-
-    PROGRAMA PRINCIPAL:
-        1. Mostrar "Ingresa un número entre 1 y 64"
-        2. Leer número ingresado por el usuario y convertirlo a entero
-        3. Mostrar "Los granos en la casilla [numero] son [Tablero.granosEnCasilla(numero)]"
-        4. Mostrar "El total de granos en el tablero es [Tablero.totalGranos()]"
-
-──────────────────────────────────────────────────────────────────────────────
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 5. EJEMPLOS TRABAJADOS                                                      │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-    EJEMPLO 1: getGrainCountForSquare(1) — primera casilla
-
-        Entrada: numero = 1
-        Proceso:
-            ¿1 < 1 O 1 > 64? → ¿falso O falso? → falso → NO lanza excepción
-            numeronGrande = 2
-            2^(1-1) = 2^0 = 1
-        Resultado: 1 grano
-        └── La primera casilla tiene exactamente 1 grano.
-
-    EJEMPLO 2: getGrainCountForSquare(10) — casilla 10
-
-        Entrada: numero = 10
-        Proceso:
-            ¿10 < 1 O 10 > 64? → falso
-            numeronGrande = 2
-            2^(10-1) = 2^9 = 512
-        Resultado: 512 granos
-        └── Patrón de duplicación: 1 → 2 → 4 → 8 → 16 → 32 → 64 → 128 → 256 → 512
-
-    EJEMPLO 3: getTotalGrainCount() — suma total del tablero
-
-        Entrada: ninguna
-        Proceso:
-            total = 0
-            i = 1: total = 0 + 2^0 = 0 + 1 = 1
-            i = 2: total = 1 + 2^1 = 1 + 2 = 3
-            i = 3: total = 3 + 2^2 = 3 + 4 = 7
-            i = 4: total = 7 + 2^3 = 7 + 8 = 15
-            i = 5: total = 15 + 2^4 = 15 + 16 = 31
-            ...
-            i = 64: total = (2^64 - 1) = 18.446.744.073.709.551.615
-        Resultado: 18.446.744.073.709.551.615 granos
-        └── Equivale a 2^64 - 1. Es un número de 20 dígitos, más granos que
-            los que existen en la Tierra.
-
-    EJEMPLO 4: getGrainCountForSquare(70) — casilla inválida (fuera de rango)
-
-        Entrada: numero = 70
-        Proceso:
-            ¿70 < 1 O 70 > 64? → ¿falso O verdadero? → verdadero
-            → LANZA IllegalArgumentException
-        Resultado: el programa se detiene con un error
-        └── El tablero solo tiene 64 casillas. La entrada 70 no es válida.
-*/
+ *  =====================  GUÍA DE ESTUDIO  =====================
+ *
+ *  📌  OBJETIVO
+ *
+ *      Calcular la cantidad de granos de trigo en una casilla dada de
+ *      un tablero de ajedrez (que se duplica en cada casilla) y el
+ *      total acumulado en las 64 casillas.
+ *
+ *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Validar que la casilla esté entre 1 y 64.
+ *      II.  Los granos en la casilla n son 2^(n-1); usar BigInteger
+ *           porque 2⁶³ supera el rango de Long.
+ *      III. El total es la suma de getGrainCountForSquare(i) para i
+ *           de 1 a 64.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun getGrainCountForSquare(number: Int): BigInteger {
+ *      →      if (number < 1 || number > 64) throw IllegalArgumentException(...)
+ *      ①  Valida que la casilla esté en rango [1, 64]; si no, lanza
+ *          una excepción.
+ *
+ *      →      val bigNumber = BigInteger.valueOf(2)
+ *      ②  BigInteger permite números enteros de tamaño arbitrario,
+ *          necesarios porque 2⁶⁴ excede Long.
+ *
+ *      →      return bigNumber.pow(number - 1)
+ *      ③  pow(n-1) calcula 2 elevado a (n-1): la casilla 1 tiene
+ *          2⁰=1 grano, la casilla 4 tiene 2³=8.
+ *      →  }
+ *
+ *      →  fun getTotalGrainCount(): BigInteger {
+ *      →      var total = BigInteger.ZERO
+ *      →      for (i in 1..64){
+ *      →          total += getGrainCountForSquare(i)
+ *      ④  Acumula los granos de cada una de las 64 casillas.
+ *      →      }
+ *      →      return total
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
+ *  🔁  ENFOQUES ALTERNATIVOS
+ *
+ *      A)  Calcular el total directamente con la fórmula de la suma
+ *          geométrica: 2⁶⁴ - 1, sin bucle.
+ *      B)  Usar (1..64).sumOf { getGrainCountForSquare(it) } — aunque
+ *          sumOf no soporta BigInteger de forma nativa, requeriría un
+ *          fold en su lugar.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN granosEnCasilla(numero): BigEntero
+ *          SI numero < 1 O numero > 64: LANZAR Error
+ *          DEVOLVER 2 ELEVADO A (numero - 1)
+ *      FIN FUNCIÓN
+ *
+ *      FUNCIÓN totalGranos(): BigEntero
+ *          total ← 0
+ *          PARA i DESDE 1 HASTA 64: total ← total + granosEnCasilla(i)
+ *          DEVOLVER total
+ *      FIN FUNCIÓN
+ *
+ *  -----------------------------------------------------------------
+ *  🧪  EJEMPLOS TRABAJADOS
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "getGrainCountForSquare(1)"
+ *      ─────────────────────────────────────────────────────────
+ *      2^(1-1) = 2^0 = 1
+ *      Resultado: 1 grano
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "getGrainCountForSquare(64)"
+ *      ─────────────────────────────────────────────────────────
+ *      2^(64-1) = 2^63 = 9.223.372.036.854.775.808
+ *      Resultado: 9223372036854775808 granos
+ *
+ *  ================================================================
+ */

@@ -29,160 +29,70 @@ object Pangram {
     }
 }
 
-/**
+/*
  *  =====================  GUÍA DE ESTUDIO  =====================
  *
  *  📌  OBJETIVO
- *  Determinar si una oración es un pangrama, es decir, si contiene
- *  cada letra del alfabeto inglés al menos una vez.
+ *
+ *      Determinar si una oración es un pangrama: que contenga cada
+ *      letra del alfabeto inglés al menos una vez, sin distinguir
+ *      mayúsculas de minúsculas.
  *
  *  -----------------------------------------------------------------
- *  🧠  ANÁLISIS DE LA SOLUCIÓN
+ *  🧠  ORDEN DE PENSAMIENTO
  *
- *  fun isPangram(input: String): Boolean {
- *      return ('a'..'z').all { char ->
- *          input.contains(char, ignoreCase = true)
- *      }
- *  }
+ *      I.   Generar el rango de letras 'a' a 'z'.
+ *      II.  Verificar que TODAS esas letras estén presentes en la
+ *           frase, ignorando mayúsculas.
+ *      III. .all() se detiene apenas encuentra una letra ausente
+ *           (cortocircuito).
  *
  *  -----------------------------------------------------------------
  *  🔍  EXPLICACIÓN PASO A PASO
  *
- *  1.  ('a'..'z')  — crea un Rango que incluye todas las letras
- *      del alfabeto inglés en minúscula. En Kotlin, 'a'..'z' es
- *      un CharRange que produce 26 caracteres.
+ *      →  fun isPangram(input: String): Boolean {
+ *      →      return ('a'..'z').all { char ->
+ *      ①  ('a'..'z') crea un CharRange con las 26 letras del
+ *          alfabeto; .all { } comprueba si TODOS los elementos
+ *          cumplen la condición dada.
  *
- *  2.  .all { }    — es una función de extensión para colecciones
- *      que devuelve true si TODOS los elementos cumplen la condición
- *      dada. Tan pronto como un elemento no la cumple, se detiene
- *      (cortocircuito / short-circuit).
- *
- *  3.  input.contains(char, ignoreCase = true)
- *      — verifica si la cadena input contiene el caracter 'char'
- *      sin distinguir mayúsculas de minúsculas. El parámetro
- *      ignoreCase evita tener que convertir manualmente la cadena.
- *
- *  -----------------------------------------------------------------
- *  🛠️  FUNCIONES Y CONCEPTOS CLAVE DE KOTLIN
- *
- *  ┌───────────────────────────┬──────────────────────────────────┐
- *  │  Concepto                 │  Uso en el ejercicio             │
- *  ├───────────────────────────┼──────────────────────────────────┤
- *  │  CharRange                │  ('a'..'z') genera las 26 letras │
- *  │  Función de extensión     │  .all { } actúa sobre el rango   │
- *  │  Lambda / predicado       │  { char -> ... }                 │
- *  │  Parámetro con nombre     │  ignoreCase = true               │
- *  │  Short-circuit            │  .all() falla rápido             │
- *  │  Expresión única          │  La función solo tiene un return │
- *  └───────────────────────────┴──────────────────────────────────┘
+ *      →          input.contains(char, ignoreCase = true)
+ *      ②  .contains(char, ignoreCase = true) busca la letra en la
+ *          frase sin distinguir mayúsculas de minúsculas.
+ *      →      }
+ *      →  }
  *
  *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
- *  A)  Con conjunto (Set):
- *      input.lowercase().filter { it.isLetter() }.toSet().size == 26
- *
- *  B)  Con loop tradicional:
- *      for (c in 'a'..'z') if (c !in input.lowercase()) return false
- *      return true
- *
- *  -----------------------------------------------------------------
- *  ⚡  RENDIMIENTO
- *  La solución actual es O(n·m) en el peor caso, donde n = 26 y
- *  m = longitud de input. Gracias al cortocircuito de .all(),
- *  suele terminar antes si falta una letra temprana.
+ *      A)  Con Set: input.lowercase().filter { it.isLetter() }.toSet().size == 26.
+ *      B)  Con bucle tradicional: for (c in 'a'..'z') if (c !in
+ *          input.lowercase()) return false; return true.
  *
  *  -----------------------------------------------------------------
  *  📝  PSEUDOCÓDIGO EN ESPAÑOL
  *
- *  FUNCIÓN esPangrama(entrada: Texto): Booleano
- *
- *      PARA CADA letra DESDE 'a' HASTA 'z':
- *          SI entrada NO CONTIENE letra (ignorando mayúsculas):
- *              DEVOLVER Falso
- *          FIN SI
- *      FIN PARA
- *
- *      DEVOLVER Verdadero
- *  FIN FUNCIÓN
+ *      FUNCIÓN esPangrama(entrada: Texto): Booleano
+ *          PARA CADA letra DESDE 'a' HASTA 'z':
+ *              SI entrada NO CONTIENE letra (ignorando mayúsculas):
+ *                  DEVOLVER Falso
+ *          DEVOLVER Verdadero
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 1: "The quick brown fox jumps over the lazy dog."
- *  ─────────────────────────────────────────────────────────────────
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "\"The quick brown fox jumps over the lazy dog.\""
+ *      ─────────────────────────────────────────────────────────
+ *      Contiene las 26 letras del alfabeto (a...z)
+ *      Resultado: true
  *
- *  ¿Contiene 'a'?  → Sí ("...azy...")        ✅
- *  ¿Contiene 'b'?  → Sí ("...brown...")      ✅
- *  ¿Contiene 'c'?  → Sí ("...quick...")      ✅
- *  ¿Contiene 'd'?  → Sí ("...dog...")        ✅
- *  ¿Contiene 'e'?  → Sí ("...the...")        ✅
- *  ¿Contiene 'f'?  → Sí ("...fox...")        ✅
- *  ¿Contiene 'g'?  → Sí ("...dog...")        ✅
- *  ¿Contiene 'h'?  → Sí ("...the...")        ✅
- *  ¿Contiene 'i'?  → Sí ("...quick...")      ✅
- *  ¿Contiene 'j'?  → Sí ("...jumps...")      ✅
- *  ¿Contiene 'k'?  → Sí ("...quick...")      ✅
- *  ¿Contiene 'l'?  → Sí ("...lazy...")       ✅
- *  ¿Contiene 'm'?  → Sí ("...jumps...")      ✅
- *  ¿Contiene 'n'?  → Sí ("...brown...")      ✅
- *  ¿Contiene 'o'?  → Sí ("...fox...")        ✅
- *  ¿Contiene 'p'?  → Sí ("...jumps...")      ✅
- *  ¿Contiene 'q'?  → Sí ("...quick...")      ✅
- *  ¿Contiene 'r'?  → Sí ("...brown...")      ✅
- *  ¿Contiene 's'?  → Sí ("...jumps...")      ✅
- *  ¿Contiene 't'?  → Sí ("...the...")        ✅
- *  ¿Contiene 'u'?  → Sí ("...quick...")      ✅
- *  ¿Contiene 'v'?  → Sí ("...over...")       ✅
- *  ¿Contiene 'w'?  → Sí ("...brown...")      ✅
- *  ¿Contiene 'x'?  → Sí ("...fox...")        ✅
- *  ¿Contiene 'y'?  → Sí ("...lazy...")       ✅
- *  ¿Contiene 'z'?  → Sí ("...lazy...")       ✅
- *
- *  Resultado: true  (es un pangrama)
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 2: "Hello World"
- *  ─────────────────────────────────────────────────────────────────
- *
- *  ¿Contiene 'a'?  → No                     ❌ (cortocircuito)
- *
- *  Resultado: false  (no es un pangrama)
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 3: "Pack my box with five dozen liquor jugs"
- *  ─────────────────────────────────────────────────────────────────
- *
- *  ¿Contiene 'a'?  → Sí   ✅
- *  ¿Contiene 'b'?  → Sí   ✅
- *  ¿Contiene 'c'?  → Sí   ✅
- *  ¿Contiene 'd'?  → Sí   ✅
- *  ¿Contiene 'e'?  → Sí   ✅
- *  ¿Contiene 'f'?  → Sí   ✅
- *  ¿Contiene 'g'?  → Sí   ✅
- *  ¿Contiene 'h'?  → No   ❌ (cortocircuito)
- *
- *  Resultado: false  (falta la 'h')
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 4: Entrada vacía ""
- *  ─────────────────────────────────────────────────────────────────
- *
- *  ¿Contiene 'a'?  → No   ❌ (cortocircuito)
- *
- *  Resultado: false  (una cadena vacía nunca es un pangrama)
- *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 5: "abcdefghijklmnopqrstuvwxyz"
- *  ─────────────────────────────────────────────────────────────────
- *
- *  ¿Contiene 'a'?  → Sí   ✅
- *  ¿Contiene 'b'?  → Sí   ✅
- *      ...
- *  ¿Contiene 'z'?  → Sí   ✅
- *
- *  Resultado: true  (contiene el alfabeto completo)
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "\"Hello World\""
+ *      ─────────────────────────────────────────────────────────
+ *      No contiene 'a' → .all() corta en la primera letra ausente
+ *      Resultado: false
  *
  *  ================================================================
  */

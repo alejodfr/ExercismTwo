@@ -67,17 +67,99 @@ object Flattener {
     }
 }
 
-/**
- * Míralo en acción con un ejemplo simple:
+/*
+ *  =====================  GUÍA DE ESTUDIO  =====================
  *
- * Si la entrada es [1, [2, 3]]:
+ *  📌  OBJETIVO
  *
- *   1. stack recibe [1, [2, 3]]
- *   2. removeLast() saca [2, 3] y al ser una colección mete 2 y 3 a la pila
- *   3. removeLast() saca 3 -> result: [3]
- *   4. removeLast() saca 2 -> result: [3, 2]
- *   5. removeLast() saca 1 -> result: [3, 2, 1]
- *   6. result.reversed() -> devuelve [1, 2, 3]
+ *      Aplanar un array anidado de cualquier profundidad en una sola
+ *      lista, excluyendo los valores null que puedan aparecer.
  *
- * ¡Has implementado un algoritmo iterativo para desanidar estructuras usando ArrayDeque!
+ *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Usar una pila (ArrayDeque) en vez de recursión para
+ *           procesar los elementos de forma iterativa.
+ *      II.  Sacar un elemento de la pila: si es null, ignorarlo; si es
+ *           una colección, volver a meter sus elementos a la pila; si
+ *           es un valor simple, guardarlo en el resultado.
+ *      III. Como la pila procesa en orden LIFO (al revés), invertir el
+ *           resultado una sola vez al final.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  val stack = ArrayDeque<Any?>()
+ *      →  stack.addAll(source)
+ *      ①  ArrayDeque funciona como pila: addAll mete todos los
+ *          elementos de entrada tal cual, sin aplanar todavía.
+ *
+ *      →  while (stack.isNotEmpty()) {
+ *      →      val element = stack.removeLast()
+ *      ②  removeLast() saca el último elemento agregado (comportamiento
+ *          de pila LIFO).
+ *
+ *      →      when (element) {
+ *      →          null -> { /* Ignorar / No hace nada */ }
+ *      ③  Si el elemento es null, la rama no hace nada: se descarta.
+ *
+ *      →          is Collection<*> -> {
+ *      →              stack.addAll(element)
+ *      ④  Si es una subcolección, se vuelven a meter sus elementos a
+ *          la pila para procesarlos en las siguientes iteraciones.
+ *
+ *      →          else -> {
+ *      →              result.add(element)
+ *      ⑤  Si es un valor simple (no null, no colección), se agrega
+ *          directamente al resultado.
+ *      →          }
+ *      →      }
+ *      →  }
+ *
+ *      →  return result.reversed()
+ *      ⑥  Como los elementos salen en orden inverso al de entrada
+ *          (por ser pila), se invierte la lista una sola vez al final.
+ *
+ *  -----------------------------------------------------------------
+ *  🔁  ENFOQUES ALTERNATIVOS
+ *
+ *      A)  Recursión clásica: fun flatten(list) = list.flatMap { if
+ *          (it is Collection<*>) flatten(it) else listOfNotNull(it) }.
+ *      B)  Usar una Queue (FIFO) con addFirst/removeFirst para
+ *          preservar el orden original sin necesidad de invertir al
+ *          final.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN aplanar(origen: Coleccion): ListaDe<Any>
+ *          resultado ← LISTA_VACIA
+ *          pila ← PILA(origen)
+ *          MIENTRAS pila NO esté vacía:
+ *              elemento ← pila.SACAR_ULTIMO()
+ *              SI elemento es nulo: CONTINUAR (ignorar)
+ *              SINO SI elemento es Colección: pila.AGREGAR_TODOS(elemento)
+ *              SINO: resultado.AGREGAR(elemento)
+ *          DEVOLVER resultado.INVERTIR()
+ *      FIN FUNCIÓN
+ *
+ *  -----------------------------------------------------------------
+ *  🧪  EJEMPLOS TRABAJADOS
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "flatten([1, [2, 3]])"
+ *      ─────────────────────────────────────────────────────────
+ *      pila=[1,[2,3]] → saca [2,3] → mete 2,3 → pila=[1,2,3]
+ *      saca 3→result=[3]; saca 2→result=[3,2]; saca 1→result=[3,2,1]
+ *      reversed() → [1,2,3]
+ *      Resultado: [1, 2, 3]
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "flatten([1, [2, 6, null], [[null, [4]], 5]])"
+ *      ─────────────────────────────────────────────────────────
+ *      Cada null se ignora; las subcolecciones se desanidan
+ *      recursivamente vía la pila.
+ *      Resultado: [1, 2, 6, 4, 5]
+ *
+ *  ================================================================
  */

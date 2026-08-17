@@ -55,106 +55,89 @@ class PhoneNumber(rawNumber: String) {
     }
 }
 
-/**
+/*
  *  =====================  GUÍA DE ESTUDIO  =====================
  *
  *  📌  OBJETIVO
- *  Limpiar números telefónicos ingresados por el usuario eliminando
- *  puntuación y código de país, validando el formato NANP (NXX-NXX-XXXX).
+ *
+ *      Limpiar números telefónicos ingresados por el usuario: quitar
+ *      puntuación, eliminar el código de país si está presente, y
+ *      validar el formato NANP (NXX-NXX-XXXX).
  *
  *  -----------------------------------------------------------------
- *  🧠  ANÁLISIS DE LA SOLUCIÓN
+ *  🧠  ORDEN DE PENSAMIENTO
  *
- *  class PhoneNumber(rawNumber: String) {
- *      val number: String
- *      init {
- *          var digits = rawNumber.filter { it.isDigit() }
- *          if (digits.length == 11) {
- *              require(digits.startsWith("1")) { "11-digit numbers must start with 1" }
- *              digits = digits.drop(1)
- *          }
- *          require(digits.length == 10) { "Incorrect number of digits" }
- *          require(digits[0] in '2'..'9') { "Area code cannot start with 0 or 1" }
- *          require(digits[3] in '2'..'9') { "Exchange code cannot start with 0 or 1" }
- *          number = digits
- *      }
- *  }
+ *      I.   Extraer solo los dígitos del texto de entrada.
+ *      II.  Si quedan 11 dígitos, validar que empiecen con "1" (código
+ *           de país) y eliminarlo.
+ *      III. Validar que queden exactamente 10 dígitos.
+ *      IV.  Validar que el área y el código de intercambio (posiciones
+ *           0 y 3) no empiecen con 0 ni 1.
+ *      V.   Guardar el número limpio en la propiedad number.
  *
  *  -----------------------------------------------------------------
  *  🔍  EXPLICACIÓN PASO A PASO
  *
- *  1.  filter + isDigit — Extrae solo los dígitos del string original.
- *  2.  Código de país — Si hay 11 dígitos y empieza con '1', lo elimina.
- *  3.  require + length — Valida que queden exactamente 10 dígitos.
- *  4.  Rangos con in — Verifica que posición 0 y 3 estén en '2'..'9'.
- *  5.  Asignación — Guarda el número limpio en la propiedad val number.
+ *      →  var digits = rawNumber.filter { it.isDigit() }
+ *      ①  filter conserva solo los caracteres que son dígitos,
+ *          eliminando espacios, guiones, paréntesis y el "+".
  *
- *  -----------------------------------------------------------------
- *  🛠️  FUNCIONES Y CONCEPTOS CLAVE DE KOTLIN
+ *      →  if (digits.length == 11) {
+ *      →      require(digits.startsWith("1")) { "11-digit numbers must start with 1" }
+ *      →      digits = digits.drop(1)
+ *      ②  Si hay 11 dígitos, deben empezar con "1" (código de país
+ *          válido); .drop(1) lo elimina, dejando 10 dígitos.
+ *      →  }
  *
- *  ┌───────────────────────────┬──────────────────────────────────────┐
- *  │  Concepto                 │  Uso en el ejercicio                 │
- *  ├───────────────────────────┼──────────────────────────────────────┤
- *  │  filter                   │  rawNumber.filter { it.isDigit() }   │
- *  │  isDigit()                │  Filtra caracteres no numéricos      │
- *  │  require                  │  Valida condiciones con excepción    │
- *  │  drop(n)                  │  digits.drop(1) elimina prefijo      │
- *  │  startsWith               │  digits.startsWith("1")             │
- *  │  Rangos '2'..'9'         │  digits[0] in '2'..'9'              │
- *  │  init block               │  Bloque de inicialización            │
- *  │  val (inmutabilidad)      │  number se asigna una sola vez       │
- *  └───────────────────────────┴──────────────────────────────────────┘
+ *      →  require(digits.length == 10) { "Incorrect number of digits" }
+ *      ③  Tras el posible recorte, deben quedar exactamente 10 dígitos.
+ *
+ *      →  require(digits[0] in '2'..'9') { "Area code cannot start with 0 or 1" }
+ *      →  require(digits[3] in '2'..'9') { "Exchange code cannot start with 0 or 1" }
+ *      ④  El primer dígito del área (posición 0) y del código de
+ *          intercambio (posición 3) deben estar en el rango '2'..'9'.
+ *
+ *      →  number = digits
+ *      ⑤  Si todas las validaciones pasan, se guarda el número limpio.
  *
  *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
- *  A)  replace con Regex
- *      rawNumber.replace(Regex("[^0-9]"), "") en vez de filter.
- *  B)  Función privada auxiliar
- *      Extraer validaciones a métodos privados separados.
- *
- *  -----------------------------------------------------------------
- *  ⚡  RENDIMIENTO
- *  O(n) tiempo, O(n) espacio — filter recorre tdo el string y crea
- *  uno nuevo. Las validaciones restantes son O(1).
+ *      A)  Usar una expresión regular Regex("[^0-9]") con .replace("")
+ *          en vez de filter { it.isDigit() }.
+ *      B)  Extraer las validaciones a funciones privadas separadas
+ *          (validateLength, validateAreaCode, ...) para mayor claridad.
  *
  *  -----------------------------------------------------------------
  *  📝  PSEUDOCÓDIGO EN ESPAÑOL
  *
- *  CLASE PhoneNumber(rawNumber: String)
- *      number: String (inmutable)
- *      INICIALIZAR:
- *          digits = rawNumber SOLO DÍGITOS
- *          SI digits.longitud == 11 ENTONCES
- *              REQUERIR digits EMPIEZA CON "1"
- *              digits = digits SIN PRIMER CARÁCTER
- *          REQUERIR digits.longitud == 10
- *          REQUERIR digits[0] EN '2'..'9'
- *          REQUERIR digits[3] EN '2'..'9'
- *          number = digits
- *      FIN INICIALIZAR
- *  FIN CLASE
+ *      CLASE PhoneNumber(rawNumber)
+ *          AL CREAR:
+ *              digits ← rawNumber SOLO DÍGITOS
+ *              SI digits.LONGITUD == 11:
+ *                  REQUERIR digits EMPIEZA CON "1"
+ *                  digits ← digits SIN PRIMER CARÁCTER
+ *              REQUERIR digits.LONGITUD == 10
+ *              REQUERIR digits[0] EN '2'..'9'
+ *              REQUERIR digits[3] EN '2'..'9'
+ *              number ← digits
+ *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 1: "+1 (613)-995-0253"
- *  ─────────────────────────────────────────────────────────────────
- *  filter { it.isDigit() } → "16139950253" (11 dígitos)
- *  startsWith("1")? sí → drop(1) → "6139950253"
- *  length == 10? sí
- *  digits[0] = '6' in '2'..'9'? sí
- *  digits[3] = '9' in '2'..'9'? sí
- *  Resultado: "6139950253"
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 1: "PhoneNumber(\"+1 (613)-995-0253\")"
+ *      ─────────────────────────────────────────────────────────
+ *      filter → "16139950253" (11 dígitos) → empieza con "1" → drop(1)
+ *      → "6139950253" (10 dígitos); [0]='6', [3]='9' ambos en 2..9
+ *      Resultado: number = "6139950253"
  *
- *  ─────────────────────────────────────────────────────────────────
- *  Ejemplo 2: "123-456-7890"
- *  ─────────────────────────────────────────────────────────────────
- *  filter → "1234567890" (10 dígitos)
- *  length == 10? sí
- *  digits[0] = '1' in '2'..'9'? NO → IllegalArgumentException
- *  Resultado: "Area code cannot start with 0 or 1"
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 2: "PhoneNumber(\"123-456-7890\")"
+ *      ─────────────────────────────────────────────────────────
+ *      filter → "1234567890" (10 dígitos); [0]='1' NO está en 2..9
+ *      Resultado: lanza IllegalArgumentException("Area code cannot start with 0 or 1")
  *
  *  ================================================================
  */
