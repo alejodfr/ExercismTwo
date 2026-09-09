@@ -81,7 +81,7 @@ fun main() {
     println(maria.getList())                       // [EGGS]
 }
 
-/**
+/*
  *  =====================  GUÍA DE ESTUDIO  =====================
  *
  *  📌  OBJETIVO
