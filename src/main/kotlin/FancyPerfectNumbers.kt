@@ -1,36 +1,21 @@
 @file:Suppress("SpellCheckingInspection")
 // ? Solucion Refactorizado de PerfectNumbers.kt
 
-// ▶ enum class FancyClassification {
-//   └▶ ① enum → las tres categorías posibles del número.
 enum class FancyClassification {
     DEFICIENT, PERFECT, ABUNDANT
 }
 
 
-// ▶ object FancyPerfectNumbers {
-//   └▶ ② object → singleton: una única instancia con nombre FancyPerfectNumbers.
 object FancyPerfectNumbers {
 
-    // ▶ fun classify(naturalNumber: Int): FancyClassification {
-    //   └▶ ③ misma lógica que PerfectNumbers, pero en estilo funcional.
     fun classify(naturalNumber: Int): FancyClassification {
-        // ▶ require(naturalNumber > 0) { "The number must be greater than zero" }
-        //   └▶ ④ precondición: lanza excepción si el número no es positivo.
         require(naturalNumber > 0) { "The number must be greater than zero" }
 
-        // ▶ val aliquotSum = (1 until naturalNumber).filter { naturalNumber % it == 0 }.sum()
-        //   ├▶ ⑤ (1 until naturalNumber) → rango exclusivo, sin el número mismo.
-        //   ├▶ ⑥ .filter { naturalNumber % it == 0 } → conserva solo los
-        //   │       divisores exactos.
-        //   └▶ ⑦ .sum() → los suma → suma alícuota, todo en una expresión.
+        // Filtramos directamente las letras/números en el rango y los sumamos
         val aliquotSum = (1 until naturalNumber)
             .filter { naturalNumber % it == 0 }
             .sum()
 
-        // ▶ return when {
-        //   └▶ ⑧ compara aliquotSum con el número original y devuelve la
-        //           clasificación correspondiente.
         return when {
             aliquotSum == naturalNumber -> FancyClassification.PERFECT
             aliquotSum > naturalNumber -> FancyClassification.ABUNDANT
@@ -49,12 +34,57 @@ object FancyPerfectNumbers {
  *      alícuota, usando filter + sum en vez de un bucle for manual.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Validar que el número sea positivo.
+ *      II.  Generar el rango 1 hasta naturalNumber-1, filtrar los que
+ *           son divisores exactos y sumarlos en una sola expresión.
+ *      III. Comparar la suma alícuota contra el número original para
+ *           decidir la clasificación.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun classify(naturalNumber: Int): FancyClassification {
+ *      →      require(naturalNumber > 0) { "The number must be greater than zero" }
+ *      ①  Precondición: lanza excepción si el número no es positivo.
+ *
+ *      →      val aliquotSum = (1 until naturalNumber)
+ *      →          .filter { naturalNumber % it == 0 }
+ *      ②  filter conserva solo los i que dividen exactamente a
+ *          naturalNumber (naturalNumber % i == 0).
+ *
+ *      →          .sum()
+ *      ③  Suma todos los divisores propios encontrados: la suma
+ *          alícuota.
+ *
+ *      →      return when {
+ *      →          aliquotSum == naturalNumber -> FancyClassification.PERFECT
+ *      →          aliquotSum > naturalNumber -> FancyClassification.ABUNDANT
+ *      →          else -> FancyClassification.DEFICIENT
+ *      →      }
+ *      ④  when compara la suma alícuota contra el número original y
+ *          devuelve la clasificación correspondiente.
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Optimizar recorriendo solo hasta √n y sumando cada divisor
  *          junto con su complementario (n / divisor).
  *      B)  Usar sumOf en vez de filter + sum: (1 until n).sumOf { if
  *          (n % it == 0) it else 0 }.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN clasificar(numero): Clasificacion
+ *          REQUERIR numero > 0
+ *          suma ← SUMAR(1 hasta numero-1 FILTRADO POR divisor exacto)
+ *          SI suma == numero: DEVOLVER PERFECTO
+ *          SINO SI suma > numero: DEVOLVER ABUNDANTE
+ *          SINO: DEVOLVER DEFICIENTE
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

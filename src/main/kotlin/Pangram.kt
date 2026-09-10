@@ -19,21 +19,11 @@
  * "The quick brown fox jumps over the lazy dog."
  */
 
-// ▶ object Pangram {
-//   └▶ ① object → singleton: una única instancia con nombre Pangram.
 object Pangram {
 
-    // ▶ fun isPangram(input: String): Boolean {
-    //   └▶ ② recibe la frase y devuelve true si es un pangrama.
     fun isPangram(input: String): Boolean {
-        // ▶ return ('a'..'z').all { char ->
-        //   ├▶ ③ ('a'..'z') → CharRange con las 26 letras del alfabeto.
-        //   └▶ ④ .all { ... } → true solo si TODOS los elementos cumplen la
-        //           condición; corta apenas uno falla (cortocircuito).
+        // * ¿Para TODAS las letras de la 'a' a la 'z', la frase contiene esa letra (ignorando mayúsculas)?
         return ('a'..'z').all { char ->
-            // ▶ input.contains(char, ignoreCase = true)
-            //   └▶ ⑤ busca la letra en la frase sin distinguir mayúsculas
-            //           de minúsculas.
             input.contains(char, ignoreCase = true)
         }
     }
@@ -49,11 +39,45 @@ object Pangram {
  *      mayúsculas de minúsculas.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Generar el rango de letras 'a' a 'z'.
+ *      II.  Verificar que TODAS esas letras estén presentes en la
+ *           frase, ignorando mayúsculas.
+ *      III. .all() se detiene apenas encuentra una letra ausente
+ *           (cortocircuito).
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun isPangram(input: String): Boolean {
+ *      →      return ('a'..'z').all { char ->
+ *      ①  ('a'..'z') crea un CharRange con las 26 letras del
+ *          alfabeto; .all { } comprueba si TODOS los elementos
+ *          cumplen la condición dada.
+ *
+ *      →          input.contains(char, ignoreCase = true)
+ *      ②  .contains(char, ignoreCase = true) busca la letra en la
+ *          frase sin distinguir mayúsculas de minúsculas.
+ *      →      }
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Con Set: input.lowercase().filter { it.isLetter() }.toSet().size == 26.
  *      B)  Con bucle tradicional: for (c in 'a'..'z') if (c !in
  *          input.lowercase()) return false; return true.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN esPangrama(entrada: Texto): Booleano
+ *          PARA CADA letra DESDE 'a' HASTA 'z':
+ *              SI entrada NO CONTIENE letra (ignorando mayúsculas):
+ *                  DEVOLVER Falso
+ *          DEVOLVER Verdadero
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

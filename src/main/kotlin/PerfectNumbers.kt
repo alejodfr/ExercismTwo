@@ -22,41 +22,22 @@
  *        Prime numbers are always deficient.
  */
 
-// ▶ enum class Classification {
-//   └▶ ① enum → conjunto fijo de constantes con nombre; las tres
-//           categorías posibles del número.
 enum class Classification {
     DEFICIENT, PERFECT, ABUNDANT
 }
 
-// ▶ fun classify(naturalNumber: Int): Classification {
-//   └▶ ② recibe un entero y devuelve una de las tres constantes del enum.
 fun classify(naturalNumber: Int): Classification {
-    // ▶ require(naturalNumber > 0) { "The number must be greater than zero" }
-    //   └▶ ③ require → lanza IllegalArgumentException si el número no es positivo.
     require(naturalNumber > 0) { "The number must be greater than zero" }
 
-    // ▶ val divisores = mutableListOf<Int>()
-    //   └▶ ④ lista mutable donde se acumulan los divisores propios.
     val divisores = mutableListOf<Int>()
-    // ▶ for (i in 1 until naturalNumber) {
-    //   └▶ ⑤ until → rango exclusivo [1, naturalNumber): no incluye el
-    //           número mismo.
     for (i in 1 until naturalNumber) {
-        // ▶ if (naturalNumber % i == 0) { divisores.add(i) }
-        //   └▶ ⑥ % → resto; si es 0, i divide exacto y es divisor propio.
         if (naturalNumber % i == 0) {
             divisores.add(i)
         }
     }
 
-    // ▶ val resultado = divisores.sum()
-    //   └▶ ⑦ suma alícuota: la suma de todos los divisores propios.
     val resultado = divisores.sum()
 
-    // ▶ return when {
-    //   └▶ ⑧ compara la suma contra el número: igual → PERFECT, mayor →
-    //           ABUNDANT, menor → DEFICIENT.
     return when {
         resultado == naturalNumber -> Classification.PERFECT
         resultado > naturalNumber -> Classification.ABUNDANT
@@ -74,6 +55,44 @@ fun classify(naturalNumber: Int): Classification {
  *      propios, sin incluir el número mismo).
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Validar que el número sea positivo con require.
+ *      II.  Recorrer desde 1 hasta naturalNumber-1 y acumular en una
+ *           lista los que dividen exactamente al número.
+ *      III. Sumar esa lista de divisores (suma alícuota).
+ *      IV.  Comparar la suma contra el número original para elegir la
+ *           clasificación.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun classify(naturalNumber: Int): Classification {
+ *      →      require(naturalNumber > 0) { "The number must be greater than zero" }
+ *      ①  Lanza excepción si el número no es positivo.
+ *
+ *      →      val divisores = mutableListOf<Int>()
+ *      →      for (i in 1 until naturalNumber) {
+ *      →          if (naturalNumber % i == 0) {
+ *      →              divisores.add(i)
+ *      ②  until crea un rango exclusivo [1, naturalNumber); si el
+ *          residuo de la división es 0, i es divisor y se agrega.
+ *      →          }
+ *      →      }
+ *
+ *      →      val resultado = divisores.sum()
+ *      ③  Suma todos los divisores encontrados: la suma alícuota.
+ *
+ *      →      return when {
+ *      →          resultado == naturalNumber -> Classification.PERFECT
+ *      →          resultado > naturalNumber -> Classification.ABUNDANT
+ *      →          else -> Classification.DEFICIENT
+ *      →      }
+ *      ④  Compara la suma contra el número original: igual → PERFECT,
+ *          mayor → ABUNDANT, menor → DEFICIENT.
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Optimizar recorriendo solo hasta √n, sumando cada divisor y
@@ -81,6 +100,19 @@ fun classify(naturalNumber: Int): Classification {
  *      B)  Estilo funcional: (1 until n).filter { n % it == 0 }.sum()
  *          en vez del bucle for con lista mutable (ver
  *          FancyPerfectNumbers.kt).
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN clasificar(numero): Clasificacion
+ *          REQUERIR numero > 0
+ *          suma ← 0
+ *          PARA i DESDE 1 HASTA numero - 1:
+ *              SI numero % i == 0: suma ← suma + i
+ *          SI suma == numero: DEVOLVER PERFECTO
+ *          SINO SI suma > numero: DEVOLVER ABUNDANTE
+ *          SINO: DEVOLVER DEFICIENTE
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

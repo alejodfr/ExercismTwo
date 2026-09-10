@@ -28,93 +28,43 @@
 
 
 
-// ▶ object RunLengthEncoding {
-//   └▶ ① object → singleton: una única instancia con nombre RunLengthEncoding.
 object RunLengthEncoding {
 
-    // ▶ fun encode(input: String): String {
-    //   └▶ ② comprime: cada grupo de caracteres iguales seguidos se
-    //           sustituye por conteo + carácter (el conteo se omite si es 1).
     fun encode(input: String): String {
-        // ▶ if (input.isEmpty()) return ""
-        //   └▶ ③ caso borde: sin caracteres no hay nada que codificar; además
-        //           evita que input[0] falle más abajo.
         if (input.isEmpty()) return ""
 
-        // ▶ var count = 1
-        // ▶ var currentChar = input[0]
-        // ▶ val result = StringBuilder()
-        //   ├▶ ④ count → repeticiones del grupo actual (empieza en 1: ya
-        //   │       tenemos el primer carácter).
-        //   ├▶ ⑤ currentChar → carácter que se está contando.
-        //   └▶ ⑥ StringBuilder → acumula el resultado sin crear muchos String.
         var count = 1
         var currentChar = input[0]
         val result = StringBuilder()
 
-        // ▶ for (i in 1 until input.length) {
-        //   └▶ ⑦ recorre desde el índice 1 (el 0 ya está capturado) hasta el
-        //           final; until excluye input.length.
         for (i in 1 until input.length) {
-            // ▶ if (input[i] == currentChar) { count++ }
-            //   └▶ ⑧ si sigue el mismo carácter, solo se incrementa el contador.
             if (input[i] == currentChar) {
                 count++
             } else {
-                // ▶ if (count > 1) result.append(count)
-                // ▶ result.append(currentChar)
-                // ▶ count = 1;  currentChar = input[i]
-                //   └▶ ⑨ carácter distinto → "cierra" el grupo previo: escribe
-                //           el número solo si hubo más de una repetición, luego
-                //           el carácter; reinicia el contador y cambia de carácter.
                 if (count > 1) result.append(count)
                 result.append(currentChar)
                 count = 1
                 currentChar = input[i]
             }
         }
-        // ▶ if (count > 1) result.append(count)
-        // ▶ result.append(currentChar)
-        // ▶ return result.toString()
-        //   └▶ ⑩ al salir del bucle queda el último grupo sin cerrar: se
-        //           escribe igual que los demás y se devuelve el texto.
         if (count > 1) result.append(count)
         result.append(currentChar)
         return result.toString()
     }
 
-    // ▶ fun decode(input: String): String {
-    //   └▶ ⑪ proceso inverso: un número indica cuántas veces se repite el
-    //           carácter que le sigue.
     fun decode(input: String): String {
-        // ▶ val result = StringBuilder()
-        // ▶ var countStr = ""
-        //   ├▶ ⑫ result → acumula el texto expandido.
-        //   └▶ ⑬ countStr → junta los dígitos del número cifra a cifra
-        //           (puede tener varias, p. ej. "12").
         val result = StringBuilder()
         var countStr = ""
 
-        // ▶ for (char in input) {
         for (char in input) {
-            // ▶ if (char.isDigit()) { countStr += char }
-            //   └▶ ⑭ si es dígito, se concatena a countStr para formar el número.
             if (char.isDigit()) {
                 countStr += char
             } else {
-                // ▶ val count = if (countStr.isEmpty()) 1 else countStr.toInt()
-                //   └▶ ⑮ si no se leyó ningún dígito, el conteo es 1; si sí, se
-                //           convierte countStr a entero.
                 val count = if (countStr.isEmpty()) 1 else countStr.toInt()
-                // ▶ repeat(count) { result.append(char) }
-                //   └▶ ⑯ añade la letra esa cantidad de veces.
                 repeat(count) { result.append(char) }
-                // ▶ countStr = ""
-                //   └▶ ⑰ limpia el acumulador de dígitos para el siguiente grupo.
                 countStr = ""
             }
         }
-        // ▶ return result.toString()
         return result.toString()
     }
 }
@@ -133,6 +83,96 @@ object RunLengthEncoding {
  *      un número indica cuántas veces se repite el carácter siguiente.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.    encode: si el texto está vacío, devolver "".
+ *      II.   Recorrer el texto llevando un carácter actual y un
+ *            contador de cuántas veces se ha repetido seguido.
+ *      III.  Cuando aparece un carácter distinto, "cerrar" el grupo
+ *            anterior: escribir el contador (solo si es mayor que 1)
+ *            y luego el carácter; después reiniciar el contador a 1 y
+ *            cambiar el carácter actual.
+ *      IV.   Al terminar el bucle queda un último grupo sin cerrar:
+ *            escribirlo también.
+ *      V.    decode: recorrer el texto acumulando los dígitos en un
+ *            texto auxiliar; al encontrar una letra, convertir esos
+ *            dígitos a número (o 1 si no había dígitos) y repetir la
+ *            letra esa cantidad de veces.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun encode(input: String): String {
+ *      →      if (input.isEmpty()) return ""
+ *      ①  Caso borde: si no hay caracteres, no hay nada que codificar
+ *          y se devuelve cadena vacía. Además evita que input[0] falle
+ *          más abajo.
+ *
+ *      →      var count = 1
+ *      →      var currentChar = input[0]
+ *      →      val result = StringBuilder()
+ *      ②  count cuenta las repeticiones del grupo actual (empieza en 1
+ *          porque ya tenemos el primer carácter). currentChar guarda
+ *          el carácter que se está contando. StringBuilder acumula el
+ *          resultado de forma eficiente sin crear muchos String.
+ *
+ *      →      for (i in 1 until input.length) {
+ *      ③  Se recorre desde el índice 1 (el 0 ya está capturado) hasta
+ *          el último carácter. "until" excluye input.length.
+ *
+ *      →          if (input[i] == currentChar) {
+ *      →              count++
+ *      ④  Si el carácter actual es igual al que venimos contando, solo
+ *          se incrementa el contador y se sigue.
+ *
+ *      →          } else {
+ *      →              if (count > 1) result.append(count)
+ *      →              result.append(currentChar)
+ *      →              count = 1
+ *      →              currentChar = input[i]
+ *      ⑤  Si es distinto, se cierra el grupo previo: se añade el número
+ *          solo cuando hubo más de una repetición, luego el carácter.
+ *          Después se reinicia el contador a 1 y se pasa a contar el
+ *          nuevo carácter.
+ *      →          }
+ *      →      }
+ *
+ *      →      if (count > 1) result.append(count)
+ *      →      result.append(currentChar)
+ *      →      return result.toString()
+ *      ⑥  Al salir del bucle siempre queda el último grupo pendiente
+ *          (nunca se cerró porque no vino un carácter distinto tras
+ *          él). Se escribe igual que los demás y se devuelve el texto.
+ *
+ *      →  fun decode(input: String): String {
+ *      →      val result = StringBuilder()
+ *      →      var countStr = ""
+ *      ⑦  result acumula el texto expandido. countStr va juntando los
+ *          dígitos que forman el número de repeticiones (puede tener
+ *          varias cifras, p. ej. "12").
+ *
+ *      →      for (char in input) {
+ *      →          if (char.isDigit()) {
+ *      →              countStr += char
+ *      ⑧  Si el carácter es un dígito, se concatena a countStr para
+ *          construir el número completo cifra a cifra.
+ *
+ *      →          } else {
+ *      →              val count = if (countStr.isEmpty()) 1 else countStr.toInt()
+ *      →              repeat(count) { result.append(char) }
+ *      →              countStr = ""
+ *      ⑨  Si es una letra: si no se había leído ningún dígito, el conteo
+ *          es 1; si sí, se convierte countStr a entero. repeat(count)
+ *          añade la letra esa cantidad de veces. Luego se limpia
+ *          countStr para el siguiente grupo.
+ *      →          }
+ *      →      }
+ *      →      return result.toString()
+ *      ⑩  Se devuelve el texto reconstruido. Como el enunciado garantiza
+ *          que un número siempre va seguido de un carácter, no queda
+ *          countStr sin usar al final.
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  encode con expresiones regulares: buscar el patrón
@@ -147,6 +187,41 @@ object RunLengthEncoding {
  *          carácter según el número (o 1 si viene vacío).
  *
  *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN encode(input): Texto
+ *          SI input está vacío: DEVOLVER ""
+ *          count ← 1
+ *          currentChar ← input[0]
+ *          result ← constructor de texto vacío
+ *          PARA i DESDE 1 HASTA longitud(input) - 1:
+ *              SI input[i] == currentChar:
+ *                  count ← count + 1
+ *              SINO:
+ *                  SI count > 1: AÑADIR count A result
+ *                  AÑADIR currentChar A result
+ *                  count ← 1
+ *                  currentChar ← input[i]
+ *          SI count > 1: AÑADIR count A result
+ *          AÑADIR currentChar A result
+ *          DEVOLVER result COMO TEXTO
+ *      FIN FUNCIÓN
+ *
+ *      FUNCIÓN decode(input): Texto
+ *          result ← constructor de texto vacío
+ *          countStr ← ""
+ *          PARA CADA char EN input:
+ *              SI char es dígito:
+ *                  countStr ← countStr + char
+ *              SINO:
+ *                  SI countStr está vacío: count ← 1
+ *                  SINO: count ← countStr COMO ENTERO
+ *                  REPETIR count VECES: AÑADIR char A result
+ *                  countStr ← ""
+ *          DEVOLVER result COMO TEXTO
+ *      FIN FUNCIÓN
+ *
+ *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
  *
  *      ─────────────────────────────────────────────────────────
@@ -156,27 +231,40 @@ object RunLengthEncoding {
  *      i=1 'A' == 'A' → count=2
  *      i=2 'B' ≠ 'A'  → count>1: escribe "2A"; count=1; currentChar='B'
  *      i=3 'C' ≠ 'B'  → count=1: escribe "B";  count=1; currentChar='C'
- *      i=4..5 'C' == 'C' → count=3
- *      i=6 'D' ≠ 'C'  → escribe "3C"; currentChar='D'
- *      i=7 'E' ≠ 'D'  → escribe "D";  currentChar='E'
- *      i=8..10 'E' == 'E' → count=4
+ *      i=4 'C' == 'C' → count=2
+ *      i=5 'C' == 'C' → count=3
+ *      i=6 'D' ≠ 'C'  → escribe "3C"; count=1; currentChar='D'
+ *      i=7 'E' ≠ 'D'  → escribe "D";  count=1; currentChar='E'
+ *      i=8 'E' == 'E' → count=2
+ *      i=9 'E' == 'E' → count=3
+ *      i=10 'E' == 'E' → count=4
  *      Fin del bucle → último grupo: escribe "4E"
  *      Resultado: "2AB3CD4E"
  *
  *      ─────────────────────────────────────────────────────────
  *      Ejemplo 2: decode("12WB12W3B24WB")
  *      ─────────────────────────────────────────────────────────
- *      "12"→'W' = 12 'W';  ""→'B' = "B";  "12"→'W' = 12 'W';
- *      "3"→'B' = "BBB";  "24"→'W' = 24 'W';  ""→'B' = "B"
+ *      '1','2' → countStr="12"
+ *      'W'     → count=12 → 12 letras 'W'; countStr=""
+ *      'B'     → countStr vacío → count=1 → "B"
+ *      '1','2' → countStr="12"
+ *      'W'     → 12 letras 'W'; countStr=""
+ *      '3'     → countStr="3"
+ *      'B'     → 3 letras 'B'; countStr=""
+ *      '2','4' → countStr="24"
+ *      'W'     → 24 letras 'W'; countStr=""
+ *      'B'     → count=1 → "B"
  *      Resultado: "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB"
  *
  *      ─────────────────────────────────────────────────────────
  *      Ejemplo 3: encode("")  y  encode("XYZ")
  *      ─────────────────────────────────────────────────────────
  *      encode("")  → input vacío → devuelve ""
- *      encode("XYZ") → ningún carácter se repite: count=1 siempre, nunca
- *      se escribe número → "XYZ"
+ *      encode("XYZ") → ningún carácter se repite: cada grupo tiene
+ *      count=1, así que nunca se escribe número → "XYZ"
  *      Resultado: "" y "XYZ"
  *
  *  ================================================================
  */
+
+

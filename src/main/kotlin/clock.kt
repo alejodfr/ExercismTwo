@@ -12,67 +12,34 @@
  *
  *
  */
-// ▶ class Clock(private val hours: Int = 0, private val minutes: Int = 0) {
-//   └▶ ① parámetros del constructor con valor por defecto 0; private → no
-//           son accesibles desde fuera de la clase.
 class Clock(private val hours: Int = 0, private val minutes: Int = 0) {
-    // ▶ private var h: Int = 0
-    // ▶ private var m: Int = 0
-    //   └▶ ② campos mutables internos: la hora y el minuto ya normalizados.
     private var h: Int = 0
     private var m: Int = 0
 
-    // ▶ init { normalize(hours, minutes) }
-    //   └▶ ③ al construir el objeto se normalizan los valores recibidos.
     init {
         normalize(hours, minutes)
     }
 
-    // ▶ private fun normalize(hours: Int, minutes: Int) {
-    //   └▶ ④ lleva cualquier par (horas, minutos) al rango 00:00–23:59.
     private fun normalize(hours: Int, minutes: Int) {
-        // ▶ this.h = ((hours + minutes / 60) % 24)
-        //   ├▶ ⑤ hours + minutes/60 → suma las horas completas contenidas
-        //   │       en los minutos.
-        //   └▶ ⑥ % 24 → mantiene el resultado dentro de un día.
         this.h = ((hours + minutes / 60) % 24)
-            // ▶ .let { if (minutes % 60 < 0) it - 1 else it }
-            //   └▶ ⑦ si el resto de minutos es negativo, la división truncó
-            //           hacia arriba: se resta 1 hora para compensar.
             .let { if (minutes % 60 < 0) it - 1 else it }
-            // ▶ .let { if (it < 0) it + 24 else it }
-            //   └▶ ⑧ si la hora quedó negativa, se le suma 24 para llevarla a [0,23].
             .let { if (it < 0) it + 24 else it }
-        // ▶ this.m = (minutes % 60).let { if (it < 0) it + 60 else it }
-        //   └▶ ⑨ minutes % 60 puede ser negativo; sumar 60 lo lleva a [0,59].
         this.m = (minutes % 60)
             .let { if (it < 0) it + 60 else it }
     }
 
-    // ▶ override fun equals(other: Any?): Boolean = other is Clock && h == other.h && m == other.m
-    //   └▶ ⑩ dos relojes son iguales si el otro es un Clock y coinciden h y m.
     @Override
     override fun equals(other: Any?): Boolean = other is Clock && h == other.h && m == other.m
 
-    // ▶ private fun Int.padZeroChars() = toString().padStart(length = 2, padChar = '0')
-    //   └▶ ⑪ función de extensión: convierte un Int a texto de 2 dígitos
-    //           rellenando con '0' a la izquierda (7 → "07").
     private fun Int.padZeroChars() = toString().padStart(length = 2, padChar = '0')
 
-    // ▶ override fun toString() = "${h.padZeroChars()}:${m.padZeroChars()}"
-    //   └▶ ⑫ formatea el reloj como "HH:MM".
     override fun toString() = "${h.padZeroChars()}:${m.padZeroChars()}"
 
-    // ▶ fun subtract(minutes: Int) { m -= minutes; normalize(h, m) }
-    //   └▶ ⑬ resta minutos al campo m y vuelve a normalizar.
     fun subtract(minutes: Int) {
         m -= minutes
         normalize(h, m)
     }
 
-    // ▶ fun add(minutes: Int) { m += minutes; normalize(h, m) }
-    //   └▶ ⑭ suma minutos al campo m y vuelve a normalizar para corregir
-    //           desbordamientos.
     fun add(minutes: Int) {
         m += minutes
         normalize(h, m)
@@ -89,12 +56,67 @@ class Clock(private val hours: Int = 0, private val minutes: Int = 0) {
  *      comparando relojes por igualdad de hora y minuto.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Guardar horas y minutos en campos mutables internos (h, m)
+ *           inicializados en el bloque init llamando a normalize.
+ *      II.  normalize calcula la hora base con (hours + minutes/60) %
+ *           24 y ajusta signos negativos sumando 24 o 60 cuando
+ *           corresponde.
+ *      III. add/subtract modifican m y vuelven a llamar a normalize.
+ *      IV.  toString formatea h y m con dos dígitos; equals compara
+ *           ambos campos.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  private fun normalize(hours: Int, minutes: Int) {
+ *      →      this.h = ((hours + minutes / 60) % 24)
+ *      ①  hours + minutes/60 suma las horas completas contenidas en
+ *          los minutos; % 24 mantiene el resultado en rango de un día.
+ *
+ *      →          .let { if (minutes % 60 < 0) it - 1 else it }
+ *      ②  Si el residuo de minutos es negativo, la división truncó
+ *          hacia arriba: se resta 1 hora para compensar.
+ *
+ *      →          .let { if (it < 0) it + 24 else it }
+ *      ③  Si la hora quedó negativa, se suma 24 para llevarla a [0,23].
+ *
+ *      →      this.m = (minutes % 60)
+ *      →          .let { if (it < 0) it + 60 else it }
+ *      ④  El residuo de minutes % 60 puede ser negativo; sumar 60 lo
+ *          lleva a [0, 59].
+ *      →  }
+ *
+ *      →  fun add(minutes: Int) {
+ *      →      m += minutes
+ *      →      normalize(h, m)
+ *      ⑤  Suma minutos al campo m y vuelve a normalizar para corregir
+ *          desbordamientos.
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Versión inmutable: add/subtract devuelven un nuevo Clock en
  *          vez de modificar el objeto actual (más seguro en concurrencia).
  *      B)  Usar Math.floorMod(hours * 60 + minutes, 24 * 60) para
  *          normalizar en un solo paso, sin .let encadenados.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      CLASE Reloj(horas=0, minutos=0)
+ *          FUNCIÓN normalizar(horas, minutos):
+ *              h ← (horas + minutos/60) % 24
+ *              SI (minutos % 60) < 0: h ← h - 1
+ *              SI h < 0: h ← h + 24
+ *              m ← minutos % 60
+ *              SI m < 0: m ← m + 60
+ *
+ *          FUNCIÓN sumar(minutos): m ← m + minutos; normalizar(h, m)
+ *          FUNCIÓN restar(minutos): m ← m - minutos; normalizar(h, m)
+ *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

@@ -34,16 +34,7 @@
  * program should only report the eggs (1) allergy.
  */
 
-// ▶ enum class Allergen(val score: Int) {
-//   ├▶ ① enum class → conjunto fijo y cerrado de constantes con nombre; no se
-//   │       pueden crear más en ejecución (como los días de la semana).
-//   ├▶ ② Allergen → nombre del tipo; cada constante de abajo ES un Allergen.
-//   └▶ ③ (val score: Int) → constructor primario; val = propiedad inmutable que
-//           cada constante fija con su propio número (potencia de 2 → un bit).
 enum class Allergen(val score: Int) {
-    // ▶ EGGS(1), PEANUTS(2), ... CATS(128)
-    //   └▶ ④ las ocho constantes; cada paréntesis pasa su score al constructor.
-    //           Analogía: interruptores de un panel, cada uno con su id.
     EGGS(1),
     PEANUTS(2),
     SHELLFISH(4),
@@ -52,40 +43,15 @@ enum class Allergen(val score: Int) {
     CHOCOLATE(32),
     POLLEN(64),
     CATS(128)
-    // ▶ }
-    //   └▶ ⑤ cierra el cuerpo del enum.
 }
 
-// ▶ class Allergies(val score: Int) {
-//   └▶ ⑥ clase normal; score es el puntaje total recibido (ej. 34 = 2 + 32) y
-//           queda guardado como propiedad.
 class Allergies(val score: Int) {
 
-    // ▶ fun getList(): List<Allergen> {
-    //   ├▶ ⑦ fun getList → declara un metdo sin parámetros.
-    //   └▶ ⑧ : List<Allergen> → tipo de retorno: una lista de constantes del enum.
     fun getList(): List<Allergen> {
-        // ▶ return Allergen.values().filter { isAllergicTo(it) }
-        //   ├▶ ⑨ Allergen.values() → array con TDAS las constantes del enum,
-        //   │       generado automáticamente.
-        //   ├▶ ⑩ .filter { ... } → conserva solo los elementos que cumplen la
-        //   │       condición entre llaves.
-        //   └▶ ⑪ isAllergicTo(it) → condición; it = cada Allergen en turno
-        //           (parámetro implícito de la lambda).
         return Allergen.values().filter { isAllergicTo(it) }
     }
 
-    // ▶ fun isAllergicTo(allergen: Allergen): Boolean {
-    //   ├▶ ⑫ allergen: Allergen → recibe el alérgeno a consultar.
-    //   └▶ ⑬ : Boolean → devuelve true o false.
     fun isAllergicTo(allergen: Allergen): Boolean {
-        // ▶ return score and allergen.score != 0
-        //   ├▶ ⑭ score → puntaje total de la persona.
-        //   ├▶ ⑮ and → AND bit a bit: pone 1 solo donde AMBOS números tienen 1
-        //   │       en esa posición.
-        //   ├▶ ⑯ allergen.score → el bit único de ese alérgeno.
-        //   └▶ ⑰ != 0 → si algún bit coincidió, el resultado no es cero → la
-        //           persona es alérgica. (Precedencia: primero and, luego != 0.)
         return score and allergen.score != 0
     }
 }
@@ -104,7 +70,7 @@ fun main() {
     println(ana.isAllergicTo(Allergen.EGGS))       // false
     println(ana.getList())                         // []
 
-    // Score 255 = tdos los alérgenos (1+2+4+8+16+32+64+128)
+    // Score 255 = todos los alérgenos (1+2+4+8+16+32+64+128)
     val pedro = Allergies(255)
     println(pedro.isAllergicTo(Allergen.CATS))     // true
     println(pedro.getList())                       // [EGGS, PEANUTS, SHELLFISH, STRAWBERRIES, TOMATOES, CHOCOLATE, POLLEN, CATS]
@@ -122,16 +88,99 @@ fun main() {
  *
  *      Dado el puntaje de alergias de una persona (un entero que codifica
  *      cada alérgeno como una potencia de 2), determinar si es alérgica a
- *      un alérgeno concreto y obtener la lista completa de sus alergias,
+ *      un alérgeno específico y obtener la lista completa de sus alergias,
  *      ignorando cualquier bit que no corresponda a un alérgeno conocido.
+ *
+ *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Modelar los alérgenos con un enum: cada uno es un valor fijo
+ *           conocido (EGGS, PEANUTS, SHELLFISH, ...) con un score asociado
+ *           que es una potencia de 2 (1, 2, 4, 8, 16, 32, 64, 128).
+ *      II.  Detectar una alergia específica (isAllergicTo): usar AND bit
+ *           a bit entre el score total y el score del alérgeno; si el
+ *           resultado no es cero, el bit está presente y la persona es
+ *           alérgica.
+ *      III. Obtener la lista completa (getList): recorrer tdos los
+ *           alérgenos con Allergen.values() y filtrar los que dan true
+ *           en isAllergicTo.
+ *      IV.  Ignorar valores desconocidos: el AND bit a bit solo coincide
+ *           con los bits de alérgenos conocidos, así que cualquier bit
+ *           extra (256, 512, ...) queda automáticamente descartado.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  enum class Allergen(val score: Int) {
+ *      ①  enum class: define un conjunto fijo de constantes con nombre,
+ *          como los días de la semana.
+ *      ②  Allergen: nombre del enum; cada constante representa un
+ *          alérgeno.
+ *      ③  (val score: Int): constructor del enum; score es una
+ *          propiedad inmutable que guarda el valor entero (potencia de
+ *          2) de bit.
+ *
+ *      →      EGGS(1), PEANUTS(2), SHELLFISH(4), STRAWBERRIES(8),
+ *              TOMATOES(16), CHOCOLATE(32), POLLEN(64), CATS(128)
+ *      ④  Constantes del enum, cada una una instancia de Allergen con
+ *          su propio score. Son analogía a interruptores de un panel
+ *          de luces, cada uno con su propio número de identificación.
+ *      →  }
+ *
+ *      →  class Allergies(val score: Int) {
+ *      ⑤  Clase que representa las alergias de una persona; score es
+ *          el puntaje total que codifica tdas sus alergias (ej. 34 =
+ *          2 + 32).
+ *
+ *      →      fun getList(): List<Allergen> {
+ *      ⑥  Metdo que devuelve la lista completa de alérgenos presentes.
+ *      →          return Allergen.values().filter { isAllergicTo(it) }
+ *      ⑦  Allergen.values(): array generado automáticamente con todas
+ *          las constantes del enum, como el catálogo completo de una
+ *          tienda.
+ *      ⑧  .filter { isAllergicTo(it) }: conserva solo los alérgenos
+ *          para los que isAllergicTo devuelve true; it es el parámetro
+ *          implícito de la lambda (cada alérgeno en turno).
+ *      →      }
+ *
+ *      →      fun isAllergicTo(allergen: Allergen): Boolean {
+ *      ⑨  Metdo que determina si la persona es alérgica a un alérgeno
+ *          dado; devuelve true o false.
+ *      →          return score and allergen.score != 0
+ *      ⑩  and: operador AND bit a bit; compara cada bit del score con
+ *          cada bit de allergen.score, y solo da 1 donde ambos bits
+ *          son 1.
+ *      ⑪  != 0: si el resultado no es cero, hay al menos un bit
+ *          coincidente — analogía a dos llaves que deben tener la
+ *          misma muesca en la misma posición para que la cerradura
+ *          gire.
+ *      →      }
+ *      →  }
  *
  *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
- *      A)  Guardar el desplazamiento en el propio enum con (1 shl ordinal)
- *          en lugar de escribir el score explícito en el constructor.
- *      B)  Convertir el score a binario (Integer.toBinaryString) y
- *          comprobar cada bit por posición en vez de usar and.
+ *      A)  Usar un Set<Allergen> construido con valores de enum cuyo
+ *          ordinal se desplaza con shl (1 shl ordinal) en vez de
+ *          guardar el score explícitamente en el constructor.
+ *      B)  Convertir el score a su representación binaria
+ *          (Integer.toBinaryString) y comprobar cada bit por posición
+ *          en vez de usar and.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      ENUMERACIÓN Alergeno
+ *          HUEVOS=1, MANI=2, MARISCO=4, FRESAS=8, TOMATE=16,
+ *          CHOCOLATE=32, POLEN=64, GATOS=128
+ *
+ *      FUNCIÓN esAlergicoA(puntaje, alergeno): booleano
+ *          DEVOLVER (puntaje Y alergeno.valor) DIFERENTE DE 0
+ *      FIN FUNCIÓN
+ *
+ *      FUNCIÓN obtenerLista(puntaje): lista de Alergeno
+ *          DEVOLVER TDOS_LOS_ALERGENOS.FILTRAR(a -> esAlergicoA(puntaje, a))
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
@@ -146,11 +195,20 @@ fun main() {
  *      Resultado: [PEANUTS, CHOCOLATE]
  *
  *      ─────────────────────────────────────────────────────────
- *      Ejemplo 2: "María — score=257 (eggs=1 + valor desconocido=256)"
+ *      Ejemplo 2: "Ana — score=0 (sin alergias)"
  *      ─────────────────────────────────────────────────────────
- *      257 en binario = 100000001 (bit 0 y bit 8 activados).
+ *      Tdo bit en 0 → 0 and cualquier score = 0 → siempre false.
+ *      Resultado: []
+ *
+ *      ─────────────────────────────────────────────────────────
+ *      Ejemplo 3: "María — score=257 (eggs=1 + valor desconocido=256)"
+ *      ─────────────────────────────────────────────────────────
+ *      257 en binario = 100000001 (bit 0 y bit 8 activados)
  *      isAllergicTo(EGGS): 257 and 1 = 1 ≠ 0 → true
- *      El bit 8 (256) no corresponde a ningún alérgeno, el AND lo ignora.
+ *      Resto de alérgenos: sus bits no coinciden con el bit 0 ni el
+ *      bit 8 → false
+ *      El bit 256 (bit 8) no corresponde a ningún alérgeno conocido,
+ *      así que el AND simplemente lo ignora.
  *      Resultado: [EGGS]
  *
  *  ================================================================

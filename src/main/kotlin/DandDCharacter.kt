@@ -39,48 +39,25 @@ import kotlin.math.floor
  * Because constitution is 3, the constitution modifier is -4 and the hitpoints are 6.
  */
 
-// ▶ class DndCharacter {
-//   └▶ ① clase de un personaje; cada propiedad de abajo se calcula al construirlo.
 class DndCharacter {
 
-    // ▶ val strength: Int = ability()  (y las otras 5 habilidades)
-    //   └▶ ② cada habilidad se inicializa llamando a ability() (una tirada nueva).
     val strength: Int = ability()
     val dexterity: Int = ability()
     val constitution: Int = ability()
     val intelligence: Int = ability()
     val wisdom: Int = ability()
     val charisma: Int = ability()
-    // ▶ val hitpoints: Int = 10 + modifier(constitution)
-    //   └▶ ③ usa constitution, ya inicializada arriba; el orden de
-    //           declaración importa.
     val hitpoints: Int = 10 + modifier(constitution)
 
-    // ▶ companion object {
-    //   └▶ ④ agrupa funciones compartidas por todas las instancias
-    //           (se llaman como DndCharacter.ability()).
     companion object {
 
-        // ▶ fun ability(): Int {
         fun ability(): Int {
-            // ▶ val stats = List(4) { (1..6).random() }
-            //   ├▶ ⑤ List(4) { ... } → crea 4 elementos ejecutando la lambda
-            //   │       una vez por cada uno.
-            //   └▶ ⑥ (1..6).random() → simula un dado de 6 caras.
             val stats = List(4) { (1..6).random() }
-            // ▶ val totalSum = stats.sorted().drop(1).sum()
-            //   ├▶ ⑦ .sorted() → ordena de menor a mayor.
-            //   ├▶ ⑧ .drop(1) → descarta el valor más bajo.
-            //   └▶ ⑨ .sum() → suma los 3 dados restantes.
             val totalSum = stats.sorted().drop(1).sum()
             return totalSum
         }
 
-        // ▶ fun modifier(score: Int): Int {
         fun modifier(score: Int): Int {
-            // ▶ val modified = floor((score - 10).toDouble() / 2).toInt()
-            //   └▶ ⑩ resta 10, divide entre 2 como Double y floor() redondea
-            //           hacia abajo (también con negativos: -3.5 → -4).
             val modified = floor((score - 10).toDouble() / 2).toInt()
             return modified
         }
@@ -109,12 +86,63 @@ fun main() {
  *      los hitpoints dependen del modificador de constitution.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   ability(): tirar 4 dados de 6 caras, ordenar, descartar el
+ *           más bajo y sumar los 3 restantes.
+ *      II.  modifier(score): restar 10, dividir entre 2 y redondear
+ *           hacia abajo (floor).
+ *      III. La clase DndCharacter inicializa cada habilidad llamando a
+ *           ability(), y hitpoints con 10 + modifier(constitution).
+ *      IV.  companion object agrupa ability() y modifier() como
+ *           funciones compartidas por todas las instancias.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun ability(): Int {
+ *      →      val stats = List(4) { (1..6).random() }
+ *      ①  List(4) { ... } crea 4 elementos ejecutando la lambda una
+ *          vez por cada uno; (1..6).random() simula un dado de 6 caras.
+ *
+ *      →      val totalSum = stats.sorted().drop(1).sum()
+ *      ②  .sorted() ordena de menor a mayor; .drop(1) descarta el
+ *          valor más bajo; .sum() suma los 3 restantes.
+ *      →      return totalSum
+ *      →  }
+ *
+ *      →  fun modifier(score: Int): Int {
+ *      →      val modified = floor((score - 10).toDouble() / 2).toInt()
+ *      ③  Resta 10, divide entre 2 como Double y floor() redondea
+ *          hacia abajo (incluso con negativos).
+ *      →      return modified
+ *      →  }
+ *
+ *      →  val hitpoints: Int = 10 + modifier(constitution)
+ *      ④  Propiedad calculada que usa constitution, ya inicializada
+ *          previamente en la clase.
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar Math.floorDiv(score - 10, 2) con enteros, evitando
  *          convertir a Double para el cálculo del modificador.
  *      B)  Guardar las 6 habilidades en una List<Int> generada con
  *          List(6) { ability() } en vez de 6 propiedades separadas.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN habilidad(): Entero
+ *          dados ← 4 TIRADAS ALEATORIAS(1..6)
+ *          DEVOLVER SUMAR(dados.ORDENAR().DESCARTAR_PRIMERO())
+ *
+ *      FUNCIÓN modificador(puntaje): Entero
+ *          DEVOLVER REDONDEAR_ABAJO((puntaje - 10) / 2)
+ *
+ *      CLASE PersonajeD&D:
+ *          fuerza, destreza, constitucion, ... ← habilidad()
+ *          puntosVida ← 10 + modificador(constitucion)
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

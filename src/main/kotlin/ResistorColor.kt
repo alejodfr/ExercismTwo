@@ -42,25 +42,15 @@
  *
  * */
 
-// ▶ object ResistorColor {
-//   └▶ ① object → singleton: una única instancia con nombre ResistorColor.
 object ResistorColor {
 
-    // ▶ private val colorsList = listOf("black", "brown", ..., "white")
-    //   └▶ ② lista inmutable privada; el orden importa: índice 0 = "black"
-    //           (valor 0), índice 9 = "white" (valor 9).
     private val colorsList = listOf(
         "black", "brown", "red", "orange", "yellow",
         "green", "blue", "violet", "grey", "white"
     )
 
-    // ▶ fun colorCode(input: String): Int = colorsList.indexOf(input)
-    //   └▶ ③ indexOf → devuelve la posición del color (que coincide con su
-    //           valor); devuelve -1 si no existe.
     fun colorCode(input: String): Int = colorsList.indexOf(input)
 
-    // ▶ fun colors(): List<String> = colorsList
-    //   └▶ ④ expone la lista completa de colores en orden.
     fun colors(): List<String> = colorsList
 }
 
@@ -73,12 +63,46 @@ object ResistorColor {
  *      (0-9) y proveer la lista completa de colores disponibles.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Guardar los 10 colores en una lista ordenada, donde el
+ *           índice de cada color coincide con su valor numérico.
+ *      II.  colorCode busca el índice de un color con indexOf.
+ *      III. colors() expone la lista completa.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  private val colorsList = listOf(
+ *      →      "black", "brown", "red", "orange", "yellow",
+ *      →      "green", "blue", "violet", "grey", "white"
+ *      →  )
+ *      ①  Lista inmutable privada; el orden importa: el índice 0 es
+ *          "black" (valor 0), el índice 9 es "white" (valor 9).
+ *
+ *      →  fun colorCode(input: String): Int = colorsList.indexOf(input)
+ *      ②  indexOf busca el color recibido y devuelve su posición en la
+ *          lista (que coincide con su valor); devuelve -1 si no existe.
+ *
+ *      →  fun colors(): List<String> = colorsList
+ *      ③  Devuelve la lista completa de colores en orden.
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar un enum class Color con 10 constantes y su .ordinal
  *          como valor numérico, en vez de una lista de Strings.
  *      B)  Usar un Map<String, Int> explícito para lograr búsqueda en
  *          O(1) en vez de O(n) con indexOf.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      OBJETO ResistorColor
+ *          listaColores ← ["black", "brown", ..., "white"]
+ *          FUNCIÓN colorCode(input): DEVOLVER índice de input en listaColores
+ *          FUNCIÓN colors(): DEVOLVER listaColores
+ *      FIN OBJETO
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

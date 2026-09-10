@@ -40,27 +40,13 @@
  * The anagrams can be returned in any order.
  */
 
-// ▶ class Anagram(val target: String) {
-//   └▶ ① target → la palabra base; se guarda como propiedad inmutable.
 class Anagram(val target: String) {
 
-    // ▶ fun match(anagrams: Collection<String>): Set<String> {
-    //   └▶ ② recibe las candidatas y devuelve un Set con las que son anagramas.
     fun match(anagrams: Collection<String>): Set<String> {
-        // ▶ return anagrams.filter { candidate ->
-        //   └▶ ③ filter → conserva solo las candidatas para las que la
-        //           lambda devuelve true.
         return anagrams.filter { candidate ->
-            // ▶ candidate.lowercase() != target.lowercase() &&
-            //   └▶ ④ descarta la candidata si es la misma palabra que el
-            //           objetivo (ignorando mayúsculas): no es su propio anagrama.
             candidate.lowercase() != target.lowercase() &&
-            // ▶ candidate.lowercase().toList().sorted() == target.lowercase().toList().sorted()
-            //   └▶ ⑤ .toList().sorted() → letras ordenadas; dos palabras con
-            //           las mismas letras dan listas ordenadas idénticas.
             candidate.lowercase().toList().sorted() == target.lowercase().toList().sorted()
         }.toSet()
-        //   └▶ ⑥ .toSet() → convierte la List resultante en un Set sin duplicados.
     }
 }
 
@@ -75,6 +61,42 @@ class Anagram(val target: String) {
  *      palabra objetivo.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Guardar la palabra objetivo en el constructor de la clase.
+ *      II.  Para cada candidata, comparar en minúsculas que no sea
+ *           igual al objetivo (una palabra no es su propio anagrama).
+ *      III. Convertir ambas palabras a listas de caracteres ordenadas
+ *           y compararlas: si coinciden, son anagramas.
+ *      IV.  Devolver el resultado como Set para evitar duplicados.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  class Anagram(val target: String) {
+ *      ①  target se guarda como propiedad inmutable de la clase.
+ *
+ *      →      fun match(anagrams: Collection<String>): Set<String> {
+ *      →          return anagrams.filter { candidate ->
+ *      ②  filter conserva solo las candidatas para las que la lambda
+ *          devuelve true.
+ *
+ *      →              candidate.lowercase() != target.lowercase() &&
+ *      ③  Descarta la candidata si es exactamente la misma palabra que
+ *          el objetivo (ignorando mayúsculas).
+ *
+ *      →              candidate.lowercase().toList().sorted() == target.lowercase().toList().sorted()
+ *      ④  Convierte ambas palabras a lista de caracteres y las ordena;
+ *          si dos palabras tienen las mismas letras, sus listas
+ *          ordenadas quedan idénticas.
+ *
+ *      →          }.toSet()
+ *      ⑤  .toSet() convierte la List resultante en un Set sin
+ *          duplicados.
+ *      →      }
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Comparar frecuencias de letras con groupingBy { it }
@@ -82,6 +104,17 @@ class Anagram(val target: String) {
  *      B)  Precalcular target.lowercase().toList().sorted() una sola
  *          vez fuera del filter para no repetir el trabajo en cada
  *          candidata.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      CLASE Anagrama(objetivo: Texto)
+ *          FUNCIÓN coincidir(candidatos): ConjuntoDeTexto
+ *              DEVOLVER candidatos.FILTRAR(candidato ->
+ *                  candidato.MINUSCULAS() != objetivo.MINUSCULAS() Y
+ *                  candidato.ORDENAR_LETRAS() == objetivo.ORDENAR_LETRAS()
+ *              ).A_CONJUNTO()
+ *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

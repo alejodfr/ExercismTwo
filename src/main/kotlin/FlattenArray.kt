@@ -34,56 +34,35 @@
 
 
 
-// ▶ object Flattener {
-//   └▶ ① object → singleton: una única instancia con nombre Flattener.
 object Flattener {
-    // ▶ fun flatten(source: Collection<Any?>): List<Any> {
-    //   └▶ ② recibe una colección anidada (con posibles null) y devuelve
-    //           una lista plana sin null.
     fun flatten(source: Collection<Any?>): List<Any> {
-        // ▶ val result = mutableListOf<Any>()
-        //   └▶ ③ acumulador del resultado ya aplanado.
         val result = mutableListOf<Any>()
 
-        // ▶ val stack = ArrayDeque<Any?>()
-        // ▶ stack.addAll(source)
-        //   └▶ ④ ArrayDeque usado como pila: addAll mete los elementos de
-        //           entrada tal cual, sin aplanar todavía.
+        // 1. Cargamos la pila inicial (los metemos tal cual)
         val stack = ArrayDeque<Any?>()
         stack.addAll(source)
 
-        // ▶ while (stack.isNotEmpty()) {
-        //   └▶ ⑤ se repite mientras queden elementos por procesar.
+        // 2. Procesamos mientras la pila no esté vacía
         while (stack.isNotEmpty()) {
-            // ▶ val element = stack.removeLast()
-            //   └▶ ⑥ removeLast() → saca el último agregado (comportamiento LIFO).
             val element = stack.removeLast()
 
-            // ▶ when (element) {
             when (element) {
-                // ▶ null -> { }
-                //   └▶ ⑦ si es null, la rama no hace nada: se descarta.
                 null -> { /* Ignorar / No hace nada */ }
 
-                // ▶ is Collection<*> -> { stack.addAll(element) }
-                //   └▶ ⑧ si es una subcolección, se vuelven a meter sus
-                //           elementos a la pila para procesarlos después.
                 is Collection<*> -> {
+                    // Volvemos a meter los sub-elementos a la pila
                     stack.addAll(element)
                 }
 
-                // ▶ else -> { result.add(element) }
-                //   └▶ ⑨ si es un valor simple (no null, no colección), va
-                //           directo al resultado.
                 else -> {
+                    // Guardamos el valor en nuestra lista acumuladora
                     result.add(element)
                 }
             }
         }
 
-        // ▶ return result.reversed()
-        //   └▶ ⑩ los elementos salieron en orden inverso al de entrada (por
-        //           ser pila): se invierte la lista una sola vez al final.
+        // 3. Como los sacamos en orden LIFO (al revés),
+        //    invertimos 'result' una sola vez al final
         return result.reversed()
     }
 }
@@ -97,6 +76,51 @@ object Flattener {
  *      lista, excluyendo los valores null que puedan aparecer.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Usar una pila (ArrayDeque) en vez de recursión para
+ *           procesar los elementos de forma iterativa.
+ *      II.  Sacar un elemento de la pila: si es null, ignorarlo; si es
+ *           una colección, volver a meter sus elementos a la pila; si
+ *           es un valor simple, guardarlo en el resultado.
+ *      III. Como la pila procesa en orden LIFO (al revés), invertir el
+ *           resultado una sola vez al final.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  val stack = ArrayDeque<Any?>()
+ *      →  stack.addAll(source)
+ *      ①  ArrayDeque funciona como pila: addAll mete todos los
+ *          elementos de entrada tal cual, sin aplanar todavía.
+ *
+ *      →  while (stack.isNotEmpty()) {
+ *      →      val element = stack.removeLast()
+ *      ②  removeLast() saca el último elemento agregado (comportamiento
+ *          de pila LIFO).
+ *
+ *      →      when (element) {
+ *      →          null -> { /* Ignorar / No hace nada */ }
+ *      ③  Si el elemento es null, la rama no hace nada: se descarta.
+ *
+ *      →          is Collection<*> -> {
+ *      →              stack.addAll(element)
+ *      ④  Si es una subcolección, se vuelven a meter sus elementos a
+ *          la pila para procesarlos en las siguientes iteraciones.
+ *
+ *      →          else -> {
+ *      →              result.add(element)
+ *      ⑤  Si es un valor simple (no null, no colección), se agrega
+ *          directamente al resultado.
+ *      →          }
+ *      →      }
+ *      →  }
+ *
+ *      →  return result.reversed()
+ *      ⑥  Como los elementos salen en orden inverso al de entrada
+ *          (por ser pila), se invierte la lista una sola vez al final.
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Recursión clásica: fun flatten(list) = list.flatMap { if
@@ -104,6 +128,20 @@ object Flattener {
  *      B)  Usar una Queue (FIFO) con addFirst/removeFirst para
  *          preservar el orden original sin necesidad de invertir al
  *          final.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN aplanar(origen: Coleccion): ListaDe<Any>
+ *          resultado ← LISTA_VACIA
+ *          pila ← PILA(origen)
+ *          MIENTRAS pila NO esté vacía:
+ *              elemento ← pila.SACAR_ULTIMO()
+ *              SI elemento es nulo: CONTINUAR (ignorar)
+ *              SINO SI elemento es Colección: pila.AGREGAR_TODOS(elemento)
+ *              SINO: resultado.AGREGAR(elemento)
+ *          DEVOLVER resultado.INVERTIR()
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

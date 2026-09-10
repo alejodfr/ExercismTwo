@@ -17,20 +17,9 @@
  * engineering.
  */
 
-// ▶ class Squares(private val n: Int) {
-//   └▶ ① n → hasta qué número natural se calcula; private val → inmutable
-//           y no accesible desde fuera.
 class Squares(private val n: Int) {
-    // ▶ fun squareOfSum() = (1..n).sum().let { it * it }
-    //   ├▶ ② (1..n).sum() → suma el rango de 1 a n.
-    //   └▶ ③ .let { it * it } → toma ese resultado (it) y lo eleva al cuadrado.
     fun squareOfSum() = (1..n).sum().let { it * it }
-    // ▶ fun sumOfSquares() = (1..n).map { it * it }.sum()
-    //   ├▶ ④ .map { it * it } → transforma cada número en su cuadrado.
-    //   └▶ ⑤ .sum() → suma la lista de cuadrados.
     fun sumOfSquares() = (1..n).map { it * it }.sum()
-    // ▶ fun difference() = squareOfSum() - sumOfSquares()
-    //   └▶ ⑥ reutiliza las dos funciones anteriores y resta sus resultados.
     fun difference() = squareOfSum() - sumOfSquares()
 }
 
@@ -50,12 +39,48 @@ fun main() {
  *      de los cuadrados de los primeros N números naturales.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Crear una clase Squares que reciba n en el constructor.
+ *      II.  squareOfSum: sumar 1..n y elevar el resultado al cuadrado.
+ *      III. sumOfSquares: elevar cada número al cuadrado y sumarlos.
+ *      IV.  difference: restar sumOfSquares de squareOfSum.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  class Squares(private val n: Int) {
+ *      ①  n se guarda como propiedad privada e inmutable.
+ *
+ *      →      fun squareOfSum() = (1..n).sum().let { it * it }
+ *      ②  (1..n).sum() suma el rango de 1 a n; .let { it * it } toma
+ *          ese resultado (it) y lo eleva al cuadrado.
+ *
+ *      →      fun sumOfSquares() = (1..n).map { it * it }.sum()
+ *      ③  .map { it * it } transforma cada número en su cuadrado;
+ *          .sum() suma la lista de cuadrados resultante.
+ *
+ *      →      fun difference() = squareOfSum() - sumOfSquares()
+ *      ④  Reutiliza las dos funciones anteriores y resta sus
+ *          resultados.
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar las fórmulas cerradas: suma = n(n+1)/2, suma de
  *          cuadrados = n(n+1)(2n+1)/6, evitando iterar el rango.
  *      B)  Calcular ambos valores en un solo fold recorriendo el
  *          rango una única vez.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      CLASE Cuadrados(n)
+ *          FUNCIÓN cuadradoDeLaSuma(): DEVOLVER (SUMAR(1..n))²
+ *          FUNCIÓN sumaDeCuadrados(): DEVOLVER SUMAR(1..n MAPEADO A x²)
+ *          FUNCIÓN diferencia(): DEVOLVER cuadradoDeLaSuma() - sumaDeCuadrados()
+ *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

@@ -23,36 +23,19 @@
  *
  * */
 
-// ▶ object Raindrops {
-//   └▶ ① object → singleton: una única instancia con nombre Raindrops.
 object Raindrops {
 
-    // ▶ fun convert(n: Int): String {
-    //   └▶ ② recibe el número y devuelve su cadena de sonidos (o el número
-    //           como texto).
     fun convert(n: Int): String {
-        // ▶ var result = ""
-        //   └▶ ③ acumulador mutable que empieza vacío.
         var result = ""
-        // ▶ if (n % 3 == 0) { result += "Pling" }
-        //   └▶ ④ % → resto; si es 0, n es divisible por 3 → concatena "Pling".
         if (n % 3 == 0){
             result += "Pling"
         }
-        // ▶ if (n % 5 == 0) { result += "Plang" }
-        //   └▶ ⑤ chequeo independiente (no es else if): pueden cumplirse varios.
         if (n % 5 == 0){
             result += "Plang"
         }
-        // ▶ if (n % 7 == 0) { result += "Plong" }
-        //   └▶ ⑥ mismo patrón para 7.
         if (n % 7 == 0){
             result += "Plong"
         }
-        // ▶ if (result.isEmpty()) { return n.toString() } else { return result }
-        //   ├▶ ⑦ si ningún if se cumplió, result sigue vacío → se devuelve
-        //   │       el número convertido a texto.
-        //   └▶ ⑧ si hubo al menos una coincidencia, se devuelve lo acumulado.
         if (result.isEmpty()){
             return n.toString()
         } else {
@@ -71,12 +54,64 @@ object Raindrops {
  *      es divisible por ninguno, devolver el número como texto.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Empezar con un acumulador de texto vacío.
+ *      II.  Comprobar divisibilidad por 3, 5 y 7 de forma
+ *           independiente, concatenando el sonido correspondiente.
+ *      III. Si al final no se concatenó ningún sonido, devolver el
+ *           número como String; si no, devolver lo acumulado.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun convert(n: Int): String {
+ *      →      var result = ""
+ *      ①  Acumulador mutable que empieza vacío.
+ *
+ *      →      if (n % 3 == 0){
+ *      →          result += "Pling"
+ *      ②  Si n es divisible por 3, se concatena "Pling".
+ *      →      }
+ *      →      if (n % 5 == 0){
+ *      →          result += "Plang"
+ *      ③  Chequeo independiente para 5 (no es else if: pueden
+ *          cumplirse varias condiciones a la vez).
+ *      →      }
+ *      →      if (n % 7 == 0){
+ *      →          result += "Plong"
+ *      ④  Mismo patrón para 7.
+ *      →      }
+ *
+ *      →      if (result.isEmpty()){
+ *      →          return n.toString()
+ *      ⑤  Si ningún if se cumplió, result sigue vacío: se devuelve el
+ *          número convertido a texto.
+ *      →      } else {
+ *      →          return result
+ *      ⑥  Si hubo al menos una coincidencia, se devuelve lo acumulado.
+ *      →      }
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar buildString { if (...) append(...) }.ifEmpty { n.toString() }
  *          en vez de var + concatenación manual con +=.
  *      B)  Guardar los sonidos en una List<Pair<Int,String>> y usar
  *          filter + joinToString("") para generar el resultado.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN convertir(n): Texto
+ *          resultado ← ""
+ *          SI n % 3 == 0: resultado += "Pling"
+ *          SI n % 5 == 0: resultado += "Plang"
+ *          SI n % 7 == 0: resultado += "Plong"
+ *          SI resultado VACÍO: DEVOLVER n COMO TEXTO
+ *          SINO: DEVOLVER resultado
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

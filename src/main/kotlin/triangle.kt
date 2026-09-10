@@ -17,23 +17,10 @@
  *   a + c ≥ b
  */
 
-// ▶ class Triangle<out T : Number>(val a: T, val b: T, val c: T) {
-//   ├▶ ① <out T : Number> → parámetro de tipo genérico restringido a
-//   │       subtipos de Number (Int, Double, ...); out indica covarianza.
-//   └▶ ② (val a: T, val b: T, val c: T) → los tres lados, guardados como
-//           propiedades inmutables.
 class Triangle<out T : Number>(val a: T, val b: T, val c: T) {
 
-    // ▶ init {
-    //   └▶ ③ bloque que se ejecuta al construir el objeto; aquí se valida.
     init {
-        // ▶ require(a.toDouble() > 0 && b.toDouble() > 0 && c.toDouble() > 0) { ... }
-        //   ├▶ ④ require → lanza IllegalArgumentException si la condición es false.
-        //   └▶ ⑤ .toDouble() → unifica el tipo genérico para poder comparar.
         require( a.toDouble() > 0 && b.toDouble() >0 && c.toDouble() > 0) { "All sides mut be > 0" }
-        // ▶ require( (a+b >= c) && (b+c >= a) && (a+c >= b) ) { ... }
-        //   └▶ ⑥ desigualdad triangular: la suma de dos lados debe ser
-        //           mayor o igual al tercero.
         require(
             (a.toDouble() + b.toDouble() >= c.toDouble()) &&
             (b.toDouble() + c.toDouble() >= a.toDouble()) &&
@@ -43,19 +30,12 @@ class Triangle<out T : Number>(val a: T, val b: T, val c: T) {
     }
 
 
-    // ▶ val isEquilateral: Boolean
-    //   ├▶ ⑦ get() → getter calculado: se evalúa cada vez que se lee.
-    //   └▶ ⑧ a == b && b == c → true solo si los tres lados son iguales.
     val isEquilateral: Boolean
         get() = a.toDouble() == b.toDouble() && b.toDouble() == c.toDouble()
 
-    // ▶ val isIsosceles: Boolean
-    //   └▶ ⑨ usa || (OR): basta con que dos lados cualesquiera coincidan.
     val isIsosceles: Boolean
         get() = a.toDouble() == b.toDouble() || b.toDouble() == c.toDouble() || a.toDouble() == c.toDouble()
 
-    // ▶ val isScalene: Boolean
-    //   └▶ ⑩ usa != y && (AND): los tres lados deben ser distintos entre sí.
     val isScalene: Boolean
         get() = a.toDouble() != b.toDouble() && b.toDouble() != c.toDouble() && a.toDouble() != c.toDouble()
 }
@@ -100,6 +80,51 @@ fun main(){
  *      triángulo válido (lados positivos y desigualdad triangular).
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Crear una clase genérica Triangle<T : Number> que reciba
+ *           los tres lados a, b, c.
+ *      II.  En el bloque init, validar que los tres lados sean > 0 y
+ *           que cumplan la desigualdad triangular.
+ *      III. Definir tres propiedades calculadas (get()) que comparen
+ *           los lados entre sí: equilátero (todos iguales), isósceles
+ *           (al menos dos iguales), escaleno (todos distintos).
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  class Triangle<out T : Number>(val a: T, val b: T, val c: T) {
+ *      ①  <out T : Number> — parámetro de tipo genérico restringido a
+ *          subtipos de Number (Int, Double, ...); out indica covarianza.
+ *      ②  (val a: T, val b: T, val c: T) — los tres lados, guardados
+ *          como propiedades inmutables.
+ *
+ *      →      init {
+ *      →          require(a.toDouble() > 0 && b.toDouble() > 0 && c.toDouble() > 0) { ... }
+ *      ③  require lanza IllegalArgumentException si algún lado no es
+ *          positivo; .toDouble() unifica el tipo genérico para comparar.
+ *      →          require(
+ *      →              (a.toDouble() + b.toDouble() >= c.toDouble()) && ...
+ *      ④  Verifica la desigualdad triangular: la suma de dos lados debe
+ *          ser mayor o igual al tercero.
+ *      →          ) { ... }
+ *      →      }
+ *
+ *      →      val isEquilateral: Boolean
+ *      →          get() = a.toDouble() == b.toDouble() && b.toDouble() == c.toDouble()
+ *      ⑤  get() define un getter calculado; compara los tres lados con
+ *          == para ver si son todos iguales.
+ *
+ *      →      val isIsosceles: Boolean
+ *      →          get() = a.toDouble() == b.toDouble() || b.toDouble() == c.toDouble() || a.toDouble() == c.toDouble()
+ *      ⑥  Usa || (OR): basta con que dos lados cualesquiera coincidan.
+ *
+ *      →      val isScalene: Boolean
+ *      →          get() = a.toDouble() != b.toDouble() && b.toDouble() != c.toDouble() && a.toDouble() != c.toDouble()
+ *      ⑦  Usa != y && (AND): los tres lados deben ser distintos entre sí.
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar un Set de los tres lados y comparar su tamaño (1 →
@@ -107,6 +132,19 @@ fun main(){
  *          comparaciones booleanas independientes.
  *      B)  Restringir T a Double directamente (sin genéricos) si no se
  *          necesita soportar Int y Double al mismo tiempo.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      CLASE Triangulo(a, b, c)
+ *          AL CREAR:
+ *              SI a <= 0 O b <= 0 O c <= 0: LANZAR ERROR
+ *              SI a+b < c O b+c < a O a+c < b: LANZAR ERROR
+ *
+ *          PROPIEDAD esEquilatero: DEVOLVER a == b Y b == c
+ *          PROPIEDAD esIsosceles: DEVOLVER a == b O b == c O a == c
+ *          PROPIEDAD esEscaleno: DEVOLVER a != b Y b != c Y a != c
+ *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

@@ -26,22 +26,10 @@
  *   Zaphod  | One for Zaphod, one for me.
  */
 
-// ▶ fun twofer(name: String? = null): String {
-//   ├▶ ① fun twofer → declara una función llamada twofer.
-//   ├▶ ② name: String? = null → parámetro opcional nullable con valor por
-//   │       defecto null (permite llamar twofer() sin argumentos).
-//   └▶ ③ : String → siempre devuelve un texto, nunca null.
 fun twofer(name: String? = null): String {
-    // ▶ if (name != null) {
-    //   └▶ ④ comprueba si se recibió un nombre real (distinto de null).
     if (name != null){
-        // ▶ return "One for $name, one for me."
-        //   └▶ ⑤ $name interpola el valor del parámetro dentro del texto.
         return "One for $name, one for me."
-    // ▶ } else {
     } else {
-        // ▶ return "One for you, one for me."
-        //   └▶ ⑥ rama alternativa: mensaje fijo cuando no hay nombre.
         return "One for you, one for me."
     }
 }
@@ -66,12 +54,53 @@ fun main() {
  *      one for me."; si no, decir "One for you, one for me."
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Declarar una función twofer con un parámetro opcional
+ *           name de tipo String? y valor por defecto null.
+ *      II.  Si name no es null, interpolarlo en el mensaje.
+ *      III. Si name es null, usar el mensaje fijo con "you".
+ *      IV.  El valor por defecto null permite llamar la función sin
+ *           argumentos.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun twofer(name: String? = null): String {
+ *      ①  fun declara una función; twofer es su nombre.
+ *      ②  name: String? = null — parámetro opcional nullable con
+ *          valor por defecto null.
+ *      ③  : String — la función siempre devuelve un texto, nunca null.
+ *
+ *      →      if (name != null){
+ *      ④  Comprueba si se recibió un nombre real (no null).
+ *
+ *      →          return "One for $name, one for me."
+ *      ⑤  $name interpola el valor del parámetro dentro del texto.
+ *
+ *      →      } else {
+ *      →          return "One for you, one for me."
+ *      ⑥  Rama alternativa: mensaje fijo cuando no hay nombre.
+ *      →      }
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar un operador Elvis: "One for ${name ?: "you"}, one for me."
  *          evita el if/else explícito.
  *      B)  Sobrecargar la función (una versión sin parámetros y otra
  *          con String) en vez de usar un parámetro nullable.
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN dosPorUno(nombre: Texto o nulo = nulo): Texto
+ *          SI nombre NO ES nulo:
+ *              DEVOLVER "One for " + nombre + ", one for me."
+ *          SINO:
+ *              DEVOLVER "One for you, one for me."
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

@@ -30,44 +30,24 @@
  *
  */
 
-// ▶ object PrimeFactorCalculator {
-//   └▶ ① object → singleton: una única instancia con nombre PrimeFactorCalculator.
 object PrimeFactorCalculator {
-    // ▶ fun primeFactors(int: Int): List<Int> {
-    //   └▶ ② versión para Int; devuelve la lista de factores primos (con repetición).
     fun primeFactors(int: Int): List<Int> {
-        // ▶ val factors = mutableListOf<Int>()
-        // ▶ var number = int
-        // ▶ var divisor = 2
-        //   ├▶ ③ number → copia mutable que se irá reduciendo.
-        //   └▶ ④ divisor → arranca en 2, el menor primo posible.
         val factors = mutableListOf<Int>()
         var number = int
         var divisor = 2
 
-        // ▶ while (number > 1) {
-        //   └▶ ⑤ se repite hasta reducir number a 1.
         while (number > 1) {
-            // ▶ if (number % divisor == 0) {
-            //   ├▶ ⑥ divisor divide exacto → factors.add(divisor) lo guarda.
-            //   └▶ ⑦ number /= divisor → reduce el número dividiéndolo.
             if (number % divisor == 0) {
                 factors.add(divisor)
                 number /= divisor
             } else {
-                // ▶ divisor++
-                //   └▶ ⑧ no divide exacto → probar con el siguiente entero.
                 divisor++
             }
         }
 
-        // ▶ return factors
         return factors
     }
 
-    // ▶ fun primeFactors(long: Long): List<Long> {
-    //   └▶ ⑨ misma lógica sobrecargada para Long (números grandes); 2L y
-    //           0L son literales de tipo Long.
     fun primeFactors(long: Long): List<Long> {
         val factors = mutableListOf<Long>()
         var number = long
@@ -94,12 +74,65 @@ object PrimeFactorCalculator {
  *      divisores crecientes desde 2 hasta reducir el número a 1.
  *
  *  -----------------------------------------------------------------
+ *  🧠  ORDEN DE PENSAMIENTO
+ *
+ *      I.   Empezar con divisor = 2 y una copia mutable del número.
+ *      II.  Mientras number > 1: si divisor divide exacto, guardarlo
+ *           como factor y reducir number dividiéndolo; si no,
+ *           avanzar al siguiente divisor.
+ *      III. Repetir hasta que number llegue a 1.
+ *      IV.  La misma lógica se sobrecarga para Int y Long.
+ *
+ *  -----------------------------------------------------------------
+ *  🔍  EXPLICACIÓN PASO A PASO
+ *
+ *      →  fun primeFactors(int: Int): List<Int> {
+ *      →      val factors = mutableListOf<Int>()
+ *      →      var number = int
+ *      →      var divisor = 2
+ *      ①  number es una copia mutable para poder reducirla; divisor
+ *          comienza en el menor primo posible.
+ *
+ *      →      while (number > 1) {
+ *      →          if (number % divisor == 0) {
+ *      →              factors.add(divisor)
+ *      →              number /= divisor
+ *      ②  Si divisor divide exacto a number, se agrega a la lista de
+ *          factores y number se reduce dividiéndolo entre divisor.
+ *
+ *      →          } else {
+ *      →              divisor++
+ *      ③  Si no divide exacto, se prueba con el siguiente entero.
+ *      →          }
+ *      →      }
+ *
+ *      →      return factors
+ *      ④  Devuelve la lista completa de factores primos encontrados.
+ *      →  }
+ *
+ *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Recursivo: fun primeFactors(n, divisor=2) que se llama a sí
  *          misma reduciendo n y avanzando divisor.
  *      B)  Optimizar probando solo 2 y luego impares, o detener el
  *          bucle en divisor*divisor > number (el resto sería primo).
+ *
+ *  -----------------------------------------------------------------
+ *  📝  PSEUDOCÓDIGO EN ESPAÑOL
+ *
+ *      FUNCIÓN factoresPrimos(num): ListaDeEnteros
+ *          factores ← LISTA_VACIA
+ *          numero ← num
+ *          divisor ← 2
+ *          MIENTRAS numero > 1:
+ *              SI numero % divisor == 0:
+ *                  factores.AGREGAR(divisor)
+ *                  numero ← numero / divisor
+ *              SINO:
+ *                  divisor ← divisor + 1
+ *          DEVOLVER factores
+ *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
