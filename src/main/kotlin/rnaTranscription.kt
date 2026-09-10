@@ -31,14 +31,27 @@
  */
 
 
+// ▶ fun transcribeToRna(dna: String): String {
+//   └▶ ① recibe la cadena de ADN y devuelve su complemento de ARN.
 fun transcribeToRna(dna: String): String{
+    // ▶ return dna.toList().map { when (it) {
+    //   ├▶ ② .toList() → convierte el String en List<Char>.
+    //   └▶ ③ .map { ... } → transforma cada carácter con el when; it es
+    //           cada Char en turno (parámetro implícito de la lambda).
     return dna.toList().map { when(it){
+        // ▶ 'G' -> 'C'  /  'C' -> 'G'  /  'T' -> 'A'  /  'A' -> 'U'
+        //   └▶ ④ cada rama mapea un nucleótido de ADN a su complemento de ARN.
         'G' -> 'C'
         'C' -> 'G'
         'T' -> 'A'
         'A' -> 'U'
+        // ▶ else -> throw IllegalArgumentException("Invalid nucleotide: $it")
+        //   └▶ ⑤ rama por defecto obligatoria: cualquier carácter inválido
+        //           lanza excepción con el carácter problemático.
         else -> throw IllegalArgumentException("Invalid nucleotide: $it")
     } }.joinToString("")
+    //   └▶ ⑥ joinToString("") → concatena la lista de Chars en un String
+    //           sin separador.
 }
 
 fun main() {
@@ -63,57 +76,12 @@ fun main() {
  *      caracteres que no sean nucleótidos válidos.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Convertir el String de ADN en una lista de caracteres.
- *      II.  Transformar cada carácter con un when que mapea cada
- *           nucleótido a su complemento.
- *      III. Si aparece un carácter que no sea A, C, G o T, lanzar
- *           IllegalArgumentException.
- *      IV.  Unir la lista transformada de nuevo en un String.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun transcribeToRna(dna: String): String{
- *      →      return dna.toList().map { when(it){
- *      ①  .toList() convierte el String en List<Char>; .map transforma
- *          cada carácter aplicando el when.
- *
- *      →          'G' -> 'C'
- *      →          'C' -> 'G'
- *      →          'T' -> 'A'
- *      →          'A' -> 'U'
- *      ②  Cada rama del when mapea un nucleótido de ADN a su
- *          complemento de ARN.
- *
- *      →          else -> throw IllegalArgumentException("Invalid nucleotide: $it")
- *      ③  Rama por defecto obligatoria: cualquier carácter inválido
- *          lanza una excepción con el carácter problemático.
- *
- *      →      } }.joinToString("")
- *      ④  joinToString("") concatena la lista de Chars transformada
- *          en un único String sin separador.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar un Map<Char, Char> de complementos y buscar con
  *          map[it] ?: throw ..., en vez de un when.
  *      B)  Usar .replace() encadenado por cada nucleótido (menos
  *          seguro: hay que evitar sustituciones cruzadas).
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN transcribirAArn(adn: Texto): Texto
- *          DEVOLVER adn.MAPEAR(caracter c):
- *              SEGÚN c:
- *                  'G' → 'C'; 'C' → 'G'; 'T' → 'A'; 'A' → 'U'
- *                  OTRO → LANZAR Error("Nucleotido invalido: " + c)
- *              .UNIR("")
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

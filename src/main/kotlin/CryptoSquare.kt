@@ -91,23 +91,49 @@ import kotlin.math.sqrt
  *    al final.
  */
 
+// ▶ object CryptoSquare {
+//   └▶ ① object → singleton: una única instancia con nombre CryptoSquare.
 object CryptoSquare {
 
+    // ▶ fun ciphertext(plaintext: String): String {
+    //   └▶ ② recibe el texto plano y devuelve el texto cifrado.
     fun ciphertext(plaintext: String): String {
+        // ▶ val normalizedText = plaintext.filter { it.isLetterOrDigit() }.lowercase()
+        //   ├▶ ③ filter { it.isLetterOrDigit() } → conserva solo letras y dígitos.
+        //   └▶ ④ .lowercase() → unifica mayúsculas y minúsculas.
         val normalizedText = plaintext.filter { it.isLetterOrDigit() }.lowercase()
+        // ▶ if (normalizedText.isEmpty()) return ""
+        //   └▶ ⑤ caso borde: sin texto normalizado, no hay nada que cifrar.
         if (normalizedText.isEmpty()) return ""
         val normalTextLength = normalizedText.length
+        // ▶ val c = ceil(sqrt(normalTextLength.toDouble())).toInt()
+        //   └▶ ⑥ sqrt → tamaño ideal; ceil (techo) redondea hacia arriba
+        //           para garantizar c >= r (número de columnas).
         val c = ceil(sqrt(normalTextLength.toDouble())).toInt()
+        // ▶ val r = ceil((normalTextLength / c).toDouble()).toInt()
+        //   └▶ ⑦ filas necesarias para cubrir todos los caracteres con c columnas.
         val r = ceil((normalTextLength / c).toDouble()).toInt()
+        // ▶ val chunked = normalizedText.chunked(c).map { it.padEnd(c) }
+        //   ├▶ ⑧ .chunked(c) → parte el texto en trozos de tamaño c (las filas).
+        //   └▶ ⑨ .padEnd(c) → rellena con espacios el último trozo incompleto.
         val chunked = normalizedText.chunked(c).map { it.padEnd(c) }
+        // ▶ val auxList = mutableListOf<String>()
+        //   └▶ ⑩ acumulador de las columnas ya leídas.
         val auxList = mutableListOf<String>()
+        // ▶ for (i in 0 until c) {
+        //   └▶ ⑪ recorre cada columna i de 0 a c-1.
         for (i in 0 until c) {
             var column = ""
+            // ▶ for (j in chunked.indices) { column += chunked[j][i] }
+            //   └▶ ⑫ recorre todas las filas j y concatena el carácter que
+            //           está en la posición i de esa fila.
             for (j in chunked.indices) {
                 column += chunked[j][i]
             }
             auxList.add(column)
         }
+        // ▶ return auxList.joinToString(" ")
+        //   └▶ ⑬ une todas las columnas leídas, separadas por un espacio.
         return auxList.joinToString(" ")
     }
 
@@ -124,54 +150,6 @@ object CryptoSquare {
  *      por espacios.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Normalizar: quitar todo lo que no sea letra/dígito y pasar
- *           a minúsculas.
- *      II.  Calcular columnas c = techo(√longitud) y filas r =
- *           techo(longitud / c).
- *      III. Dividir el texto normalizado en trozos de tamaño c,
- *           rellenando con espacios el último trozo si falta.
- *      IV.  Leer cada columna recorriendo todas las filas y
- *           concatenar los caracteres encontrados.
- *      V.   Unir las columnas resultantes con un espacio.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  val normalizedText = plaintext.filter { it.isLetterOrDigit() }.lowercase()
- *      ①  filter conserva solo letras y dígitos; lowercase() unifica
- *          mayúsculas y minúsculas.
- *
- *      →  if (normalizedText.isEmpty()) return ""
- *      ②  Caso borde: sin texto normalizado, no hay nada que cifrar.
- *
- *      →  val c = ceil(sqrt(normalTextLength.toDouble())).toInt()
- *      ③  La raíz cuadrada da el tamaño ideal; ceil (techo) redondea
- *          hacia arriba para garantizar c >= r.
- *
- *      →  val r = ceil((normalTextLength / c).toDouble()).toInt()
- *      ④  Calcula cuántas filas hacen falta para cubrir todos los
- *          caracteres con c columnas.
- *
- *      →  val chunked = normalizedText.chunked(c).map { it.padEnd(c) }
- *      ⑤  .chunked(c) parte el texto en trozos de tamaño c (filas);
- *          .padEnd(c) rellena con espacios el último trozo incompleto.
- *
- *      →  for (i in 0 until c) {
- *      →      var column = ""
- *      →      for (j in chunked.indices) {
- *      →          column += chunked[j][i]
- *      ⑥  Para cada columna i, recorre todas las filas j y concatena
- *          el carácter en la posición i de cada fila.
- *      →      }
- *      →      auxList.add(column)
- *      →  }
- *
- *      →  return auxList.joinToString(" ")
- *      ⑦  Une todas las columnas leídas, separadas por un espacio.
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar transposición de matriz genérica: convertir las filas
@@ -180,23 +158,6 @@ object CryptoSquare {
  *      B)  Calcular r y c con enteros sin pasar por Double, iterando
  *          desde 1 hasta encontrar el primer c que cumpla las 3
  *          condiciones del enunciado.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN ciphertext(textoPlano): Texto
- *          normal ← textoPlano.FILTRAR(esLetraODigito).MINUSCULAS()
- *          SI normal.VACIO(): DEVOLVER ""
- *          columnas ← TECHO(RAIZ(normal.LONGITUD))
- *          filas ← TECHO(normal.LONGITUD / columnas)
- *          bloques ← normal.DIVIDIR(columnas).RELLENAR(columnas, ' ')
- *          resultado ← LISTA_VACIA
- *          PARA i DESDE 0 HASTA columnas-1:
- *              columna ← ""
- *              PARA CADA bloque EN bloques: columna += bloque[i]
- *              resultado.AGREGAR(columna)
- *          DEVOLVER resultado.UNIR(" ")
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

@@ -27,19 +27,38 @@ import java.math.BigInteger
  *
  */
 
+// ▶ object Board {
+//   └▶ ① object → singleton: una única instancia con nombre Board.
 object Board {
 
+    // ▶ fun getGrainCountForSquare(number: Int): BigInteger {
+    //   └▶ ② devuelve los granos de una casilla; BigInteger porque 2⁶³
+    //           supera el rango de Long.
     fun getGrainCountForSquare(number: Int): BigInteger {
+        // ▶ if (number < 1 || number > 64) throw IllegalArgumentException(...)
+        //   └▶ ③ valida que la casilla esté en el rango [1, 64].
         if (number < 1 || number > 64) throw IllegalArgumentException("Only integers between 1 and 64 (inclusive) are allowed")
+        // ▶ val bigNumber = BigInteger.valueOf(2)
+        //   └▶ ④ crea el BigInteger 2, que será la base de la potencia.
         val bigNumber = BigInteger.valueOf(2)
+        // ▶ return bigNumber.pow(number - 1)
+        //   └▶ ⑤ pow(n-1) → 2 elevado a (n-1): casilla 1 = 2⁰ = 1;
+        //           casilla 4 = 2³ = 8.
         return bigNumber.pow(number - 1)
     }
 
+    // ▶ fun getTotalGrainCount(): BigInteger {
+    //   └▶ ⑥ suma los granos de las 64 casillas.
     fun getTotalGrainCount(): BigInteger {
+        // ▶ var total = BigInteger.ZERO
+        //   └▶ ⑦ acumulador inicializado en 0.
         var total = BigInteger.ZERO
+        // ▶ for (i in 1..64) { total += getGrainCountForSquare(i) }
+        //   └▶ ⑧ recorre cada casilla y añade sus granos al total.
         for (i in 1..64){
             total += getGrainCountForSquare(i)
         }
+        // ▶ return total
         return total
     }
 }
@@ -63,62 +82,12 @@ fun main(){
  *      total acumulado en las 64 casillas.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Validar que la casilla esté entre 1 y 64.
- *      II.  Los granos en la casilla n son 2^(n-1); usar BigInteger
- *           porque 2⁶³ supera el rango de Long.
- *      III. El total es la suma de getGrainCountForSquare(i) para i
- *           de 1 a 64.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun getGrainCountForSquare(number: Int): BigInteger {
- *      →      if (number < 1 || number > 64) throw IllegalArgumentException(...)
- *      ①  Valida que la casilla esté en rango [1, 64]; si no, lanza
- *          una excepción.
- *
- *      →      val bigNumber = BigInteger.valueOf(2)
- *      ②  BigInteger permite números enteros de tamaño arbitrario,
- *          necesarios porque 2⁶⁴ excede Long.
- *
- *      →      return bigNumber.pow(number - 1)
- *      ③  pow(n-1) calcula 2 elevado a (n-1): la casilla 1 tiene
- *          2⁰=1 grano, la casilla 4 tiene 2³=8.
- *      →  }
- *
- *      →  fun getTotalGrainCount(): BigInteger {
- *      →      var total = BigInteger.ZERO
- *      →      for (i in 1..64){
- *      →          total += getGrainCountForSquare(i)
- *      ④  Acumula los granos de cada una de las 64 casillas.
- *      →      }
- *      →      return total
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Calcular el total directamente con la fórmula de la suma
  *          geométrica: 2⁶⁴ - 1, sin bucle.
- *      B)  Usar (1..64).sumOf { getGrainCountForSquare(it) } — aunque
- *          sumOf no soporta BigInteger de forma nativa, requeriría un
- *          fold en su lugar.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN granosEnCasilla(numero): BigEntero
- *          SI numero < 1 O numero > 64: LANZAR Error
- *          DEVOLVER 2 ELEVADO A (numero - 1)
- *      FIN FUNCIÓN
- *
- *      FUNCIÓN totalGranos(): BigEntero
- *          total ← 0
- *          PARA i DESDE 1 HASTA 64: total ← total + granosEnCasilla(i)
- *          DEVOLVER total
- *      FIN FUNCIÓN
+ *      B)  Usar (1..64).fold(BigInteger.ZERO) { acc, i -> acc +
+ *          getGrainCountForSquare(i) } en vez del bucle for.
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

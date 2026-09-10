@@ -31,19 +31,39 @@
  *     We've found our item.
  */
 
+// ▶ object BinarySearch {
+//   └▶ ① object → singleton: una única instancia con nombre BinarySearch.
 object BinarySearch {
+    // ▶ fun search(list: List<Int>, item: Int): Int {
+    //   └▶ ② recibe una lista YA ordenada y el valor a buscar; devuelve su índice.
     fun search(list: List<Int>, item: Int): Int {
+        // ▶ var left = 0
+        // ▶ var right = list.size - 1
+        //   └▶ ③ left y right delimitan el segmento de búsqueda actual.
         var left = 0
         var right = list.size - 1
+        // ▶ while (left <= right) {
+        //   └▶ ④ se repite mientras quede al menos un elemento por revisar.
         while (left <= right){
+            // ▶ val mid = (left + right) / 2
+            //   └▶ ⑤ división entera → índice del elemento central del segmento.
             val mid = (left + right) / 2
+            // ▶ when {
             when{
+                // ▶ list[mid] == item -> return mid
+                //   └▶ ⑥ si coincide, se encontró: devuelve el índice de inmediato.
                 list[mid] == item -> return mid  // encontrado
+                // ▶ list[mid] < item -> left = mid + 1
+                //   └▶ ⑦ el medio es menor → descarta la mitad izquierda.
                 list[mid] < item -> left = mid + 1 // busca derecha
+                // ▶ else -> right = mid - 1
+                //   └▶ ⑧ el medio es mayor → descarta la mitad derecha.
                 else            -> right = mid -1 // busca izquierda
             }
         }
 
+        // ▶ return throw NoSuchElementException("$item not found in list")
+        //   └▶ ⑨ si el bucle termina (left > right), el elemento no existe.
         return throw NoSuchElementException("$item not found in list")
     }
 }
@@ -58,69 +78,12 @@ object BinarySearch {
  *      espacio de búsqueda a la mitad.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Establecer límites left = 0 y right = size - 1.
- *      II.  Mientras left <= right, calcular el índice medio.
- *      III. Comparar el elemento medio con el buscado: si es igual,
- *           devolver el índice; si es menor, descartar la mitad
- *           izquierda; si es mayor, descartar la mitad derecha.
- *      IV.  Si el bucle termina sin encontrar el elemento, lanzar
- *           NoSuchElementException.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun search(list: List<Int>, item: Int): Int {
- *      →      var left = 0
- *      →      var right = list.size - 1
- *      ①  left y right delimitan el segmento de búsqueda actual.
- *
- *      →      while (left <= right){
- *      ②  Mientras quede al menos un elemento por revisar.
- *
- *      →          val mid = (left + right) / 2
- *      ③  División entera: índice del elemento central del segmento.
- *
- *      →          when{
- *      →              list[mid] == item -> return mid
- *      ④  Si coincide, se encontró: devuelve el índice de inmediato.
- *
- *      →              list[mid] < item -> left = mid + 1
- *      ⑤  Si el medio es menor que el buscado, descarta la mitad
- *          izquierda moviendo left justo después de mid.
- *
- *      →              else            -> right = mid -1
- *      ⑥  Si es mayor, descarta la mitad derecha moviendo right justo
- *          antes de mid.
- *      →          }
- *      →      }
- *
- *      →      return throw NoSuchElementException("$item not found in list")
- *      ⑦  Si el bucle termina (left > right), el elemento no existe.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Versión recursiva: search(list, item, left, right) que se
  *          llama a sí misma sobre la mitad correspondiente.
  *      B)  Devolver Int? (nullable) en vez de lanzar excepción, y que
  *          el llamador decida cómo manejar el caso "no encontrado".
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN buscar(lista, elemento): Entero
- *          izquierda ← 0
- *          derecha ← lista.tamaño - 1
- *          MIENTRAS izquierda <= derecha:
- *              medio ← (izquierda + derecha) / 2
- *              SI lista[medio] == elemento: DEVOLVER medio
- *              SINO SI lista[medio] < elemento: izquierda ← medio + 1
- *              SINO: derecha ← medio - 1
- *          LANZAR Error("elemento no encontrado")
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

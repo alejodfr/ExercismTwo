@@ -34,18 +34,38 @@
  * Therefore, the player earns 78 energy points.
  */
 
+// ▶ object SumOfMultiples {
+//   └▶ ① object → singleton: una única instancia con nombre SumOfMultiples.
 object SumOfMultiples {
 
+    // ▶ fun sum(factors: Set<Int>, limit: Int): Int {
+    //   └▶ ② factors → conjunto de valores base; limit → el nivel alcanzado.
     fun sum(factors: Set<Int>, limit: Int): Int {
+        // ▶ val multiplesOfThree = mutableSetOf<Int>()
+        //   └▶ ③ Set mutable vacío: descarta duplicados automáticamente.
         val multiplesOfThree = mutableSetOf<Int>()
+        // ▶ for (factor in factors) {
+        //   └▶ ④ recorre cada valor base del conjunto.
         for (factor in factors) {
+            // ▶ if (factor == 0) { continue }
+            //   └▶ ⑤ continue → salta a la siguiente iteración; evita dividir
+            //           entre cero más abajo.
             if (factor == 0){ continue }
+            // ▶ for (i in factor..(limit - 1)) {
+            //   └▶ ⑥ recorre desde factor hasta limit-1 (estrictamente menor
+            //           que el límite).
             for (i in factor..(limit-1)) {
+                // ▶ if (i % factor == 0) {
+                //   └▶ ⑦ % → resto; si es 0, i es múltiplo exacto de factor.
                 if (i % factor == 0) {
+                    // ▶ multiplesOfThree.add(i)
+                    //   └▶ ⑧ agrega i al set (si ya estaba, no se duplica).
                     multiplesOfThree.add(i)
                 }
             }
         }
+        // ▶ return multiplesOfThree.sum()
+        //   └▶ ⑨ .sum() sobre el set devuelve la suma total de los múltiplos.
         return multiplesOfThree.sum()
     }
 }
@@ -67,48 +87,6 @@ fun main(){
  *      sumarlos.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Crear un objeto singleton con una función sum(factors, limit).
- *      II.  Acumular los múltiplos en un Set mutable para evitar
- *           duplicados automáticamente.
- *      III. Recorrer cada factor; si es 0, saltarlo (evita división
- *           entre cero).
- *      IV.  Para cada factor, recorrer los números desde el propio
- *           factor hasta limit-1 y agregar los que sean múltiplos.
- *      V.   Devolver la suma de todos los múltiplos acumulados.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun sum(factors: Set<Int>, limit: Int): Int {
- *      ①  factors es el conjunto de valores base; limit es el nivel.
- *
- *      →      val multiplesOfThree = mutableSetOf<Int>()
- *      ②  Set mutable vacío: descarta duplicados automáticamente.
- *
- *      →      for (factor in factors) {
- *      →          if (factor == 0){ continue }
- *      ③  continue salta a la siguiente iteración si factor es 0,
- *          evitando la división por cero en el módulo.
- *
- *      →          for (i in factor..(limit-1)) {
- *      ④  Recorre desde factor hasta limit-1 (estrictamente menor al
- *          límite).
- *
- *      →              if (i % factor == 0) {
- *      →                  multiplesOfThree.add(i)
- *      ⑤  Si el residuo es 0, i es múltiplo exacto de factor y se
- *          agrega al set.
- *      →              }
- *      →          }
- *      →      }
- *
- *      →      return multiplesOfThree.sum()
- *      ⑥  .sum() sobre el set devuelve la suma total de los múltiplos.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Estilo funcional: (1 until limit).filter { n -> factors.any
@@ -117,19 +95,6 @@ fun main(){
  *      B)  Fórmula matemática cerrada (suma de progresión aritmética)
  *          para cada factor y aplicar inclusión-exclusión para evitar
  *          contar dos veces los múltiplos comunes.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN suma(factores: ConjuntoDeEnteros, limite: Entero): Entero
- *          acumulador ← CONJUNTO VACÍO
- *          PARA CADA factor EN factores:
- *              SI factor == 0: CONTINUAR
- *              PARA i DESDE factor HASTA limite - 1:
- *                  SI i % factor == 0:
- *                      acumulador.AGREGAR(i)
- *          DEVOLVER acumulador.SUMAR()
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

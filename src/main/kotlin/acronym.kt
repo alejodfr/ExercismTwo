@@ -20,14 +20,31 @@
  *   Thank George It's Friday!      TGIF
  */
 
+// ▶ object Acronym {
+//   └▶ ① object → singleton: una única instancia con nombre Acronym.
 object Acronym {
+    // ▶ fun generate(phrase: String): String {
+    //   └▶ ② recibe la frase completa y devuelve su acrónimo.
     fun generate(phrase: String) : String {
 
+        // ▶ val auxList = mutableListOf<String>()
+        //   └▶ ③ lista mutable donde se acumularán las iniciales.
         val auxList = mutableListOf<String>()
+        // ▶ val list = phrase.split(" ","-","_").filter { it.isNotEmpty() }
+        //   ├▶ ④ split(" ","-","_") → divide la frase por esos tres separadores.
+        //   └▶ ⑤ filter { it.isNotEmpty() } → descarta las cadenas vacías que
+        //           dejan los separadores consecutivos.
         val list = phrase.split(" ","-","_").filter { it.isNotEmpty() }
+        // ▶ for (i in list) {
         for (i in list){
+            // ▶ auxList.add(i.first().uppercaseChar().toString())
+            //   ├▶ ⑥ i.first() → primer carácter de la palabra.
+            //   ├▶ ⑦ .uppercaseChar() → lo pasa a mayúscula.
+            //   └▶ ⑧ .toString() → lo convierte a String para poder concatenarlo.
             auxList.add(i.first().uppercaseChar().toString())
         }
+        // ▶ return auxList.joinToString("")
+        //   └▶ ⑨ une todas las iniciales en un solo String, sin separador.
         return auxList.joinToString("")
     }
 }
@@ -48,7 +65,7 @@ fun main() {
     // Caso 5 — separadores consecutivos
     println(Acronym.generate("Something - Interesting"))   // SI
 
-    // Caso 6 — todo en minúsculas
+    // Caso 6 — tdo en minúsculas
     println(Acronym.generate("portable network graphics")) // PNG
 }
 
@@ -62,39 +79,6 @@ fun main() {
  *      separadores e ignorando cualquier otro signo de puntuación.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Separar la frase en palabras usando espacio, guión y
- *           guión bajo como delimitadores.
- *      II.  Descartar las cadenas vacías que puedan resultar de
- *           separadores consecutivos.
- *      III. Tomar la primera letra de cada palabra y convertirla a
- *           mayúscula.
- *      IV.  Concatenar todas las iniciales sin separador.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun generate(phrase: String) : String {
- *      →      val auxList = mutableListOf<String>()
- *      ①  Lista mutable donde se acumularán las iniciales.
- *
- *      →      val list = phrase.split(" ","-","_").filter { it.isNotEmpty() }
- *      ②  split() divide la frase por espacio, guión y guión bajo;
- *          filter descarta las cadenas vacías (separadores dobles).
- *
- *      →      for (i in list){
- *      →          auxList.add(i.first().uppercaseChar().toString())
- *      ③  .first() toma el primer carácter de la palabra;
- *          .uppercaseChar() lo pasa a mayúscula; .toString() lo
- *          convierte para poder concatenarlo.
- *      →      }
- *
- *      →      return auxList.joinToString("")
- *      ④  Une todas las iniciales en un solo String, sin separador.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar una expresión regular Regex("[^A-Za-z-_ ]") para
@@ -102,17 +86,6 @@ fun main() {
  *          en que .first() ignore signos como el apóstrofo.
  *      B)  Estilo funcional con map en vez de un bucle for:
  *          list.map { it.first().uppercaseChar() }.joinToString("").
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN generar(frase: Texto): Texto
- *          palabras ← frase.SEPARAR(" ", "-", "_").FILTRAR(no_vacio)
- *          iniciales ← LISTA_VACIA
- *          PARA CADA palabra EN palabras:
- *              iniciales.AGREGAR(palabra.PRIMERA_LETRA().MAYUSCULA())
- *          DEVOLVER iniciales.UNIR("")
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

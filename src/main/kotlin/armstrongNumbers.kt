@@ -16,11 +16,24 @@
  * Write some code to determine whether a number is an Armstrong number.
  */
 
+// ▶ object ArmstrongNumber {
+//   └▶ ① object → singleton: una única instancia con nombre ArmstrongNumber.
 object ArmstrongNumber {
 
+    // ▶ fun check(input: Int): Boolean {
+    //   └▶ ② recibe el número a evaluar y devuelve true/false.
     fun check(input: Int): Boolean {
+        // ▶ val digits = input.toString().map { it - '0' }
+        //   ├▶ ③ .toString() → convierte el número a texto.
+        //   └▶ ④ .map { it - '0' } → resta el código de '0' a cada carácter,
+        //           obteniendo su valor numérico ('5' - '0' = 5).
         val digits = input.toString().map { it - '0' }
+        // ▶ val power = digits.size
+        //   └▶ ⑤ la cantidad de dígitos es el exponente de la fórmula.
         val power = digits.size
+        // ▶ return input == digits.sumOf { Math.pow(it.toDouble(), power.toDouble()).toInt() }
+        //   ├▶ ⑥ sumOf { ... } → eleva cada dígito a power y suma los resultados.
+        //   └▶ ⑦ input == ... → es Armstrong si esa suma iguala al número original.
         return input == digits.sumOf { Math.pow(it.toDouble(), power.toDouble()).toInt() }
     }
 }
@@ -42,48 +55,12 @@ fun main() {
  *      debe ser igual al número original.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Convertir el número a String y luego a lista de dígitos
- *           individuales (restando el código de '0').
- *      II.  Contar cuántos dígitos hay: ese es el exponente.
- *      III. Elevar cada dígito a esa potencia y sumar los resultados.
- *      IV.  Comparar la suma con el número original.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun check(input: Int): Boolean {
- *      →      val digits = input.toString().map { it - '0' }
- *      ①  .toString() convierte el número a texto; .map { it - '0' }
- *          resta el código ASCII de '0' a cada carácter, obteniendo
- *          su valor numérico ('5' - '0' = 5).
- *
- *      →      val power = digits.size
- *      ②  La cantidad de dígitos será el exponente de la fórmula.
- *
- *      →      return input == digits.sumOf { Math.pow(it.toDouble(), power.toDouble()).toInt() }
- *      ③  sumOf aplica Math.pow(digito, power) a cada dígito y suma
- *          los resultados; se compara esa suma con el número original.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar exponenciación entera manual (repeat multiply) en vez
  *          de Math.pow, evitando conversiones a Double.
  *      B)  Calcular los dígitos con operaciones aritméticas (% 10 y
  *          / 10) en vez de convertir a String.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN esArmstrong(numero): Booleano
- *          digitos ← CONVERTIR_A_TEXTO(numero).MAPEAR(c → c - '0')
- *          potencia ← digitos.TAMAÑO
- *          suma ← digitos.SUMAR { ELEVAR(d, potencia) }
- *          DEVOLVER numero == suma
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

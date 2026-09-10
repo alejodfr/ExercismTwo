@@ -42,12 +42,26 @@
 
 
 
+// ▶ object ResistorColorDuo {
+//   └▶ ① object → singleton: una única instancia con nombre ResistorColorDuo.
 object ResistorColorDuo {
 
+    // ▶ fun value(vararg colors: Color): Int {
+    //   └▶ ② vararg → permite pasar cualquier cantidad de argumentos Color
+    //           sin construir un array explícito.
     fun value(vararg colors: Color): Int {
+        // ▶ val firstDigit = colors[0].ordinal.toString()
+        // ▶ val secondDigit = colors[1].ordinal.toString()
+        //   └▶ ③ .ordinal → posición del color en el enum (0-based, coincide
+        //           con su valor); .toString() lo pasa a texto.
         val firstDigit = colors[0].ordinal.toString()
         val secondDigit = colors[1].ordinal.toString()
+        // ▶ val result = (firstDigit + secondDigit).toInt()
+        //   └▶ ④ concatena ambos dígitos como Strings ("1"+"5"="15") y
+        //           convierte el resultado de vuelta a Int.
         val result = (firstDigit+secondDigit).toInt()
+        // ▶ return result
+        //   └▶ ⑤ los colores extra (colors[2], ...) simplemente no se usan.
         return result
     }
 }
@@ -61,35 +75,6 @@ object ResistorColorDuo {
  *      número de dos dígitos, ignorando cualquier color adicional.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Recibir los colores como vararg (cantidad variable de
- *           argumentos).
- *      II.  Obtener el valor numérico de los dos primeros colores
- *           usando su .ordinal en el enum Color.
- *      III. Concatenar ambos dígitos como texto y convertir el
- *           resultado a Int.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun value(vararg colors: Color): Int {
- *      ①  vararg permite pasar cualquier cantidad de argumentos Color
- *          sin necesidad de un array explícito.
- *
- *      →      val firstDigit = colors[0].ordinal.toString()
- *      →      val secondDigit = colors[1].ordinal.toString()
- *      ②  .ordinal devuelve la posición del color en el enum (0-based,
- *          coincide con su valor); .toString() lo convierte a texto.
- *
- *      →      val result = (firstDigit+secondDigit).toInt()
- *      ③  Concatena ambos dígitos como Strings (ej. "1"+"5"="15") y
- *          convierte el resultado de vuelta a Int.
- *
- *      →      return result
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Cálculo aritmético directo: colors[0].ordinal * 10 +
@@ -97,15 +82,6 @@ object ResistorColorDuo {
  *          eficiente.
  *      B)  Usar un Map<Color, Int> explícito en vez de .ordinal, si se
  *          necesita desacoplar el valor del orden de declaración.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN valor(vararg colores): Entero
- *          primerDigito ← colores[0].ordinal
- *          segundoDigito ← colores[1].ordinal
- *          DEVOLVER CONCATENAR(primerDigito, segundoDigito) COMO Entero
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

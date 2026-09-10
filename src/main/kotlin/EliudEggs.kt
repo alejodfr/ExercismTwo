@@ -23,12 +23,24 @@
  * 3. Show the result on the display.
  */
 
+// ▶ object EliudsEggs {
+//   └▶ ① object → singleton: una única instancia con nombre EliudsEggs.
 object EliudsEggs {
 
+    // ▶ fun eggCount(number: Int): Int {
+    //   └▶ ② recibe el número decimal de la pantalla y devuelve los huevos reales.
     fun eggCount(number: Int): Int{
         val num = number
+        // ▶ val binary = num.toString(2)
+        //   └▶ ③ toString(2) → convierte el entero a String en base 2
+        //           (binario); ej. 6 → "110".
         val binary = num.toString(2) // transformar a binario
+        // ▶ val count = binary.count { it == '1' }
+        //   └▶ ④ .count { it == '1' } → recorre la cadena binaria y cuenta
+        //           los caracteres que son exactamente '1'.
         val count = binary.count { it == '1' } // cuenta cuantos '1' hay en el binario
+        // ▶ return count
+        //   └▶ ⑤ ese conteo de unos es la cantidad de huevos en el gallinero.
         return count
     }
 }
@@ -50,46 +62,12 @@ fun main(){
  *      de su representación binaria.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Convertir el número decimal a su representación binaria
- *           como String.
- *      II.  Contar cuántos caracteres '1' aparecen en esa cadena.
- *      III. Ese conteo es la cantidad real de huevos.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun eggCount(number: Int): Int{
- *      →      val num = number
- *      →      val binary = num.toString(2) // transformar a binario
- *      ①  toString(2) convierte el entero a String en base 2
- *          (binario); ej. 6 → "110".
- *
- *      →      val count = binary.count { it == '1' } // cuenta cuantos '1' hay en el binario
- *      ②  .count { it == '1' } recorre la cadena binaria y cuenta los
- *          caracteres que son exactamente '1'.
- *
- *      →      return count
- *      ③  Ese conteo de unos es la cantidad de huevos en el gallinero.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar Integer.bitCount(number), función de la biblioteca
  *          estándar de Java que cuenta bits en 1 directamente.
  *      B)  Contar con desplazamiento de bits: mientras number > 0,
  *          sumar (number and 1) y desplazar number con shr(1).
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN conteoHuevos(numero): Entero
- *          binario ← numero.CONVERTIR_A_BASE(2)
- *          contador ← binario.CONTAR(caracter == '1')
- *          DEVOLVER contador
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

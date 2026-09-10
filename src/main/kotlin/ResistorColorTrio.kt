@@ -51,14 +51,30 @@
  * "33 kiloohms"
  */
 
+// ▶ object ResistorColorTrio {
+//   └▶ ① object → singleton: una única instancia con nombre ResistorColorTrio.
 object ResistorColorTrio {
 
+    // ▶ fun text(vararg input: Color): String {
+    //   └▶ ② vararg → recibe los colores; aquí solo se usan los índices 0, 1 y 2.
     fun text(vararg input: Color): String {
+        // ▶ val baseValue = input[0].ordinal * 10 + input[1].ordinal
+        //   └▶ ③ combina las dos primeras bandas en un número de dos
+        //           dígitos (decenas + unidades).
         val baseValue = input[0].ordinal * 10 + input[1].ordinal
+        // ▶ val exponent = input[2].ordinal
+        //   └▶ ④ la tercera banda indica cuántos ceros añadir (el exponente).
         val exponent = input[2].ordinal
+        // ▶ val multiplier = Math.pow(10.0, exponent.toDouble()).toLong()
+        //   └▶ ⑤ 10^exponente = el multiplicador de ceros.
         val multiplier = Math.pow(10.0, exponent.toDouble()).toLong()
+        // ▶ val totalOhms = baseValue * multiplier
+        //   └▶ ⑥ valor final en ohms = valor base × multiplicador.
         val totalOhms = baseValue * multiplier
 
+        // ▶ return when {
+        //   └▶ ⑦ elige el prefijo métrico según el umbral que supere
+        //           totalOhms, dividiendo para mostrar el número reducido.
         return when {
             totalOhms >= 1_000_000_000 -> "${totalOhms / 1_000_000_000} gigaohms"
             totalOhms >= 1_000_000 -> "${totalOhms / 1_000_000} megaohms"
@@ -78,67 +94,12 @@ object ResistorColorTrio {
  *      (kilo, mega, giga).
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Las dos primeras bandas forman el valor base (decenas +
- *           unidades), igual que en ResistorColorDuo.
- *      II.  La tercera banda indica el exponente de 10 (cuántos ceros
- *           agregar).
- *      III. Multiplicar el valor base por 10^exponente para obtener
- *           el total en ohms.
- *      IV.  Elegir el prefijo métrico (giga/mega/kilo/ninguno) según
- *           la magnitud del resultado.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun text(vararg input: Color): String {
- *      ①  vararg permite recibir exactamente 3 colores (o más, aunque
- *          aquí solo se usan los índices 0, 1 y 2).
- *
- *      →      val baseValue = input[0].ordinal * 10 + input[1].ordinal
- *      ②  Combina las dos primeras bandas en un número de dos dígitos
- *          usando aritmética (decenas + unidades).
- *
- *      →      val exponent = input[2].ordinal
- *      →      val multiplier = Math.pow(10.0, exponent.toDouble()).toLong()
- *      ③  La tercera banda es el exponente; Math.pow(10.0, exponent)
- *          calcula 10^exponente como el multiplicador de ceros.
- *
- *      →      val totalOhms = baseValue * multiplier
- *      ④  El valor final en ohms es el valor base multiplicado por el
- *          multiplicador de ceros.
- *
- *      →      return when {
- *      →          totalOhms >= 1_000_000_000 -> "${totalOhms / 1_000_000_000} gigaohms"
- *      →          totalOhms >= 1_000_000 -> "${totalOhms / 1_000_000} megaohms"
- *      →          totalOhms >= 1_000 -> "${totalOhms / 1_000} kiloohms"
- *      →          else -> "$totalOhms ohms"
- *      →      }
- *      ⑤  when elige el prefijo métrico según el umbral que supere
- *          totalOhms, dividiendo para mostrar el número reducido.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar un mapa de colores a valores en vez de .ordinal, para
  *          desacoplar el valor del orden de declaración del enum.
  *      B)  Calcular el exponente con potencias enteras manuales (un
  *          bucle multiplicando por 10) en vez de Math.pow con Double.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN text(input: Color[]): Texto
- *          base ← input[0].ordinal * 10 + input[1].ordinal
- *          exponente ← input[2].ordinal
- *          total ← base * 10^exponente
- *          SI total >= 1_000_000_000: DEVOLVER (total/1e9) + " gigaohms"
- *          SINO SI total >= 1_000_000: DEVOLVER (total/1e6) + " megaohms"
- *          SINO SI total >= 1_000: DEVOLVER (total/1e3) + " kiloohms"
- *          SINO: DEVOLVER total + " ohms"
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

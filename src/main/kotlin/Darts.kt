@@ -20,18 +20,34 @@
  * by a dart landing at that point.
  */
 
+// ▶ object Darts {
+//   └▶ ① object → declara un singleton: una única instancia con nombre Darts.
 object Darts {
 
+    // ▶ fun score(x: Number, y: Number): Int {
+    //   └▶ ② Number → acepta cualquier tipo numérico (Int, Double, ...).
     fun score(x: Number, y: Number ): Int {
         var firstCordinate = x
         var secondCordinate = y
+        // ▶ var distance = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0))
+        //   ├▶ ③ Math.pow(v, 2.0) → eleva v al cuadrado.
+        //   └▶ ④ Math.sqrt(...) → raíz cuadrada de la suma = distancia
+        //           euclidiana del punto al origen (0, 0).
         var distance = Math.sqrt(Math.pow(firstCordinate.toDouble(), 2.0) + Math.pow(secondCordinate.toDouble(), 2.0))
+        // ▶ if (distance <= 1) { return 10 }
+        //   └▶ ⑤ distancia ≤ 1 → círculo interior → 10 puntos.
         if (distance<=1){
             return 10
+        // ▶ } else if (distance <= 5) { return 5 }
+        //   └▶ ⑥ si no, pero ≤ 5 → círculo medio → 5 puntos.
         } else if (distance<=5){
             return 5
+        // ▶ } else if (distance <= 10) { return 1 }
+        //   └▶ ⑦ si no, pero ≤ 10 → círculo exterior → 1 punto.
         } else if (distance<=10){
             return 1
+        // ▶ } else { return 0 }
+        //   └▶ ⑧ si no cumple nada anterior → fuera del blanco → 0 puntos.
         } else {
             return 0
         }
@@ -56,60 +72,12 @@ fun main(){
  *      la distancia del punto (x, y) al centro (0, 0) del blanco.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Calcular la distancia del punto al origen usando el
- *           teorema de Pitágoras: distancia = raíz(x² + y²).
- *      II.  Comparar esa distancia contra los radios 1, 5 y 10, en
- *           orden creciente.
- *      III. Devolver 10, 5, 1 o 0 según en qué círculo cayó el dardo.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun score(x: Number, y: Number): Int {
- *      ①  Number acepta cualquier tipo numérico (Int, Double, ...).
- *
- *      →      var distance = Math.sqrt(Math.pow(firstCordinate.toDouble(), 2.0) + Math.pow(secondCordinate.toDouble(), 2.0))
- *      ②  Math.pow(v, 2.0) eleva al cuadrado; Math.sqrt() calcula la
- *          raíz cuadrada de la suma → distancia euclidiana al origen.
- *
- *      →      if (distance<=1){
- *      →          return 10
- *      ③  Si la distancia es ≤ 1, el dardo cayó en el círculo interior.
- *
- *      →      } else if (distance<=5){
- *      →          return 5
- *      ④  Si no, pero es ≤ 5, cayó en el círculo medio.
- *
- *      →      } else if (distance<=10){
- *      →          return 1
- *      ⑤  Si no, pero es ≤ 10, cayó en el círculo exterior.
- *
- *      →      } else {
- *      →          return 0
- *      ⑥  Si no cumple ninguna condición anterior, cayó fuera del blanco.
- *      →      }
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar when { distance <= 1 -> 10; distance <= 5 -> 5; ... }
  *          en vez de la cadena if/else if.
  *      B)  Comparar el cuadrado de la distancia contra los radios al
  *          cuadrado, evitando calcular la raíz cuadrada.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN puntuar(x, y): Entero
- *          distancia ← RAIZ(x² + y²)
- *          SI distancia <= 1: DEVOLVER 10
- *          SINO SI distancia <= 5: DEVOLVER 5
- *          SINO SI distancia <= 10: DEVOLVER 1
- *          SINO: DEVOLVER 0
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

@@ -49,13 +49,20 @@ import java.time.LocalDateTime
 
 
 
+// ▶ class Gigasecond(val birthDate: LocalDateTime) {
+//   └▶ ① constructor primario: birthDate se guarda como propiedad
+//           inmutable de tipo LocalDateTime (fecha + hora).
 class Gigasecond(val birthDate: LocalDateTime) { // * <- Constructor Primario
 
-    // ? Constructor secundario: Si nos pasan solo un LocalDate,
-    // ? lo convertimos a LocalDateTime a las 00:00:00 y se lo enviamos al constructor principal
+    // ▶ constructor(birthDate: LocalDate) : this(birthDate.atStartOfDay())
+    //   ├▶ ② constructor secundario: recibe un LocalDate (solo fecha).
+    //   └▶ ③ : this(...) → delega en el primario, convirtiendo con
+    //           .atStartOfDay() a las 00:00:00 de ese día.
     constructor(birthDate: LocalDate) : this(birthDate.atStartOfDay())
 
-    // Calculamos la nueva fecha sumando el gigasegundo
+    // ▶ val date: LocalDateTime = birthDate.plusSeconds(1_000_000_000)
+    //   └▶ ④ .plusSeconds(n) → suma n segundos; un gigasegundo = 1_000_000_000
+    //           (los guiones bajos son solo separadores visuales).
     val date: LocalDateTime = birthDate.plusSeconds(1_000_000_000)
 }
 
@@ -69,50 +76,12 @@ class Gigasecond(val birthDate: LocalDateTime) { // * <- Constructor Primario
  *      después de esa fecha.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   El constructor primario recibe un LocalDateTime.
- *      II.  Un constructor secundario acepta un LocalDate y lo
- *           convierte al inicio de ese día (00:00:00) delegando en el
- *           constructor primario con this(...).
- *      III. La propiedad date se calcula sumando 1_000_000_000
- *           segundos con plusSeconds().
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  class Gigasecond(val birthDate: LocalDateTime) {
- *      ①  Constructor primario: birthDate se guarda como propiedad
- *          inmutable de tipo LocalDateTime (fecha + hora).
- *
- *      →      constructor(birthDate: LocalDate) : this(birthDate.atStartOfDay())
- *      ②  Constructor secundario: recibe un LocalDate (solo fecha) y
- *          delega en el primario con this(...), convirtiendo con
- *          .atStartOfDay() a las 00:00:00 de ese día.
- *
- *      →      val date: LocalDateTime = birthDate.plusSeconds(1_000_000_000)
- *      ③  .plusSeconds(n) suma n segundos a la fecha; un gigasegundo
- *          equivale a 1_000_000_000 segundos (los guiones bajos son
- *          solo separadores visuales, no afectan el valor).
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar Duration.ofSeconds(1_000_000_000) y birthDate.plus(duration)
  *          en vez de plusSeconds directo.
  *      B)  Aceptar un Instant en vez de LocalDateTime si no importa la
  *          zona horaria ni el calendario humano.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      CLASE Gigasegundo
- *          Constructor primario(fechaNacimiento: FechaHora)
- *              date ← fechaNacimiento + 1_000_000_000 segundos
- *          Constructor secundario(fechaNacimiento: SoloFecha)
- *              LLAMA al primario con fechaNacimiento a las 00:00:00
- *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

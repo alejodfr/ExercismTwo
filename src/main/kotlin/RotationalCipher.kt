@@ -36,30 +36,55 @@
  *
  */
 
+// ▶ class RotationalCipher(private val key: Int) {
+//   └▶ ① key → cuántas posiciones se desplaza cada letra; private val →
+//           inmutable e interna.
 class RotationalCipher(private val key: Int) {
 
+    // ▶ init { require(key in 0..26) { "The key must be between 0 and 26" } }
+    //   └▶ ② al construir el objeto se valida que la clave esté en 0..26.
     init {
         require(key in 0..26) { "The key must be between 0 and 26" }
     }
 
+    // ▶ fun encode(text: String): String {
+    //   └▶ ③ recibe el texto plano y devuelve el texto cifrado.
     fun encode(text: String): String {
+        // ▶ val plain = "abcdefghijklmnopqrstuvwxyz"
+        //   └▶ ④ alfabeto base sin rotar.
         val plain = "abcdefghijklmnopqrstuvwxyz"
+        // ▶ val cipher = plain.drop(key) + plain.take(key)
+        //   ├▶ ⑤ .drop(key) → descarta los primeros key caracteres.
+        //   └▶ ⑥ .take(key) → toma esos mismos y los pega al final →
+        //           alfabeto rotado.
         val cipher = plain.drop(key) + plain.take(key)
 
+        // ▶ return text.map { char ->
+        //   └▶ ⑦ .map → transforma cada carácter del texto.
         return text.map { char ->
+            // ▶ when {
             when {
+                // ▶ char.isLowerCase() -> { val index = plain.indexOf(char); cipher[index] }
+                //   └▶ ⑧ minúscula: busca su posición en plain y toma el
+                //           carácter en la misma posición del alfabeto cifrado.
                 char.isLowerCase() -> {
                     val index = plain.indexOf(char)
                     cipher[index]
                 }
+                // ▶ char.isUpperCase() -> { ... cipher[index].uppercaseChar() }
+                //   └▶ ⑨ mayúscula: se pasa a minúscula para buscarla, se
+                //           sustituye y se vuelve a poner en mayúscula.
                 char.isUpperCase() -> {
                     val lowerChar = char.lowercaseChar()
                     val index = plain.indexOf(lowerChar)
                     cipher[index].uppercaseChar()
                 }
+                // ▶ else -> char
+                //   └▶ ⑩ cualquier carácter no alfabético se deja igual.
                 else -> char
             }
         }.joinToString("")
+        //   └▶ ⑪ .joinToString("") → reconstruye el String final sin separador.
     }
 }
 
@@ -74,76 +99,12 @@ class RotationalCipher(private val key: Int) {
  *      alfabéticos.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Validar que la clave esté entre 0 y 26.
- *      II.  Construir el alfabeto cifrado rotando el alfabeto base
- *           según la clave.
- *      III. Recorrer cada carácter del texto: si es letra, ubicar su
- *           posición en el alfabeto base y sustituirla por el
- *           carácter en la misma posición del alfabeto cifrado.
- *      IV.  Conservar mayúsculas, minúsculas y símbolos no alfabéticos.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  init {
- *      →      require(key in 0..26) { "The key must be between 0 and 26" }
- *      ①  Valida que la clave esté en el rango permitido; lanza
- *          excepción si no.
- *      →  }
- *
- *      →  val plain = "abcdefghijklmnopqrstuvwxyz"
- *      →  val cipher = plain.drop(key) + plain.take(key)
- *      ②  .drop(key) descarta los primeros key caracteres; .take(key)
- *          toma esos mismos caracteres y los pone al final: así se
- *          construye el alfabeto rotado.
- *
- *      →      return text.map { char ->
- *      →          when {
- *      →              char.isLowerCase() -> {
- *      →                  val index = plain.indexOf(char)
- *      →                  cipher[index]
- *      ③  Si es minúscula, se busca su posición en plain y se toma el
- *          carácter en esa misma posición del alfabeto cifrado.
- *
- *      →              char.isUpperCase() -> {
- *      →                  val lowerChar = char.lowercaseChar()
- *      →                  val index = plain.indexOf(lowerChar)
- *      →                  cipher[index].uppercaseChar()
- *      ④  Si es mayúscula, se busca su versión minúscula en plain, se
- *          sustituye y se vuelve a convertir a mayúscula.
- *
- *      →              else -> char
- *      ⑤  Cualquier carácter no alfabético se deja igual.
- *      →          }
- *      →      }.joinToString("")
- *      ⑥  .map transforma cada carácter; .joinToString("") reconstruye
- *          el String final sin separador.
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar aritmética módulo 26 directamente: ((char - 'a' + key)
  *          % 26 + 'a'.code).toChar(), sin construir el alfabeto cifrado.
  *      B)  Usar fold() en vez de map() + joinToString() para construir
  *          el resultado en una sola pasada sin lista intermedia.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      CLASE RotationalCipher(key)
- *          AL CREAR: REQUERIR key EN 0..26
- *          FUNCIÓN encode(texto): Texto
- *              alfabeto ← "abcdefghijklmnopqrstuvwxyz"
- *              cifrado ← alfabeto.QUITAR_PRIMEROS(key) + alfabeto.TOMAR_PRIMEROS(key)
- *              resultado ← ""
- *              PARA CADA char EN texto:
- *                  SI char es minúscula: resultado += cifrado[alfabeto.INDICE(char)]
- *                  SINO SI char es mayúscula: resultado += cifrado[alfabeto.INDICE(minusc)].MAYUSCULA()
- *                  SINO: resultado += char
- *              DEVOLVER resultado
- *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

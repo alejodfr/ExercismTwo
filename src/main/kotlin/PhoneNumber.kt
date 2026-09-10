@@ -29,28 +29,48 @@
  * Note: Only 1 is considered a valid country code.
  */
 
+// ▶ class PhoneNumber(rawNumber: String) {
+//   └▶ ① rawNumber → parámetro del constructor (sin val: solo se usa
+//           dentro del init, no se guarda como propiedad).
 class PhoneNumber(rawNumber: String) {
 
+    // ▶ val number: String
+    //   └▶ ② propiedad pública donde quedará el número ya limpio; se
+    //           asigna dentro del init.
     val number: String
 
+    // ▶ init {
+    //   └▶ ③ bloque que se ejecuta al construir el objeto: limpia y valida.
     init {
-        // 1. Limpiamos dejando solo los dígitos numéricos
+        // ▶ var digits = rawNumber.filter { it.isDigit() }
+        //   └▶ ④ filter { it.isDigit() } → conserva solo dígitos; elimina
+        //           espacios, guiones, paréntesis y el "+".
         var digits = rawNumber.filter { it.isDigit() }
 
-        // 2. Manejamos el código de país si tiene 11 dígitos
+        // ▶ if (digits.length == 11) {
+        //   └▶ ⑤ 11 dígitos → puede llevar el código de país delante.
         if (digits.length == 11) {
+            // ▶ require(digits.startsWith("1")) { "11-digit numbers must start with 1" }
+            //   └▶ ⑥ el único código de país válido es "1".
             require(digits.startsWith("1")) { "11-digit numbers must start with 1" }
+            // ▶ digits = digits.drop(1)
+            //   └▶ ⑦ .drop(1) → quita el primer carácter, dejando 10 dígitos.
             digits = digits.drop(1)
         }
 
-        // 3. Validamos la longitud final (deben ser exactamente 10 dígitos)
+        // ▶ require(digits.length == 10) { "Incorrect number of digits" }
+        //   └▶ ⑧ tras el posible recorte deben quedar exactamente 10 dígitos.
         require(digits.length == 10) { "Incorrect number of digits" }
 
-        // 4. Validamos que el Area Code y Exchange Code no empiecen con 0 o 1
+        // ▶ require(digits[0] in '2'..'9') { "Area code cannot start with 0 or 1" }
+        // ▶ require(digits[3] in '2'..'9') { "Exchange code cannot start with 0 or 1" }
+        //   └▶ ⑨ el primer dígito del área (pos 0) y del código de
+        //           intercambio (pos 3) deben estar en el rango '2'..'9'.
         require(digits[0] in '2'..'9') { "Area code cannot start with 0 or 1" }
         require(digits[3] in '2'..'9') { "Exchange code cannot start with 0 or 1" }
 
-        // Si pasó todas las validaciones, guardamos el número limpio
+        // ▶ number = digits
+        //   └▶ ⑩ si todas las validaciones pasan, se guarda el número limpio.
         number = digits
     }
 }
@@ -65,63 +85,12 @@ class PhoneNumber(rawNumber: String) {
  *      validar el formato NANP (NXX-NXX-XXXX).
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Extraer solo los dígitos del texto de entrada.
- *      II.  Si quedan 11 dígitos, validar que empiecen con "1" (código
- *           de país) y eliminarlo.
- *      III. Validar que queden exactamente 10 dígitos.
- *      IV.  Validar que el área y el código de intercambio (posiciones
- *           0 y 3) no empiecen con 0 ni 1.
- *      V.   Guardar el número limpio en la propiedad number.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  var digits = rawNumber.filter { it.isDigit() }
- *      ①  filter conserva solo los caracteres que son dígitos,
- *          eliminando espacios, guiones, paréntesis y el "+".
- *
- *      →  if (digits.length == 11) {
- *      →      require(digits.startsWith("1")) { "11-digit numbers must start with 1" }
- *      →      digits = digits.drop(1)
- *      ②  Si hay 11 dígitos, deben empezar con "1" (código de país
- *          válido); .drop(1) lo elimina, dejando 10 dígitos.
- *      →  }
- *
- *      →  require(digits.length == 10) { "Incorrect number of digits" }
- *      ③  Tras el posible recorte, deben quedar exactamente 10 dígitos.
- *
- *      →  require(digits[0] in '2'..'9') { "Area code cannot start with 0 or 1" }
- *      →  require(digits[3] in '2'..'9') { "Exchange code cannot start with 0 or 1" }
- *      ④  El primer dígito del área (posición 0) y del código de
- *          intercambio (posición 3) deben estar en el rango '2'..'9'.
- *
- *      →  number = digits
- *      ⑤  Si todas las validaciones pasan, se guarda el número limpio.
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Usar una expresión regular Regex("[^0-9]") con .replace("")
  *          en vez de filter { it.isDigit() }.
  *      B)  Extraer las validaciones a funciones privadas separadas
  *          (validateLength, validateAreaCode, ...) para mayor claridad.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      CLASE PhoneNumber(rawNumber)
- *          AL CREAR:
- *              digits ← rawNumber SOLO DÍGITOS
- *              SI digits.LONGITUD == 11:
- *                  REQUERIR digits EMPIEZA CON "1"
- *                  digits ← digits SIN PRIMER CARÁCTER
- *              REQUERIR digits.LONGITUD == 10
- *              REQUERIR digits[0] EN '2'..'9'
- *              REQUERIR digits[3] EN '2'..'9'
- *              number ← digits
- *      FIN CLASE
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

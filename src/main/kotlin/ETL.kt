@@ -55,15 +55,31 @@
  * to be **lower-case** rather than upper-case.
  */
 
+// ▶ object ETL {
+//   └▶ ① object → singleton: una única instancia con nombre ETL.
 object ETL {
+    // ▶ fun transform(source: Map<Int, Collection<Char>>): Map<Char, Int> {
+    //   └▶ ② entrada: puntaje → grupo de letras;  salida: letra → puntaje.
     fun transform(source: Map<Int, Collection<Char>>): Map<Char, Int> {
+        // ▶ val result = mutableMapOf<Char, Int>()
+        //   └▶ ③ mapa mutable vacío donde se acumulará el resultado.
         val result = mutableMapOf<Char, Int>()
+        // ▶ source.forEach { points, letters ->
+        //   └▶ ④ forEach sobre un Map itera cada entrada, separando clave
+        //           (points) y valor (letters).
         source.forEach { points, letters ->
+            // ▶ letters.forEach { letter ->
+            //   └▶ ⑤ forEach anidado: recorre cada letra del grupo actual.
             letters.forEach { letter ->
+                // ▶ result[letter.lowercaseChar()] = points
+                //   └▶ ⑥ .lowercaseChar() → letra en minúscula como clave;
+                //           points como valor en el mapa resultado.
                 result[letter.lowercaseChar()] = points
             }
 
         }
+        // ▶ return result
+        //   └▶ ⑦ devuelve el mapa uno-a-uno construido.
         return result
     }
 
@@ -92,57 +108,12 @@ fun main(){
  *      en un mapa uno-a-uno (letra minúscula → puntaje).
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Crear un mapa mutable vacío para el resultado.
- *      II.  Recorrer cada entrada (puntos, letras) del mapa de entrada.
- *      III. Para cada letra dentro del grupo, convertirla a minúscula
- *           y asignarle el puntaje correspondiente en el resultado.
- *      IV.  Devolver el mapa resultante.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun transform(source: Map<Int, Collection<Char>>): Map<Char, Int> {
- *      →      val result = mutableMapOf<Char, Int>()
- *      ①  Mapa mutable vacío donde se acumulará el resultado.
- *
- *      →      source.forEach { points, letters ->
- *      ②  forEach sobre un Map itera cada entrada, desestructurando
- *          clave (points) y valor (letters).
- *
- *      →          letters.forEach { letter ->
- *      ③  Segundo forEach anidado: recorre cada letra dentro del
- *          grupo actual.
- *
- *      →              result[letter.lowercaseChar()] = points
- *      ④  .lowercaseChar() convierte la letra a minúscula; se usa
- *          como clave y points como valor en el mapa resultado.
- *      →          }
- *      →      }
- *
- *      →      return result
- *      ⑤  Devuelve el mapa uno-a-uno construido.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Estilo funcional: source.flatMap { (p, letters) -> letters
  *          .map { it.lowercaseChar() to p } }.toMap() sin mapa mutable.
  *      B)  Usar associateBy o buildMap para construir el resultado de
  *          forma más declarativa.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN transformar(fuente: Mapa<Entero, ColeccionDeChar>): Mapa<Char, Entero>
- *          resultado ← MAPA_VACIO
- *          PARA CADA (puntos, letras) EN fuente:
- *              PARA CADA letra EN letras:
- *                  resultado[letra.MINUSCULA()] ← puntos
- *          DEVOLVER resultado
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

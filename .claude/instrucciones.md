@@ -2,10 +2,10 @@
 # Reglas de Generación de Guías de Estudio de Kotlin
 
 Cuando el usuario te solicite "agregar guía de estudio", "genera la guía", o
-cuando termine un ejercicio de Kotlin, debes agregar ÚNICAMENTE un bloque de
-comentarios al final del archivo `.kt` correspondiente, debajo de todo el
-código funcional (después de la última definición de función/clase/objeto),
-sin modificar la solución resuelta.
+cuando termine un ejercicio de Kotlin, debes documentar el archivo `.kt`
+correspondiente con el formato de abajo, SIN modificar la lógica de la
+solución resuelta (solo se añaden comentarios y, opcionalmente, un bloque
+final reducido).
 
 Cuando en el texto que generes aparezca la secuencia de letras "todo" (ya sea
 como palabra independiente o formando parte de otra palabra, por ejemplo
@@ -16,7 +16,49 @@ no la resalte como comentario TODO. Así:
 - "método" → "metdo"
 - "todos" → "tdos"
 
-Usa SIEMPRE el siguiente formato estricto en español:
+## Estructura del archivo
+
+1. `@file:Suppress("SpellCheckingInspection")` en la primera línea (evita que
+   el IDE subraye el español de los comentarios).
+2. El enunciado original del ejercicio en un bloque `/** Instructions ... */`
+   (tal cual lo entrega Exercism). NUNCA se elimina.
+3. El código real de la solución, anotado con la EXPLICACIÓN PASO A PASO
+   integrada como comentarios `//` con flechas (ver abajo).
+4. Opcionalmente, una función `main()` de demostración con ejemplos.
+5. Un bloque final reducido `/* GUÍA DE ESTUDIO */` con solo tres secciones:
+   OBJETIVO, ENFOQUES ALTERNATIVOS y EJEMPLOS TRABAJADOS.
+
+## EXPLICACIÓN PASO A PASO (integrada en el código)
+
+La explicación va DENTRO del código real, no en un bloque aparte:
+
+- Justo encima de cada línea de código, escribe un comentario `// ▶` que
+  repite esa línea (respetando su indentación).
+- Debajo, cuelga la explicación de cada una de sus palabras con las flechas
+  `├▶` (cuando hay más) y `└▶` (la última), alineadas bajo el `▶`.
+- Numera cada explicación con su propio icono (`①`, `②`, `③`, ...).
+- Usa el formato   `palabra → qué hace`.
+- El código real se deja intacto debajo de sus comentarios.
+
+Ejemplo:
+
+```kotlin
+    // ▶ fun isAllergicTo(allergen: Allergen): Boolean {
+    //   ├▶ ① allergen: Allergen → recibe el alérgeno a consultar.
+    //   └▶ ② : Boolean → devuelve true o false.
+    fun isAllergicTo(allergen: Allergen): Boolean {
+        // ▶ return score and allergen.score != 0
+        //   ├▶ ③ score → puntaje total de la persona.
+        //   ├▶ ④ and → AND bit a bit entre los dos puntajes.
+        //   └▶ ⑤ != 0 → true si quedó algún bit en común.
+        return score and allergen.score != 0
+    }
+```
+
+## Bloque final reducido
+
+Va después de todo el código (incluida `main()` si existe). Formato estricto
+en español:
 
 ```
 /*
@@ -27,33 +69,10 @@ Usa SIEMPRE el siguiente formato estricto en español:
  *      <explicación breve del objetivo del ejercicio>
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      <análisis de cómo completar el ejercicio desde el principio
- *      hasta el final>
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      Muestra el código del ejercicio y, debajo de cada línea de
- *      código, da una explicación de cada palabra y lo que hace en
- *      el código, en una lista numerada. Cada línea de explicación
- *      debe llevar su propio icono para diferenciarla de las demás.
- *      a cada linea de codigo ponle una flecha para reslatar que es 
- *      una linea de codigo.
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  <enfoque 1>
  *      B)  <enfoque 2>
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN <nombre>(<parámetros>): <tipo>
- *          <algoritmo en pseudocódigo>
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS

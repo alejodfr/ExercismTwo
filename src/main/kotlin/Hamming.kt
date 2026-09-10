@@ -36,16 +36,26 @@
 // so an attempt to calculate it between sequences of different lengths
 // should not work.
 
+// ▶ object Hamming {
+//   └▶ ① object → singleton: una única instancia con nombre Hamming.
 object Hamming {
 
+    // ▶ fun compute(leftStrand: String, rightStrand: String): Int {
+    //   └▶ ② recibe las dos cadenas de ADN y devuelve cuántas posiciones difieren.
     fun compute(leftStrand: String, rightStrand: String): Int {
-        // 1. Validamos que midan lo mismo.
-        // Si no miden lo mismo, require() lanza la excepción que Exercism espera.
+        // ▶ require(leftStrand.length == rightStrand.length) { "left and right strands must be of equal length" }
+        //   └▶ ③ require → lanza IllegalArgumentException con ese mensaje si
+        //           las longitudes no coinciden (Hamming solo se define para
+        //           cadenas de igual longitud).
         require(leftStrand.length == rightStrand.length) {
             "left and right strands must be of equal length"
         }
 
-        // 2. Abrochamos las dos cadenas en parejas y contamos las diferencias
+        // ▶ return leftStrand.zip(rightStrand).count { (left, right) -> left != right }
+        //   ├▶ ④ .zip(rightStrand) → combina ambas cadenas en pares (Char, Char),
+        //   │       uno por cada posición.
+        //   └▶ ⑤ .count { (left, right) -> left != right } → cuenta los pares
+        //           cuyos caracteres son distintos.
         return leftStrand.zip(rightStrand).count { (left, right) ->
             left != right
         }
@@ -61,49 +71,12 @@ object Hamming {
  *      igual longitud: la cantidad de posiciones donde difieren.
  *
  *  -----------------------------------------------------------------
- *  🧠  ORDEN DE PENSAMIENTO
- *
- *      I.   Validar que ambas cadenas tengan la misma longitud; si no,
- *           lanzar una excepción.
- *      II.  Emparejar ambas cadenas posición a posición con zip().
- *      III. Contar los pares donde los caracteres son distintos.
- *
- *  -----------------------------------------------------------------
- *  🔍  EXPLICACIÓN PASO A PASO
- *
- *      →  fun compute(leftStrand: String, rightStrand: String): Int {
- *      →      require(leftStrand.length == rightStrand.length) {
- *      →          "left and right strands must be of equal length"
- *      →      }
- *      ①  require lanza IllegalArgumentException con el mensaje dado
- *          si las longitudes no coinciden.
- *
- *      →      return leftStrand.zip(rightStrand).count { (left, right) ->
- *      ②  zip() combina ambas cadenas en una lista de pares (Char,
- *          Char), uno por cada posición.
- *
- *      →          left != right
- *      →      }
- *      ③  count evalúa la lambda por cada par y cuenta cuántos tienen
- *          caracteres diferentes.
- *      →  }
- *
- *  -----------------------------------------------------------------
  *  🔁  ENFOQUES ALTERNATIVOS
  *
  *      A)  Bucle for con índices: for (i in leftStrand.indices) if
  *          (leftStrand[i] != rightStrand[i]) contador++.
  *      B)  Usar leftStrand.indices.count { leftStrand[it] != rightStrand[it] }
  *          sin construir la lista intermedia de pares.
- *
- *  -----------------------------------------------------------------
- *  📝  PSEUDOCÓDIGO EN ESPAÑOL
- *
- *      FUNCIÓN calcularDistancia(cadenaIzq, cadenaDer): Entero
- *          REQUERIR cadenaIzq.LONGITUD == cadenaDer.LONGITUD
- *          pares ← EMPAREJAR(cadenaIzq, cadenaDer)
- *          DEVOLVER pares.CONTAR(izq != der)
- *      FIN FUNCIÓN
  *
  *  -----------------------------------------------------------------
  *  🧪  EJEMPLOS TRABAJADOS
